@@ -600,14 +600,29 @@ document.querySelectorAll('.edit-btn').forEach(button => {
     });
 });
 
-    // Logika untuk tombol hapus bisa ditambahkan di sini
-document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const productName = button.closest('tr').querySelector('td:nth-child(2)').textContent;
-        if (confirm(`Anda yakin ingin menghapus produk "${productName}"?`)) {
-            // Di sini tambahkan logika untuk menghapus produk
-            alert(`Produk "${productName}" dihapus (simulasi)`);
-            // button.closest('tr').remove(); // Hapus baris dari tabel setelah berhasil dihapus di backend
+// Image Preview
+document.getElementById('productImage').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    const file = e.target.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.style.display = 'block';
+            preview.querySelector('img').src = e.target.result;
         }
-    });
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+    }
+});
+
+// Form Submission
+document.getElementById('addMenuForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Here you would typically handle the form submission
+    // For now, we'll just show a success message
+    alert('Menu berhasil ditambahkan!');
+    window.location.href = 'menu.html';
 });

@@ -16,8 +16,7 @@
                 <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
-            <div class="nav-actions"> <!-- Menggunakan class yang sudah ada -->
-                 <i class="fas fa-bell"></i>
+            <div class="nav-actions">
                 <i class="fas fa-user"></i>
             </div>
         </div>
@@ -83,57 +82,6 @@
                 </button>
             </div>
 
-            <!-- Product Form Section (Hidden by default) -->
-            <div class="product-form-section" id="productFormSection">
-                <h3 class="section-title" id="formTitle">Tambah Menu Baru</h3>
-                <form id="productForm">
-                    <div class="form-row">
-                        <div class="form-group"> <!-- Menggunakan class yang sudah ada -->
-                            <label for="productName">Nama Produk</label> <!-- Menggunakan class yang sudah ada -->
-                            <input type="text" id="productName" class="form-control" required> <!-- Menggunakan class yang sudah ada -->
-                        </div>
-                        <div class="form-group"> <!-- Menggunakan class yang sudah ada -->
-                            <label for="productCategory">Kategori</label> <!-- Menggunakan class yang sudah ada -->
-                            <select id="productCategory" class="form-control" required> <!-- Menggunakan class yang sudah ada -->
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="kopi">Kopi</option>
-                                <option value="teh">Teh</option>
-                                <option value="snack">Snack</option>
-                                <option value="merchandise">Merchandise</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group"> <!-- Menggunakan class yang sudah ada -->
-                        <label for="productDescription">Deskripsi</label> <!-- Menggunakan class yang sudah ada -->
-                        <textarea id="productDescription" class="form-control" rows="3" required></textarea> <!-- Menggunakan class yang sudah ada -->
-                    </div>
-
-                     <div class="form-row">
-                        <div class="form-group"> <!-- Menggunakan class yang sudah ada -->
-                            <label for="productPrice">Harga (Rp)</label> <!-- Menggunakan class yang sudah ada -->
-                            <input type="number" id="productPrice" class="form-control" min="0" required> <!-- Menggunakan class yang sudah ada -->
-                        </div>
-                        <div class="form-group"> <!-- Menggunakan class yang sudah ada -->
-                            <label for="productStock">Stok</label> <!-- Menggunakan class yang sudah ada -->
-                            <input type="number" id="productStock" class="form-control" min="0" required> <!-- Menggunakan class yang sudah ada -->
-                        </div>
-                    </div>
-
-                    <div class="form-group"> <!-- Menggunakan class yang sudah ada -->
-                        <label for="productImage">Gambar Produk</label> <!-- Menggunakan class yang sudah ada -->
-                        <input type="file" id="productImage" class="form-control"> <!-- Menggunakan class yang sudah ada -->
-                         <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG, PNG. Maks: 2MB</p>
-                    </div>
-
-                    <div class="form-actions"> <!-- Menggunakan style actions yang serupa -->
-                        <button type="button" class="btn btn-cancel" id="cancelFormBtn">Batal</button> <!-- Menggunakan class yang sudah ada -->
-                        <button type="submit" class="btn">Simpan Produk</button> <!-- Menggunakan class yang sudah ada -->
-                    </div>
-                </form>
-            </div>
-
-
             <!-- Product List Section -->
             <div class="product-list-section">
                 <table class="product-table">
@@ -144,6 +92,7 @@
                             <th>Kategori</th>
                             <th>Harga</th>
                             <th>Stok</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -155,9 +104,11 @@
                             <td>Kopi</td>
                             <td>Rp 85.000</td>
                             <td>50</td>
+                            <td>
+                                <button class="btn status-active">Aktif</button>
+                            </td>
                             <td class="product-actions">
                                 <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                                <button class="btn btn-cancel delete-btn"><i class="fas fa-trash-alt"></i> Hapus</button> <!-- Menggunakan class yang sudah ada -->
                             </td>
                         </tr>
                          <tr>
@@ -166,9 +117,11 @@
                             <td>Kopi</td>
                             <td>Rp 75.000</td>
                             <td>30</td>
+                            <td>
+                                <button class="btn status-inactive">Nonaktif</button>
+                            </td>
                             <td class="product-actions">
                                 <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                                <button class="btn btn-cancel delete-btn"><i class="fas fa-trash-alt"></i> Hapus</button> <!-- Menggunakan class yang sudah ada -->
                             </td>
                         </tr>
                          <tr>
@@ -177,9 +130,11 @@
                             <td>Kopi</td>
                             <td>Rp 120.000</td>
                             <td>100</td>
+                            <td>
+                                <button class="btn status-active">Aktif</button>
+                            </td>
                             <td class="product-actions">
                                 <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                                <button class="btn btn-cancel delete-btn"><i class="fas fa-trash-alt"></i> Hapus</button> <!-- Menggunakan class yang sudah ada -->
                             </td>
                         </tr>
                           <tr>
@@ -188,9 +143,11 @@
                             <td>Merchandise</td>
                             <td>Rp 150.000</td>
                             <td>15</td>
+                            <td>
+                                <button class="btn status-inactive">Nonaktif</button>
+                            </td>
                             <td class="product-actions">
                                 <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                                <button class="btn btn-cancel delete-btn"><i class="fas fa-trash-alt"></i> Hapus</button> <!-- Menggunakan class yang sudah ada -->
                             </td>
                         </tr>
                     </tbody>
@@ -199,6 +156,6 @@
         </div>
     </div>
 
-    <script src="resources/js/script.js"></script>
+    @vite('resources/js/script.js')
 </body>
 </html>

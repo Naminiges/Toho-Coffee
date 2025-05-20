@@ -46,6 +46,12 @@ Route::get('/admin', function () {
 Route::get('/admin/manajemen-produk', function () {
     return view('admin.manajemen-produk');
 })->name('admin-manajemen-produk');
+Route::get('/admin/tambah-produk', function () {
+    return view('admin.tambah-produk');
+})->name('admin-tambah-produk');
+Route::get('/admin/edit-produk', function () {
+    return view('admin.edit-produk');
+})->name('admin-edit-produk');
 
 
 
