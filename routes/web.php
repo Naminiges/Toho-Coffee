@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -54,6 +55,10 @@ Route::get('/admin/edit-produk', function () {
 })->name('admin-edit-produk');
 
 
+
+// Rute registrasi
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
 // Route::prefix('admin')->group(function () {
 
