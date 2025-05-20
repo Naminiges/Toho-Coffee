@@ -43,7 +43,7 @@
     <section class="hero" id="home">
         <div class="hero-content">
             <h2>Nikmati Kopi Premium Berkualitas Terbaik</h2>
-            <p>Temukan kenikmatan kopi yang diproses dengan teliti dari biji pilihan dan dipanggang dengan sempurna untuk menghasilkan cita rasa terbaik.</p>
+            <p>Temukan kenikmatan kopi yang diproses dengan teliti dari biji pilihan dan dipanggang dengan sempurna untuk menghasilkan cita rasa terbaik..</p>
             <a href="#products" class="cta-button">Belanja Sekarang</a>
             <a href="#about" class="secondary-button">Pelajari Lebih Lanjut</a>
         </div>
