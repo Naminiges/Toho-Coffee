@@ -17,6 +17,9 @@ Route::get('/register', function () {
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('forgot-password');
+
+// user
+
 Route::get('/user/katalog', function () {
     return view('user.katalog');
 })->name('user-katalog');
@@ -32,6 +35,19 @@ Route::get('/user/riwayat', function () {
 Route::get('/user/riwayat/detail-pesanan', function () {
     return view('user.detail-pesanan');
 })->name('user-detail-pesanan');
+Route::get('/user/profil', function () {
+    return view('user.profil');
+})->name('user-profil');
+
+// admin
+Route::get('/admin', function () {
+    return view('admin.dashboard');
+})->name('admin-dashboard');
+Route::get('/admin/manajemen-produk', function () {
+    return view('admin.manajemen-produk');
+})->name('admin-manajemen-produk');
+
+
 
 // Route::prefix('admin')->group(function () {
 

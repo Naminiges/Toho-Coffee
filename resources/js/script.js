@@ -573,3 +573,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Calculate initial totals
     updateCartTotal();
 });
+
+const addProductBtn = document.getElementById('addProductBtn');
+const productFormSection = document.getElementById('productFormSection');
+const cancelFormBtn = document.getElementById('cancelFormBtn');
+const formTitle = document.getElementById('formTitle');
+const productForm = document.getElementById('productForm');
+
+addProductBtn.addEventListener('click', () => {
+    productFormSection.classList.add('active');
+    formTitle.textContent = 'Tambah Menu Baru';
+    productForm.reset(); // Reset form for new product
+});
+
+cancelFormBtn.addEventListener('click', () => {
+    productFormSection.classList.remove('active');
+});
+
+// Logika untuk tombol edit bisa ditambahkan di sini (misal: mengisi form dengan data produk yang dipilih)
+document.querySelectorAll('.edit-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        productFormSection.classList.add('active');
+        formTitle.textContent = 'Edit Menu';
+        // Di sini tambahkan logika untuk mengisi form dengan data produk yang relevan
+        // Contoh: productForm.elements['productName'].value = 'Nama Produk dari baris tabel';
+    });
+});
+
+    // Logika untuk tombol hapus bisa ditambahkan di sini
+document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', () => {
+        const productName = button.closest('tr').querySelector('td:nth-child(2)').textContent;
+        if (confirm(`Anda yakin ingin menghapus produk "${productName}"?`)) {
+            // Di sini tambahkan logika untuk menghapus produk
+            alert(`Produk "${productName}" dihapus (simulasi)`);
+            // button.closest('tr').remove(); // Hapus baris dari tabel setelah berhasil dihapus di backend
+        }
+    });
+});
