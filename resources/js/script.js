@@ -423,3 +423,153 @@ function simulateFormSubmission() {
         window.location.href = 'index.html';
     }, 1000);
 }
+document.addEventListener('DOMContentLoaded', function() {
+    // Cart Item Quantity Buttons
+    const decreaseBtns = document.querySelectorAll('.cart-item .quantity-btn.decrease');
+    const increaseBtns = document.querySelectorAll('.cart-item .quantity-btn.increase');
+    const quantityInputs = document.querySelectorAll('.cart-item .quantity-input');
+    const removeButtons = document.querySelectorAll('.remove-item');
+    const clearCartButton = document.querySelector('.clear-cart');
+    const updateCartButton = document.querySelector('.update-cart');
+
+    // Calculate individual item subtotals
+    function calculateItemSubtotal(quantityInput) {
+        const item = quantityInput.closest('.cart-item');
+        const price = parseInt(item.querySelector('.item-price').textContent.replace(/\D/g, ''));
+        const quantity = parseInt(quantityInput.value);
+        const subtotal = price * quantity;
+        
+        item.querySelector('.subtotal-price').textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+        
+        updateCartTotal();
+    }
+
+    // Update entire cart total
+    function updateCartTotal() {
+        let subtotal = 0;
+        document.querySelectorAll('.cart-item').forEach(item => {
+            subtotal += parseInt(item.querySelector('.subtotal-price').textContent.replace(/\D/g, ''));
+        });
+        
+        const shipping = 15000; // Biaya pengiriman tetap
+        const total = subtotal + shipping;
+        
+        document.querySelector('.summary-item:first-child span:last-child').textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+        document.querySelector('.summary-total span:last-child').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+    }
+
+    // Initialize quantity buttons
+    decreaseBtns.forEach((btn, index) => {
+        btn.addEventListener('click', function() {
+            const currentValue = parseInt(quantityInputs[index].value);
+            if (currentValue > 1) {
+                quantityInputs[index].value = currentValue - 1;
+                calculateItemSubtotal(quantityInputs[index]);
+            }
+        });
+    });
+
+    increaseBtns.forEach((btn, index) => {
+        btn.addEventListener('click', function() {
+            const currentValue = parseInt(quantityInputs[index].value);
+            quantityInputs[index].value = currentValue + 1;
+            calculateItemSubtotal(quantityInputs[index]);
+        });
+    });
+
+    // Update subtotal when quantity changes manually
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            let value = parseInt(this.value);
+            if (isNaN(value) || value < 1) {
+                this.value = 1;
+                value = 1;
+            }
+            calculateItemSubtotal(this);
+        });
+    });
+
+    // Remove item functionality
+    removeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const item = this.closest('.cart-item');
+            item.style.opacity = '0';
+            setTimeout(() => {
+                item.remove();
+                
+                // Update cart count 
+                const cartCountElement = document.querySelector('.cart-count');
+                let count = parseInt(cartCountElement.textContent) - 1;
+                cartCountElement.textContent = count;
+                
+                // Update cart item count in heading
+                const itemsCountElement = document.querySelector('.cart-items h3');
+                itemsCountElement.textContent = `Produk dalam Keranjang (${count})`;
+                
+                updateCartTotal();
+                
+                // If no items left, show empty cart message
+                if (count === 0) {
+                    const cartItems = document.querySelector('.cart-items');
+                    const emptyMessage = document.createElement('div');
+                    emptyMessage.className = 'empty-cart-message';
+                    emptyMessage.innerHTML = `
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Keranjang belanja Anda kosong.</p>
+                        <a href="menu.html" class="btn">Belanja Sekarang</a>
+                    `;
+                    cartItems.appendChild(emptyMessage);
+                }
+            }, 300);
+            item.style.transition = 'opacity 0.3s ease';
+        });
+    });
+
+    // Clear cart functionality
+    if (clearCartButton) {
+        clearCartButton.addEventListener('click', function() {
+            if (confirm('Apakah Anda yakin ingin mengosongkan keranjang?')) {
+                const cartItems = document.querySelectorAll('.cart-item');
+                cartItems.forEach(item => {
+                    item.remove();
+                });
+                
+                // Update cart count
+                document.querySelector('.cart-count').textContent = '0';
+                document.querySelector('.cart-items h3').textContent = 'Produk dalam Keranjang (0)';
+                
+                // Show empty cart message
+                const cartItemsContainer = document.querySelector('.cart-items');
+                const emptyMessage = document.createElement('div');
+                emptyMessage.className = 'empty-cart-message';
+                emptyMessage.innerHTML = `
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Keranjang belanja Anda kosong.</p>
+                    <a href="menu.html" class="btn">Belanja Sekarang</a>
+                `;
+                cartItemsContainer.appendChild(emptyMessage);
+                
+                updateCartTotal();
+            }
+        });
+    }
+
+    // Update cart button functionality
+    if (updateCartButton) {
+        updateCartButton.addEventListener('click', function() {
+            // Simulate cart update
+            this.textContent = 'Diperbarui!';
+            this.style.backgroundColor = '#165d42';
+            
+            setTimeout(() => {
+                this.textContent = 'Perbarui Keranjang';
+                this.style.backgroundColor = '';
+            }, 1000);
+            
+            updateCartTotal();
+        });
+    }
+
+    // Calculate initial totals
+    updateCartTotal();
+});

@@ -20,6 +20,12 @@ Route::get('/forgot-password', function () {
 Route::get('/user/katalog', function () {
     return view('user.katalog');
 })->name('user-katalog');
+Route::get('/user/keranjang', function () {
+    return view('user.keranjang');
+})->name('user-keranjang');
+Route::get('/user/checkout', function () {
+    return view('user.checkout');
+})->name('user-checkout');
 
 // Route::prefix('admin')->group(function () {
 
