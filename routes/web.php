@@ -20,6 +20,18 @@ Route::get('/forgot-password', function () {
 Route::get('/user/katalog', function () {
     return view('user.katalog');
 })->name('user-katalog');
+Route::get('/user/keranjang', function () {
+    return view('user.keranjang');
+})->name('user-keranjang');
+Route::get('/user/keranjang/checkout', function () {
+    return view('user.checkout');
+})->name('user-checkout');
+Route::get('/user/riwayat', function () {
+    return view('user.riwayat');
+})->name('user-riwayat');
+Route::get('/user/riwayat/detail-pesanan', function () {
+    return view('user.detail-pesanan');
+})->name('user-detail-pesanan');
 
 // Route::prefix('admin')->group(function () {
 
