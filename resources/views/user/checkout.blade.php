@@ -17,10 +17,8 @@
                 <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="index.html">Beranda</a></li>
-                <li><a href="menu.html">Menu</a></li>
-                <li><a href="about.html">Tentang Kami</a></li>
-                <li><a href="contact.html">Kontak</a></li>
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#products">Produk</a></li>
             </ul>
             <div class="nav-actions">
                 <i class="fas fa-search search-icon"></i>
