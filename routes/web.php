@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,10 @@ Route::get('/user/riwayat', function () {
 Route::get('/user/riwayat/detail-pesanan', function () {
     return view('user.detail-pesanan');
 })->name('user-detail-pesanan');
+
+// Rute registrasi
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
 // Route::prefix('admin')->group(function () {
 

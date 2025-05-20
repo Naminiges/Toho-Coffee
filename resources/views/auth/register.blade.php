@@ -27,7 +27,7 @@
                     </div>
                 @else
                     <div class="auth-links">
-                        <a href="{{ route('login') }}" class="login-btn">Login</a>
+                        <a href="{{ url('login') }}" class="login-btn">Login</a>
                 </div>
                 @endauth
             </div>
@@ -46,30 +46,41 @@
             <p>Daftarkan diri Anda untuk menikmati berbagai keuntungan</p>
         </div>
 
-        <form id="register-form" class="auth-form">
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+        <form id="register-form" class="auth-form" method="POST" action="{{ route('register') }}">
+            @csrf
             <div class="form-group">
                 <label for="name">Nama Lengkap</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Masukkan nama lengkap Anda">
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" placeholder="Masukkan nama lengkap Anda" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" class="form-control" placeholder="Masukkan email Anda">
+                <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="Masukkan email Anda" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="password-toggle">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Minimal 6 karakter">
-                    <i class="fas fa-eye"></i>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Minimal 6 karakter" required>
+                    <i class="fas fa-eye toggle-password"></i>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="confirm_password">Konfirmasi Password</label>
+                <label for="password_confirmation">Konfirmasi Password</label>
                 <div class="password-toggle">
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Masukkan password sekali lagi">
-                    <i class="fas fa-eye"></i>
+                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Masukkan password sekali lagi" required>
+                    <i class="fas fa-eye toggle-password"></i>
                 </div>
             </div>
 
@@ -93,7 +104,7 @@
         </div>
 
         <div class="form-footer">
-            Sudah memiliki akun? <a href="login.html">Masuk di sini</a>
+            Sudah memiliki akun? <a href="{{ url('login') }}">Masuk di sini</a>
         </div>
     </div>
 
@@ -162,5 +173,17 @@
     </a>
 
     @vite('resources/js/app.js')
+    <script>
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(function(eye) {
+            eye.addEventListener('click', function() {
+                const passwordField = this.previousElementSibling;
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
 </body>
 </html>
