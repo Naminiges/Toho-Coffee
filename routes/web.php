@@ -12,9 +12,6 @@ Route::get('/products', function () {
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('forgot-password');
@@ -53,6 +50,15 @@ Route::get('/admin/tambah-produk', function () {
 Route::get('/admin/edit-produk', function () {
     return view('admin.edit-produk');
 })->name('admin-edit-produk');
+Route::get('/admin/manajemen-pesanan', function () {
+    return view('admin.manajemen-pesanan');
+})->name('admin-manajemen-pesanan');
+Route::get('/admin/detail-pesanan', function () {
+    return view('admin.detail-pesanan');
+})->name('admin-detail-pesanan');
+Route::get('/admin/manajemen-pelanggan', function () {
+    return view('admin.manajemen-pelanggan');
+})->name('admin-manajemen-pelanggan');
 
 
 

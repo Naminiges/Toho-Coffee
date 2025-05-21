@@ -626,3 +626,14 @@ document.getElementById('addMenuForm').addEventListener('submit', function(e) {
     alert('Menu berhasil ditambahkan!');
     window.location.href = 'menu.html';
 });
+
+// Order Management Functions
+function updateOrderStatus(orderId) {
+    // Implement order status update logic
+    console.log('Updating status for order:', orderId);
+}
+
+function viewOrderDetail(orderId) {
+    // Implement order detail view logic
+    console.log('Viewing details for order:', orderId);
+}

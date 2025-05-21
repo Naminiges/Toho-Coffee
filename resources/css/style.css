@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
+
 /* Reset CSS dan Variabel Warna */
 :root {
     --primary-color: #1D7151;
@@ -773,14 +777,6 @@ footer {
     font-weight: 500;
 }
 
-.form-control {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--medium-gray);
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-}
 
 .form-control:focus {
     outline: none;
@@ -851,13 +847,12 @@ footer {
 }
 
 .search-bar {
-    margin-bottom: 30px;
     position: relative;
 }
 
 .search-bar input {
     width: 100%;
-    padding: 12px 15px 12px 45px;
+    padding: 9px 15px 9px 45px;
     border: 1px solid var(--medium-gray);
     border-radius: 30px;
     font-size: 16px;
@@ -882,6 +877,14 @@ footer {
     justify-content: center;
     list-style: none;
     margin-top: 50px;
+}
+
+.pagination ul {
+    list-style: none; /* Remove default list dots */
+    padding: 0;
+    display: flex; /* Arrange list items horizontally initially for centering */
+    align-items: center;
+    flex-direction: row;
 }
 
 .pagination li {
@@ -1659,6 +1662,7 @@ footer {
 .filter-section {
     margin-bottom: 20px;
     display: flex;
+    justify-content: space-between;
     gap: 10px;
     flex-wrap: wrap;
 }
@@ -2016,11 +2020,6 @@ footer {
     border-radius: 4px;
     font-size: 14px;
     transition: border-color 0.3s ease;
-}
-
-.form-control:focus {
-    border-color: var(--primary-color);
-    outline: none;
 }
 
 .password-toggle {
