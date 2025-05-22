@@ -132,6 +132,9 @@
                             <button class="btn btn-primary" onclick="updateOrderStatusDetail('ORD001')">
                                 <i class="fas fa-sync-alt"></i> Update Status
                             </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-print"></i> Print Invoice
+                            </button>
                         </div>
                     </div>
 

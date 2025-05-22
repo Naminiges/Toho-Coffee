@@ -53,12 +53,15 @@ Route::get('/admin/edit-produk', function () {
 Route::get('/admin/manajemen-pesanan', function () {
     return view('admin.manajemen-pesanan');
 })->name('admin-manajemen-pesanan');
-Route::get('/admin/detail-pesanan', function () {
+Route::get('/admin/manajemen-pesanan/detail-pesanan', function () {
     return view('admin.detail-pesanan');
 })->name('admin-detail-pesanan');
 Route::get('/admin/manajemen-pelanggan', function () {
     return view('admin.manajemen-pelanggan');
 })->name('admin-manajemen-pelanggan');
+Route::get('/admin/laporan', function () {
+    return view('admin.laporan');
+})->name('admin-laporan');
 
 
 

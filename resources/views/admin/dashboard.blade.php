@@ -75,14 +75,6 @@
                 <div class="page-title">
                     <h2>Dashboard</h2>
                 </div>
-                <div class="date-filter">
-                    <select>
-                        <option>Hari Ini</option>
-                        <option>Minggu Ini</option>
-                        <option>Bulan Ini</option>
-                        <option>Tahun Ini</option>
-                    </select>
-                </div>
             </div>
 
             <!-- Stats Grid -->
