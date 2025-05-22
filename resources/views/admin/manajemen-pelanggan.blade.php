@@ -120,17 +120,14 @@
                 </table>
             </div>
 
-            {{-- Pagination (Optional - can be added if needed) --}}
-            {{--
             <div class="pagination">
                 <ul>
                     <li><a href="#" class="active">1</a></li>
                     <li><a href="#">2</a></li>
                     <li><a href="#">3</a></li>
-                    <li><a href="#" class="next">Next <i class="fas fa-chevron-right"></i></a></li>
+                    <li><a href="#" class="next"><i class="fas fa-chevron-right"></i></a></li>
                 </ul>
             </div>
-            --}}
         </main>
     </div>
 

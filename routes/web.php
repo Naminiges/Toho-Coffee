@@ -44,10 +44,10 @@ Route::get('/admin', function () {
 Route::get('/admin/manajemen-produk', function () {
     return view('admin.manajemen-produk');
 })->name('admin-manajemen-produk');
-Route::get('/admin/tambah-produk', function () {
+Route::get('/admin/manajemen-produk/tambah-produk', function () {
     return view('admin.tambah-produk');
 })->name('admin-tambah-produk');
-Route::get('/admin/edit-produk', function () {
+Route::get('/admin/manajemen-produk/edit-produk', function () {
     return view('admin.edit-produk');
 })->name('admin-edit-produk');
 Route::get('/admin/manajemen-pesanan', function () {
@@ -63,7 +63,19 @@ Route::get('/admin/laporan', function () {
     return view('admin.laporan');
 })->name('admin-laporan');
 
-
+// staff
+Route::get('/staff', function () {
+    return view('staff.staff-dashboard');
+})->name('staff-dashboard');
+Route::get('/staff/detail-pesanan', function () {
+    return view('staff.staff-detail');
+})->name('staff-detail-pesanan');
+Route::get('/staff/manajemen-produk', function () {
+    return view('staff.staff-produk');
+})->name('staff-manajemen-produk');
+Route::get('/staff/manajemen-produk/edit-produk', function () {
+    return view('staff.staff-edit');
+})->name('staff-edit');
 
 // Rute registrasi
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');

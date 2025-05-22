@@ -23,40 +23,22 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/80/80" alt="Admin Profile">
-                <div class="admin-name">Admin TOHO</div> <!-- Menggunakan class yang sudah ada -->
-                <div class="admin-role">Administrator</div> <!-- Menggunakan class yang sudah ada -->
+                <img src="/api/placeholder/80/80" alt="Staff Profile">
+                <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
+                <div class="admin-role">Barista</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
             <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="#">
+                    <a href="#" class="active">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="active">
-                        <i class="fas fa-shopping-bag"></i>
-                        Pesanan
                     </a>
                 </li>
                 <li>
                     <a href="#">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-users"></i>
-                        Pelanggan
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
                     </a>
                 </li>
                  <li>
@@ -120,7 +102,7 @@
                         {{-- Status Update Form --}}
                         <div class="status-update-form" style="margin-top: 20px;"> {{-- Added margin-top for spacing --}}
                             <div class="form-group">
-                                <input type="hidden" value=""> 
+                                <input type="hidden" value="">
                                 <label for="orderStatus">Ubah Status Pesanan:</label>
                                 <select id="orderStatus" class="form-control">
                                     <option value="pending">Menunggu</option>
