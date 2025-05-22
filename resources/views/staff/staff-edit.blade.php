@@ -25,8 +25,8 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <img src="/api/placeholder/80/80" alt="Admin Profile">
-                <div class="admin-name">Admin TOHO</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-name">Staff TOHO</div>
+                <div class="admin-role">Staff</div>
             </div>
 
             <ul class="sidebar-menu">
@@ -37,27 +37,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="fas fa-shopping-bag"></i>
-                        Pesanan
-                    </a>
-                </li>
-                <li>
                     <a href="#" class="active">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-users"></i>
-                        Pelanggan
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
                     </a>
                 </li>
                 <li>
@@ -80,42 +62,22 @@
             <!-- Product Form Section -->
             <div class="product-form-section active">
                 <form id="editProductForm" action="#" method="POST" enctype="multipart/form-data">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="productName">Nama Produk</label>
-                            <input type="text" id="productName" name="name" class="form-control" value="" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCategory">Kategori</label>
-                            <select id="productCategory" name="category" class="form-control" required>
-                                <option value="">-- Pilih Kategori --</option>
-                                <option value="kopi" >Kopi</option>
-                                <option value="teh" >Teh</option>
-                                <option value="snack" >Snack</option>
-                                <option value="merchandise" >Merchandise</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label for="productName">Nama Produk</label>
+                        <input type="text" id="productName" name="name" class="form-control" value="" readonly>
                     </div>
-
+                    <div class="form-group">
+                        <label for="productCategory">Kategori</label>
+                        <input type="text" id="productCategory" name="category" class="form-control" value="" readonly>
+                    </div>
                     <div class="form-group">
                         <label for="productDescription">Deskripsi</label>
-                        <textarea id="productDescription" name="description" class="form-control" rows="3" required></textarea>
+                        <textarea id="productDescription" name="description" class="form-control" rows="3" readonly></textarea>
                     </div>
-
-                    <div class="form-group">
-                        <label for="productPrice">Harga (Rp)</label>
-                        <input type="number" id="productPrice" name="price" class="form-control" min="0" value="" required>
+                    <div class="form-group">   
+                        <label for="productPrice">Harga (Rp)</label> 
+                        <input type="number" id="productPrice" name="price" class="form-control" min="0" value="" readonly>
                     </div>
-
-                    <div class="form-group">
-                        <label for="productImage">Gambar Produk</label>
-                        <input type="file" id="productImage" name="image" class="form-control" accept="image/*">
-                        <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG, PNG. Maks: 2MB</p>
-                        <div id="imagePreview" style="margin-top: 10px;">
-                            <img src="" alt="Preview" style="max-width: 200px; border-radius: 8px;">
-                        </div>
-                    </div>
-
                     <div class="form-group">
                         <label for="productStatus">Status</label>
                         <select id="productStatus" name="status" class="form-control" required>

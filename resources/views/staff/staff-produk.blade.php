@@ -24,9 +24,9 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/80/80" alt="Admin Profile">
-                <div class="admin-name">Admin TOHO</div> <!-- Menggunakan class yang sudah ada -->
-                <div class="admin-role">Administrator</div> <!-- Menggunakan class yang sudah ada -->
+                <img src="/api/placeholder/80/80" alt="Staff Profile">
+                <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
+                <div class="admin-role">Staff</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
             <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
@@ -37,27 +37,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="fas fa-shopping-bag"></i>
-                        Pesanan
-                    </a>
-                </li>
-                <li>
                     <a href="#" class="active">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-users"></i>
-                        Pelanggan
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
                     </a>
                 </li>
                  <li>
@@ -75,9 +57,6 @@
                 <div class="page-title"> <!-- Menggunakan class yang sudah ada -->
                     <h2>Manajemen Produk</h2>
                 </div>
-                <button class="btn" id="addProductBtn">
-                    <i class="fas fa-plus"></i> Tambah Menu Baru
-                </button>
             </div>
 
             <!-- Product List Section -->

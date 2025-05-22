@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Produk - TOHO Coffee Admin</title>
+    <title>Manajemen Pesanan - Toho Coffee</title>
     @vite('resources/css/style.css')
 </head>
 <body>
@@ -20,7 +20,7 @@
         </div>
     </header>
 
-    <div class="product-management-container">
+    <div class="dashboard-container">
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
@@ -37,13 +37,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="#" class="active">
                         <i class="fas fa-shopping-bag"></i>
                         Pesanan
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="active">
+                    <a href="#">
                         <i class="fas fa-box"></i>
                         Produk
                     </a>
@@ -70,87 +70,87 @@
         </div>
 
         <!-- Main Content -->
-        <div class="main-content"> <!-- Menggunakan class yang sudah ada -->
-            <div class="admin-page-header"> <!-- Menggunakan class yang sudah ada -->
-                <div class="page-title"> <!-- Menggunakan class yang sudah ada -->
-                    <h2>Manajemen Produk</h2>
+        <main class="main-content">
+            <div class="admin-page-header">
+                <div class="page-title">
+                    <h2>Manajemen Pesanan</h2>
                 </div>
-                <button class="btn" id="addProductBtn">
-                    <i class="fas fa-plus"></i> Tambah Menu Baru
-                </button>
             </div>
 
-            <!-- Product List Section -->
-            <div class="product-list-section">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="search-bar">
+                    <input type="text" placeholder="Cari pesanan...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-status="all">Semua</button>
+                    <button class="filter-btn" data-status="pending">Menunggu</button>
+                    <button class="filter-btn" data-status="processing">Diproses</button>
+                    <button class="filter-btn" data-status="ready">Siap</button>
+                    <button class="filter-btn" data-status="completed">Selesai</button>
+                    <button class="filter-btn" data-status="cancelled">Dibatalkan</button>
+                </div>
+                <div class="date-filter">
+                    <input type="date" id="orderDate" class="form-control">
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="product-table-container">
                 <table class="product-table">
                     <thead>
                         <tr>
-                            <th>Gambar</th>
-                            <th>Nama Produk</th>
-                            <th>Kategori</th>
-                            <th>Harga</th>
-                            <th>Stok</th>
+                            <th>ID Pesanan</th>
+                            <th>Tanggal</th>
+                            <th>Pelanggan</th>
+                            <th>Total</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Contoh Baris Produk (akan diisi data dari backend) -->
                         <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 1"></td>
-                            <td>Arabica Gayo Premium</td>
-                            <td>Kopi</td>
-                            <td>Rp 85.000</td>
-                            <td>50</td>
-                            <td>
-                                <button class="btn status-active">Aktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                            </td>
-                        </tr>
-                         <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 2"></td>
-                            <td>Robusta Toraja Special</td>
-                            <td>Kopi</td>
-                            <td>Rp 75.000</td>
-                            <td>30</td>
-                            <td>
-                                <button class="btn status-inactive">Nonaktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                            </td>
-                        </tr>
-                         <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 3"></td>
-                            <td>TOHO Signature Blend</td>
-                            <td>Kopi</td>
-                            <td>Rp 120.000</td>
-                            <td>100</td>
-                            <td>
-                                <button class="btn status-active">Aktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
-                            </td>
-                        </tr>
-                          <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 4"></td>
-                            <td>French Press 350ml</td>
-                            <td>Merchandise</td>
+                            <td>#ORD001</td>
+                            <td>2024-03-20 14:30</td>
+                            <td>John Doe</td>
                             <td>Rp 150.000</td>
-                            <td>15</td>
-                            <td>
-                                <button class="btn status-inactive">Nonaktif</button>
-                            </td>
+                            <td><span class="status-badge status-pending">Menunggu</span></td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
+                                <button class="btn btn-secondary" onclick="viewOrderDetail('ORD001')">
+                                    <i class="fas fa-eye"></i> Detail
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD002</td>
+                            <td>2024-03-20 13:15</td>
+                            <td>Jane Smith</td>
+                            <td>Rp 85.000</td>
+                            <td><span class="status-badge status-processing">Diproses</span></td>
+                            <td class="product-actions">
+                                <button class="btn btn-secondary" onclick="viewOrderDetail('ORD002')">
+                                    <i class="fas fa-eye"></i> Detail
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#ORD003</td>
+                            <td>2024-03-20 12:45</td>
+                            <td>Mike Johnson</td>
+                            <td>Rp 200.000</td>
+                            <td><span class="status-badge status-ready">Siap</span></td>
+                            <td class="product-actions">
+                                <button class="btn btn-secondary" onclick="viewOrderDetail('ORD003')">
+                                    <i class="fas fa-eye"></i> Detail
+                                </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
             <div class="pagination">
                 <ul>
                     <li><a href="#" class="active">1</a></li>
@@ -159,7 +159,7 @@
                     <li><a href="#" class="next"><i class="fas fa-chevron-right"></i></a></li>
                 </ul>
             </div>
-        </div>
+        </main>
     </div>
 
     @vite('resources/js/script.js')

@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -76,14 +74,6 @@
             <div class="admin-page-header">
                 <div class="page-title">
                     <h2>Dashboard</h2>
-                </div>
-                <div class="date-filter">
-                    <select>
-                        <option>Hari Ini</option>
-                        <option>Minggu Ini</option>
-                        <option>Bulan Ini</option>
-                        <option>Tahun Ini</option>
-                    </select>
                 </div>
             </div>
 

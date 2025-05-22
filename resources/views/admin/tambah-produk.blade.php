@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Produk - TOHO Coffee Admin</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -104,15 +102,9 @@
                         <textarea id="productDescription" name="description" class="form-control" rows="3" required></textarea>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="productPrice">Harga (Rp)</label>
-                            <input type="number" id="productPrice" name="price" class="form-control" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="productStock">Stok</label>
-                            <input type="number" id="productStock" name="stock" class="form-control" min="0" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="productPrice">Harga (Rp)</label>
+                        <input type="number" id="productPrice" name="price" class="form-control" min="0" required>
                     </div>
 
                     <div class="form-group">

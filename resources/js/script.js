@@ -1,3 +1,5 @@
+import Chart from 'chart.js';
+
 // Toggle Menu
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
@@ -626,3 +628,93 @@ document.getElementById('addMenuForm').addEventListener('submit', function(e) {
     alert('Menu berhasil ditambahkan!');
     window.location.href = 'menu.html';
 });
+
+// Order Management Functions
+function updateOrderStatus(orderId) {
+    // Implement order status update logic
+    console.log('Updating status for order:', orderId);
+}
+
+// Initialize Charts (using Chart.js)
+document.addEventListener('DOMContentLoaded', function() {
+    // Sales Trend Chart
+    const salesTrendCtx = document.getElementById('salesTrendChart').getContext('2d');
+    new Chart(salesTrendCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'], // Replace with dynamic data
+            datasets: [{
+                label: 'Penjualan',
+                data: [65, 59, 80, 81, 56, 55], // Replace with dynamic data
+                borderColor: '#4CAF50', // Use a color from your theme if available
+                tension: 0.1,
+                fill: false // Line chart without filling area below
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+             scales: { // Example scales options
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: { // Example plugins options
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+
+    // Product Performance Chart
+    const productPerformanceCtx = document.getElementById('productPerformanceChart').getContext('2d');
+    new Chart(productPerformanceCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Espresso', 'Latte', 'Cappuccino', 'Mocha', 'Americano'], // Replace with dynamic data
+            datasets: [{
+                label: 'Jumlah Terjual',
+                data: [120, 95, 85, 70, 60], // Replace with dynamic data
+                backgroundColor: '#4CAF50' // Use a color from your theme if available
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { // Example scales options
+                y: {
+                    beginAtZero: true
+                }
+            },
+             plugins: { // Example plugins options
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+});
+
+// Print Report Function
+function printReport() {
+    window.print();
+}
+
+// Filter Report Function
+function filterReport() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    // Implement filter logic here:
+    // 1. Fetch data from backend based on startDate and endDate
+    // 2. Update the summary cards, charts, and product table with the new data
+    console.log('Filtering report from', startDate, 'to', endDate);
+    // Example: You might use fetch() API to call a backend endpoint
+    // fetch('/admin/reports/sales?start_date=' + startDate + '&end_date=' + endDate)
+    // .then(response => response.json())
+    // .then(data => {
+    //     // Update HTML elements with data
+    //     document.querySelector('.summary-cards .card:nth-child(1) .card-value').innerText = data.totalSales;
+    //     // Update charts and table data
+    // });
+}
