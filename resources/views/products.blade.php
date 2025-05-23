@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Menu - TOHO</title>
     @vite('resources/css/style.css')
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                <img src="" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -69,7 +67,7 @@
             <!-- Product 1 -->
             <div class="product-card" data-category="coffee">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Espresso">
+                    <img src="" alt="Espresso">
                 </div>
                 <div class="product-info">
                     <h4>Espresso</h4>
@@ -82,7 +80,7 @@
             <!-- Product 2 -->
             <div class="product-card" data-category="coffee">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Cappuccino">
+                    <img src="" alt="Cappuccino">
                 </div>
                 <div class="product-info">
                     <h4>Cappuccino</h4>
@@ -95,7 +93,7 @@
             <!-- Product 3 -->
             <div class="product-card" data-category="coffee">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Latte">
+                    <img src="" alt="Latte">
                 </div>
                 <div class="product-info">
                     <h4>Cafe Latte</h4>
@@ -108,7 +106,7 @@
             <!-- Product 4 -->
             <div class="product-card" data-category="non-coffee">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Matcha Latte">
+                    <img src="" alt="Matcha Latte">
                 </div>
                 <div class="product-info">
                     <h4>Matcha Latte</h4>
@@ -121,7 +119,7 @@
             <!-- Product 5 -->
             <div class="product-card" data-category="food">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Chicken Sandwich">
+                    <img src="" alt="Chicken Sandwich">
                 </div>
                 <div class="product-info">
                     <h4>Chicken Sandwich</h4>
@@ -134,7 +132,7 @@
             <!-- Product 6 -->
             <div class="product-card" data-category="pastry">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Croissant">
+                    <img src="" alt="Croissant">
                 </div>
                 <div class="product-info">
                     <h4>Butter Croissant</h4>
@@ -147,7 +145,7 @@
             <!-- Product 7 -->
             <div class="product-card" data-category="coffee">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Americano">
+                    <img src="" alt="Americano">
                 </div>
                 <div class="product-info">
                     <h4>Americano</h4>
@@ -160,7 +158,7 @@
             <!-- Product 8 -->
             <div class="product-card" data-category="non-coffee">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/280" alt="Hot Chocolate">
+                    <img src="" alt="Hot Chocolate">
                 </div>
                 <div class="product-info">
                     <h4>Hot Chocolate</h4>
@@ -185,7 +183,7 @@
         <div class="footer-content">
             <div class="footer-column">
                 <div class="logo">
-                    <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                    <img src="" alt="Toho Coffee Logo">
                     <h1>Toho Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>

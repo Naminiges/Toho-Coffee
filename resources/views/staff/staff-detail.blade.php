@@ -10,7 +10,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -23,7 +23,7 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/80/80" alt="Staff Profile">
+                <img src="" alt="Staff Profile">
                 <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Barista</div> <!-- Menggunakan class yang sudah ada -->
             </div>
@@ -127,7 +127,7 @@
                         <div class="order-items-list">
                             <div class="order-item">
                                 <div class="item-image">
-                                    <img src="/api/placeholder/80/80" alt="Product Image">
+                                    <img src="" alt="Product Image">
                                 </div>
                                 <div class="item-details">
                                     <h4>Kopi Arabika Single Origin</h4>
@@ -138,7 +138,7 @@
                             </div>
                              <div class="order-item">
                                 <div class="item-image">
-                                    <img src="/api/placeholder/80/80" alt="Product Image">
+                                    <img src="" alt="Product Image">
                                 </div>
                                 <div class="item-details">
                                     <h4>Pastry Cokelat</h4>
@@ -219,7 +219,7 @@
                     <div class="order-info-card qr-code-container">
                          <h3>Kode QR Pesanan</h3>
                         <div class="qr-code">
-                            <img src="/api/placeholder/150/150" alt="QR Code">
+                            <img src="" alt="QR Code">
                             <p>Scan QR code untuk verifikasi pesanan.</p>
                         </div>
                     </div>

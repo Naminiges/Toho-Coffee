@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -21,7 +19,6 @@
                 <li><a href="#products">Produk</a></li>
             </ul>
             <div class="nav-actions">
-                <i class="fas fa-search search-icon"></i>
                 <i class="fas fa-shopping-cart cart-icon">
                     <span class="cart-count">3</span>
                 </i>
@@ -115,7 +112,7 @@
                 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="Arabica Gayo">
+                        <img src="" alt="Arabica Gayo">
                     </div>
                     <div class="item-details">
                         <h4>Arabica Gayo Premium</h4>
@@ -127,7 +124,7 @@
 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="Robusta Toraja">
+                        <img src="" alt="Robusta Toraja">
                     </div>
                     <div class="item-details">
                         <h4>Robusta Toraja Special</h4>
@@ -139,7 +136,7 @@
 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="TOHO Blend">
+                        <img src="" alt="TOHO Blend">
                     </div>
                     <div class="item-details">
                         <h4>TOHO Signature Blend</h4>

@@ -11,7 +11,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,7 +24,7 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/80/80" alt="Admin Profile">
+                <img src="" alt="Admin Profile">
                 <div class="admin-name">Admin TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Administrator</div> <!-- Menggunakan class yang sudah ada -->
             </div>
@@ -97,7 +97,7 @@
                     <tbody>
                         <!-- Contoh Baris Produk (akan diisi data dari backend) -->
                         <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 1"></td>
+                            <td><img src="" alt="Produk 1"></td>
                             <td>Arabica Gayo Premium</td>
                             <td>Kopi</td>
                             <td>Rp 85.000</td>
@@ -110,7 +110,7 @@
                             </td>
                         </tr>
                          <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 2"></td>
+                            <td><img src="" alt="Produk 2"></td>
                             <td>Robusta Toraja Special</td>
                             <td>Kopi</td>
                             <td>Rp 75.000</td>
@@ -123,7 +123,7 @@
                             </td>
                         </tr>
                          <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 3"></td>
+                            <td><img src="" alt="Produk 3"></td>
                             <td>TOHO Signature Blend</td>
                             <td>Kopi</td>
                             <td>Rp 120.000</td>
@@ -136,7 +136,7 @@
                             </td>
                         </tr>
                           <tr>
-                            <td><img src="/api/placeholder/50/50" alt="Produk 4"></td>
+                            <td><img src="" alt="Produk 4"></td>
                             <td>French Press 350ml</td>
                             <td>Merchandise</td>
                             <td>Rp 150.000</td>

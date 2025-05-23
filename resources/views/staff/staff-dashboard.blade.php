@@ -11,7 +11,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,7 +24,7 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/80/80" alt="Staff Profile">
+                <img src="" alt="Staff Profile">
                 <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Barista</div> <!-- Menggunakan class yang sudah ada -->
             </div>

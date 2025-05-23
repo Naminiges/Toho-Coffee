@@ -13,15 +13,14 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Beranda</a></li>
-                <li><a href="menu.html">Menu</a></li>
+                <li><a href="menu.html">Produk</a></li>
             </ul>
             <div class="nav-actions">
-                <i class="fas fa-search search-icon"></i>
                 <i class="fas fa-shopping-cart cart-icon">
                     <span class="cart-count">3</span>
                 </i>
@@ -52,7 +51,7 @@
             <div class="profile-sidebar">
                 <div class="profile-header">
                     <div class="profile-avatar">
-                        <img src="/api/placeholder/120/120" alt="Profile Picture">
+                        <img src="" alt="Profile Picture">
                     </div>
                     <h3 class="profile-name">John Doe</h3>
                     <p class="profile-email">john.doe@example.com</p>

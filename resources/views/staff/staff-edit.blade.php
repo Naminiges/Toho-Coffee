@@ -11,7 +11,7 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,7 +24,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="/api/placeholder/80/80" alt="Admin Profile">
+                <img src="" alt="Admin Profile">
                 <div class="admin-name">Staff TOHO</div>
                 <div class="admin-role">Staff</div>
             </div>

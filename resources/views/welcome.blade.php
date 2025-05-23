@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toho Coffee - Nikmati Kopi Premium</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     @vite('resources/css/style.css')
 </head>
 <body>
@@ -13,7 +12,7 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                <img src="" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -80,7 +79,7 @@
                             </div>
                         </div>
                     </div>
-                @else
+                @else 
                     <div class="auth-links">
                         <a href="{{ route('login') }}" class="login-btn">Masuk</a>
                         <a href="{{ route('register') }}" class="register-btn">Daftar</a>
@@ -150,7 +149,7 @@
             <!-- Produk 1 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/250" alt="Arabica Premium">
+                    <img src="" alt="Arabica Premium">
                 </div>
                 <div class="product-info">
                     <h4>Arabica Premium</h4>
@@ -162,7 +161,7 @@
             <!-- Produk 2 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/250" alt="Robusta Gold">
+                    <img src="" alt="Robusta Gold">
                 </div>
                 <div class="product-info">
                     <h4>Robusta Gold</h4>
@@ -174,7 +173,7 @@
             <!-- Produk 3 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/250" alt="Toho Signature Blend">
+                    <img src="" alt="Toho Signature Blend">
                 </div>
                 <div class="product-info">
                     <h4>Toho Signature Blend</h4>
@@ -186,7 +185,7 @@
             <!-- Produk 4 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="/api/placeholder/300/250" alt="Single Origin Aceh Gayo">
+                    <img src="" alt="Single Origin Aceh Gayo">
                 </div>
                 <div class="product-info">
                     <h4>Single Origin Aceh Gayo</h4>
@@ -201,7 +200,7 @@
     <!-- About Section -->
     <section class="about" id="about">
         <div class="about-image">
-            <img src="/api/placeholder/600/400" alt="About Toho Coffee">
+            <img src="" alt="About Toho Coffee">
         </div>
         <div class="about-content">
             <h3>Tentang Toho Coffee</h3>
@@ -243,7 +242,7 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
-                            <img src="/api/placeholder/60/60" alt="Budi Santoso">
+                            <img src="" alt="Budi Santoso">
                         </div>
                         <div class="author-info">
                             <h5>Budi Santoso</h5>
@@ -258,7 +257,7 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
-                            <img src="/api/placeholder/60/60" alt="Ani Wijaya">
+                            <img src="" alt="Ani Wijaya">
                         </div>
                         <div class="author-info">
                             <h5>Ani Wijaya</h5>
@@ -273,7 +272,7 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
-                            <img src="/api/placeholder/60/60" alt="Dimas Purnomo">
+                            <img src="" alt="Dimas Purnomo">
                         </div>
                         <div class="author-info">
                             <h5>Dimas Purnomo</h5>
@@ -304,7 +303,7 @@
         <div class="footer-content">
             <div class="footer-column">
                 <div class="logo">
-                    <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                    <img src="" alt="Toho Coffee Logo">
                     <h1>Toho Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>
@@ -364,7 +363,7 @@
     </a>
 
     <!-- JavaScript -->
-    @vite('resources/js/app.js')
+    @vite('resources/js/script.js')
 
     <script>
         // Setup CSRF token for AJAX requests
@@ -503,554 +502,5 @@
             }
         });
     </script>
-
-    <style>
-        /* User Menu Styles */
-        .user-menu {
-            position: relative;
-        }
-
-        .user-trigger {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 16px;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: #2c3e50;
-            min-width: 200px;
-        }
-
-        .user-trigger:hover {
-            background: #e9ecef;
-            border-color: #dee2e6;
-            text-decoration: none;
-            color: #2c3e50;
-        }
-
-        .user-trigger.active {
-            background: #e9ecef;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-        }
-
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2c3e50;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 120px;
-        }
-
-        .user-email {
-            font-size: 12px;
-            color: #6c757d;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 120px;
-        }
-
-        .dropdown-arrow {
-            font-size: 12px;
-            color: #6c757d;
-            transition: transform 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .user-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            min-width: 280px;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            margin-top: 8px;
-        }
-
-        .user-dropdown.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            background: #f8f9fa;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .user-avatar-large {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .user-details {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .user-name-large {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-email-small {
-            font-size: 14px;
-            color: #6c757d;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .dropdown-divider {
-            height: 1px;
-            background: #e9ecef;
-            margin: 0;
-        }
-
-        .dropdown-menu {
-            list-style: none;
-            padding: 8px 0;
-            margin: 0;
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 20px;
-            color: #2c3e50;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-item:hover {
-            background: #f8f9fa;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .dropdown-item i {
-            width: 16px;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .dropdown-footer {
-            padding: 12px 20px 20px;
-        }
-
-        .logout-btn {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: #c82333;
-            transform: translateY(-1px);
-        }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            backdrop-filter: blur(2px);
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-            margin: 20px;
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 24px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: #6c757d;
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .modal-close:hover {
-            background: #f8f9fa;
-            color: #2c3e50;
-        }
-
-        .modal-body {
-            padding: 24px;
-            text-align: center;
-        }
-
-        .modal-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: #fff3cd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px;
-        }
-
-        .modal-icon i {
-            font-size: 24px;
-            color: #856404;
-        }
-
-        .modal-body p {
-            margin: 0;
-            font-size: 16px;
-            color: #2c3e50;
-            line-height: 1.5;
-        }
-
-        .modal-footer {
-            display: flex;
-            gap: 12px;
-            padding: 20px 24px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #c82333;
-        }
-
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .btn-loader {
-            display: none;
-        }
-
-        /* Alert Styles */
-        .alert-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 3000;
-            animation: slideInRight 0.3s ease;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .alert {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 300px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .alert:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 4px solid #28a745;
-        }
-
-        .alert-error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 4px solid #dc3545;
-        }
-
-        .alert-warning {
-            background: #fff3cd;
-            color: #856404;
-            border-left: 4px solid #ffc107;
-        }
-
-        .alert-icon {
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .alert-text {
-            font-size: 14px;
-            font-weight: 500;
-            flex-grow: 1;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .user-trigger {
-                min-width: auto;
-                padding: 8px 12px;
-            }
-
-            .user-info {
-                display: none;
-            }
-
-            .user-dropdown {
-                right: -20px;
-                min-width: 260px;
-            }
-
-            .modal-content {
-                margin: 20px 16px;
-            }
-
-            .alert-container {
-                right: 16px;
-                left: 16px;
-            }
-
-            .alert {
-                min-width: auto;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .user-dropdown {
-                right: -40px;
-                min-width: 240px;
-            }
-
-            .dropdown-header {
-                padding: 16px;
-            }
-
-            .user-name-large {
-                font-size: 14px;
-            }
-
-            .user-email-small {
-                font-size: 12px;
-            }
-
-            .dropdown-item {
-                padding: 10px 16px;
-            }
-
-            .dropdown-footer {
-                padding: 12px 16px 16px;
-            }
-        }
-
-        /* Additional Navigation Styles */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .auth-links {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .login-btn, .register-btn {
-            padding: 8px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .login-btn {
-            color: #007bff;
-            border: 1px solid #007bff;
-            background: transparent;
-        }
-
-        .login-btn:hover {
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-        }
-
-        .register-btn {
-            background: #007bff;
-            color: white;
-            border: 1px solid #007bff;
-        }
-
-        .register-btn:hover {
-            background: #0056b3;
-            border-color: #0056b3;
-            text-decoration: none;
-        }
-
-        /* Hamburger Menu Styles */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 4px;
-        }
-
-        .hamburger div {
-            width: 25px;
-            height: 3px;
-            background: #2c3e50;
-            transition: all 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-        }
-    </style>
 </body>
 </html>

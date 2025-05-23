@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Pesanan - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -21,7 +19,6 @@
                 <li><a href="#products">Produk</a></li>
             </ul>
             <div class="nav-actions">
-                <i class="fas fa-search search-icon"></i>
                 <i class="fas fa-shopping-cart cart-icon">
                     <span class="cart-count">3</span>
                 </i>
@@ -119,7 +116,7 @@
                     <div class="order-items-list">
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="/api/placeholder/80/80" alt="Arabica Gayo">
+                                <img src="" alt="Arabica Gayo">
                             </div>
                             <div class="item-details">
                                 <h4>Arabica Gayo Premium</h4>
@@ -129,7 +126,7 @@
                         </div>
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="/api/placeholder/80/80" alt="Robusta Toraja">
+                                <img src="" alt="Robusta Toraja">
                             </div>
                             <div class="item-details">
                                 <h4>Robusta Toraja Special</h4>
@@ -165,7 +162,7 @@
             <div class="order-detail-sidebar">
                 <!-- QR Code -->
                 <div class="qr-code">
-                    <img src="/api/placeholder/200/200" alt="QR Code">
+                    <img src="" alt="QR Code">
                     <p>Tunjukkan QR Code ini saat mengambil pesanan</p>
                 </div>
 
