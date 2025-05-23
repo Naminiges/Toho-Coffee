@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Produk Kopi - TOHO</title>
     @vite('resources/css/style.css')
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                <img src="" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -70,7 +68,7 @@
             <!-- Product 1 -->
             <div class="product-card" data-category="arabica">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Arabica Aceh Gayo">
+                    <img src="" alt="Arabica Aceh Gayo">
                 </div>
                 <div class="product-info">
                     <h4>Arabica Aceh Gayo</h4>
@@ -83,7 +81,7 @@
             <!-- Product 2 -->
             <div class="product-card" data-category="robusta">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Robusta Lampung">
+                    <img src="" alt="Robusta Lampung">
                 </div>
                 <div class="product-info">
                     <h4>Robusta Lampung</h4>
@@ -96,7 +94,7 @@
             <!-- Product 3 -->
             <div class="product-card" data-category="blend">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="House Blend">
+                    <img src="" alt="House Blend">
                 </div>
                 <div class="product-info">
                     <h4>House Blend</h4>
@@ -109,7 +107,7 @@
             <!-- Product 4 -->
             <div class="product-card" data-category="single-origin">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Toraja Kalosi">
+                    <img src="" alt="Toraja Kalosi">
                 </div>
                 <div class="product-info">
                     <h4>Toraja Kalosi</h4>
@@ -122,7 +120,7 @@
             <!-- Product 5 -->
             <div class="product-card" data-category="arabica">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Arabica Java Preanger">
+                    <img src="" alt="Arabica Java Preanger">
                 </div>
                 <div class="product-info">
                     <h4>Arabica Java Preanger</h4>
@@ -135,7 +133,7 @@
             <!-- Product 6 -->
             <div class="product-card" data-category="robusta">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Robusta Temanggung">
+                    <img src="" alt="Robusta Temanggung">
                 </div>
                 <div class="product-info">
                     <h4>Robusta Temanggung</h4>
@@ -148,7 +146,7 @@
             <!-- Product 7 -->
             <div class="product-card" data-category="blend">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Morning Blend">
+                    <img src="" alt="Morning Blend">
                 </div>
                 <div class="product-info">
                     <h4>Morning Blend</h4>
@@ -161,7 +159,7 @@
             <!-- Product 8 -->
             <div class="product-card" data-category="single-origin">
                 <div class="product-image">
-                    <img src="/api/placeholder/280/250" alt="Flores Bajawa">
+                    <img src="" alt="Flores Bajawa">
                 </div>
                 <div class="product-info">
                     <h4>Flores Bajawa</h4>

@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lupa Password - Green Garden</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    @vite('resources/css/style.css')">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                <img src="" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -94,7 +92,7 @@
         <div class="footer-content">
             <div class="footer-column">
                 <div class="logo">
-                    <img src="/api/placeholder/40/40" alt="Toho Coffee Logo">
+                    <img src="" alt="Toho Coffee Logo">
                     <h1>Toho Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>

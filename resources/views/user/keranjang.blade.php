@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Keranjang Belanja - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
@@ -21,7 +20,6 @@
                 <li><a href="#products">Produk</a></li>
             </ul>
             <div class="nav-actions">
-                <i class="fas fa-search search-icon"></i>
                 <i class="fas fa-shopping-cart cart-icon">
                     <span class="cart-count">3</span>
                 </i>
@@ -54,7 +52,7 @@
                 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="Arabica Gayo">
+                        <img src="" alt="Arabica Gayo">
                     </div>
                     <div class="item-details">
                         <h4>Arabica Gayo Premium</h4>
@@ -76,7 +74,7 @@
 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="Robusta Toraja">
+                        <img src="" alt="Robusta Toraja">
                     </div>
                     <div class="item-details">
                         <h4>Robusta Toraja Special</h4>
@@ -98,7 +96,7 @@
 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="TOHO Blend">
+                        <img src="" alt="TOHO Blend">
                     </div>
                     <div class="item-details">
                         <h4>TOHO Signature Blend</h4>
@@ -182,7 +180,7 @@
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
+                        <img src="" alt="TOHO Coffee">
                     </div>
                     <div class="product-info">
                         <h4>TOHO Coffee Drip Bag</h4>
@@ -194,7 +192,7 @@
                 
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
+                        <img src="" alt="TOHO Coffee">
                     </div>
                     <div class="product-info">
                         <h4>Pour Over Set</h4>
@@ -206,7 +204,7 @@
                 
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
+                        <img src="" alt="TOHO Coffee">
                     </div>
                     <div class="product-info">
                         <h4>TOHO Tumbler</h4>
@@ -218,7 +216,7 @@
                 
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
+                        <img src="" alt="TOHO Coffee">
                     </div>
                     <div class="product-info">
                         <h4>Manual Grinder</h4>
@@ -286,7 +284,34 @@
         <i class="fas fa-arrow-up"></i>
     </a>
 
-    <!-- Custom JS -->
-    @vite('resources/js/script.css')
+    @vite('resources/js/script.js')
+    <script>
+        // Quantity selector
+        const decreaseBtn = document.querySelector('.quantity-btn.decrease');
+        const increaseBtn = document.querySelector('.quantity-btn.increase');
+        const quantityInput = document.querySelector('.quantity-input');
+        
+        if (decreaseBtn && increaseBtn && quantityInput) {
+            decreaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+            
+            increaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+            
+            // Ensure quantity is always valid
+            quantityInput.addEventListener('change', function() {
+                let value = parseInt(this.value);
+                if (isNaN(value) || value < 1) {
+                    this.value = 1;
+                }
+            });
+        }
+    </script>
 </body>
 </html>

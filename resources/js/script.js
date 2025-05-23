@@ -200,33 +200,6 @@ function initProductDetail() {
         });
     }
     
-    // Quantity selector
-    const decreaseBtn = document.querySelector('.quantity-btn.decrease');
-    const increaseBtn = document.querySelector('.quantity-btn.increase');
-    const quantityInput = document.querySelector('.quantity-input');
-    
-    if (decreaseBtn && increaseBtn && quantityInput) {
-        decreaseBtn.addEventListener('click', function() {
-            const currentValue = parseInt(quantityInput.value);
-            if (currentValue > 1) {
-                quantityInput.value = currentValue - 1;
-            }
-        });
-        
-        increaseBtn.addEventListener('click', function() {
-            const currentValue = parseInt(quantityInput.value);
-            quantityInput.value = currentValue + 1;
-        });
-        
-        // Ensure quantity is always valid
-        quantityInput.addEventListener('change', function() {
-            let value = parseInt(this.value);
-            if (isNaN(value) || value < 1) {
-                this.value = 1;
-            }
-        });
-    }
-    
     // Product Tabs
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');

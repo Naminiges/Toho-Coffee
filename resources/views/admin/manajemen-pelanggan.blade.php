@@ -10,7 +10,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -23,7 +23,7 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="/api/placeholder/80/80" alt="Admin Profile">
+                <img src="" alt="Admin Profile">
                 <div class="admin-name">Admin TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Administrator</div> <!-- Menggunakan class yang sudah ada -->
             </div>
