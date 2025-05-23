@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toho Coffee - Nikmati Kopi Premium</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     @vite('resources/css/style.css')
 </head>
@@ -21,8 +22,63 @@
             </ul>
             <div class="nav-actions">
                 @auth
-                    <div class="user-icon">
-                        <i class="fas fa-user"></i>
+                    <!-- User Menu Dropdown -->
+                    <div class="user-menu">
+                        <div class="user-trigger" onclick="toggleUserMenu()">
+                            <div class="user-avatar">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">{{ Auth::user()->name }}</span>
+                                <span class="user-email">{{ Auth::user()->email }}</span>
+                            </div>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="dropdown-header">
+                                <div class="user-avatar-large">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-large">{{ Auth::user()->name }}</div>
+                                    <div class="user-email-small">{{ Auth::user()->email }}</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('profile') }}" class="dropdown-item">
+                                        <i class="fas fa-user"></i>
+                                        <span>Profile Saya</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        <span>Pesanan Saya</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fas fa-heart"></i>
+                                        <span>Favorit</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="dropdown-item">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Pengaturan</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-footer">
+                                <button onclick="confirmLogout()" class="logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Keluar</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 @else
                     <div class="auth-links">
@@ -38,6 +94,41 @@
             </div>
         </div>
     </header>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Konfirmasi Logout</h3>
+                <button class="modal-close" onclick="closeLogoutModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <p>Apakah Anda yakin ingin keluar dari akun Anda?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLogoutModal()">Batal</button>
+                <button class="btn btn-danger" onclick="performLogout()" id="confirmLogoutBtn">
+                    <span class="btn-text">Ya, Keluar</span>
+                    <span class="btn-loader" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Memproses...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Alert -->
+    <div class="alert-container" id="alertContainer" style="display: none;">
+        <div class="alert" id="alertMessage">
+            <i class="alert-icon"></i>
+            <span class="alert-text"></span>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -274,5 +365,692 @@
 
     <!-- JavaScript -->
     @vite('resources/js/app.js')
+
+    <script>
+        // Setup CSRF token for AJAX requests
+        window.Laravel = {
+            csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        };
+
+        // User Menu Functions
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            const trigger = document.querySelector('.user-trigger');
+            const arrow = document.querySelector('.dropdown-arrow');
+            
+            dropdown.classList.toggle('show');
+            trigger.classList.toggle('active');
+            
+            if (dropdown.classList.contains('show')) {
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (userMenu && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+                document.querySelector('.user-trigger').classList.remove('active');
+                document.querySelector('.dropdown-arrow').style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Logout Functions
+        function confirmLogout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+            // Close user dropdown
+            document.getElementById('userDropdown').classList.remove('show');
+            document.querySelector('.user-trigger').classList.remove('active');
+            document.querySelector('.dropdown-arrow').style.transform = 'rotate(0deg)';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function performLogout() {
+            const confirmBtn = document.getElementById('confirmLogoutBtn');
+            const btnText = confirmBtn.querySelector('.btn-text');
+            const btnLoader = confirmBtn.querySelector('.btn-loader');
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            confirmBtn.disabled = true;
+            
+            // Create form for logout
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("logout") }}';
+            
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = window.Laravel.csrfToken;
+            form.appendChild(csrfInput);
+            
+            // Add to DOM and submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Alert Functions
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertMessage = document.getElementById('alertMessage');
+            const alertIcon = alertMessage.querySelector('.alert-icon');
+            const alertText = alertMessage.querySelector('.alert-text');
+            
+            // Set alert content
+            alertText.textContent = message;
+            alertMessage.className = `alert alert-${type}`;
+            
+            // Set icon based on type
+            if (type === 'success') {
+                alertIcon.className = 'alert-icon fas fa-check-circle';
+            } else if (type === 'error') {
+                alertIcon.className = 'alert-icon fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                alertIcon.className = 'alert-icon fas fa-exclamation-triangle';
+            }
+            
+            // Show alert
+            alertContainer.style.display = 'flex';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alertContainer.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message if exists
+        @if(session('success'))
+            showAlert('success', '{{ session("success") }}');
+        @endif
+
+        // Show error message if exists
+        @if(session('error'))
+            showAlert('error', '{{ session("error") }}');
+        @endif
+
+        // Close alert when clicking on it
+        document.getElementById('alertContainer').addEventListener('click', function() {
+            this.style.display = 'none';
+        });
+
+        // Prevent modal from closing when clicking inside modal content
+        document.querySelector('.modal-content').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Close modal when clicking on overlay
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLogoutModal();
+            }
+        });
+    </script>
+
+    <style>
+        /* User Menu Styles */
+        .user-menu {
+            position: relative;
+        }
+
+        .user-trigger {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #2c3e50;
+            min-width: 200px;
+        }
+
+        .user-trigger:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+
+        .user-trigger.active {
+            background: #e9ecef;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #6c757d;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        .dropdown-arrow {
+            font-size: 12px;
+            color: #6c757d;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .user-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f8f9fa;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .user-avatar-large {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .user-details {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .user-name-large {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-email-small {
+            font-size: 14px;
+            color: #6c757d;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 0;
+        }
+
+        .dropdown-menu {
+            list-style: none;
+            padding: 8px 0;
+            margin: 0;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9fa;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .dropdown-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .dropdown-footer {
+            padding: 12px 20px 20px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            margin: 20px;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: #f8f9fa;
+            color: #2c3e50;
+        }
+
+        .modal-body {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .modal-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #fff3cd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+
+        .modal-icon i {
+            font-size: 24px;
+            color: #856404;
+        }
+
+        .modal-body p {
+            margin: 0;
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            padding: 20px 24px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-loader {
+            display: none;
+        }
+
+        /* Alert Styles */
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 3000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 300px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .alert:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .alert-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .alert-text {
+            font-size: 14px;
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .user-trigger {
+                min-width: auto;
+                padding: 8px 12px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .user-dropdown {
+                right: -20px;
+                min-width: 260px;
+            }
+
+            .modal-content {
+                margin: 20px 16px;
+            }
+
+            .alert-container {
+                right: 16px;
+                left: 16px;
+            }
+
+            .alert {
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-dropdown {
+                right: -40px;
+                min-width: 240px;
+            }
+
+            .dropdown-header {
+                padding: 16px;
+            }
+
+            .user-name-large {
+                font-size: 14px;
+            }
+
+            .user-email-small {
+                font-size: 12px;
+            }
+
+            .dropdown-item {
+                padding: 10px 16px;
+            }
+
+            .dropdown-footer {
+                padding: 12px 16px 16px;
+            }
+        }
+
+        /* Additional Navigation Styles */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .auth-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .login-btn, .register-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            color: #007bff;
+            border: 1px solid #007bff;
+            background: transparent;
+        }
+
+        .login-btn:hover {
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+        }
+
+        .register-btn {
+            background: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .register-btn:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+            text-decoration: none;
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+    </style>
 </body>
 </html>
