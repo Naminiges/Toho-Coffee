@@ -11,7 +11,7 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,7 +24,7 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="" alt="Admin Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
                 <div class="admin-name">Admin TOHO</div>
                 <div class="admin-role">Administrator</div>
             </div>
@@ -196,6 +196,6 @@
         </div>
     </div>
 
-    @vite('resources/js/script.js')
+    @vite(['resources/js/script.js'])
 </body>
 </html>

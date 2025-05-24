@@ -11,12 +11,12 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="Toho Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
                 <li><a href="{{ route('welcome') }}">Beranda</a></li>
-                <li><a href="#products">Produk</a></li>
+                <li><a href="{{ route('products') }}">Produk</a></li>
             </ul>
             <div class="nav-actions">
                 <div class="auth-links">
@@ -102,14 +102,6 @@
                 <span class="error-message" id="password-match-error"></span>
             </div>
 
-            <div class="form-group">
-                <label class="checkbox-container">
-                    <input type="checkbox" id="terms" required>
-                    <span class="checkmark"></span>
-                    Saya setuju dengan <a href="#" class="terms-link">Syarat dan Ketentuan</a> yang berlaku
-                </label>
-            </div>
-
             <button type="submit" class="btn btn-block" id="register-btn">
                 <span class="btn-text">Daftar Sekarang</span>
                 <span class="btn-loader" style="display: none;">
@@ -144,53 +136,34 @@
         <div class="footer-content">
             <div class="footer-column">
                 <div class="logo">
-                    <img src="" alt="Toho Coffee Logo">
+                    <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
                     <h1>Toho Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/tohocoffee.id/"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
             <div class="footer-column">
                 <h4>Informasi</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Produk</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Cara Pemesanan</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="{{ route('products') }}">Produk</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Layanan Pelanggan</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Hubungi Kami</a></li>
-                    <li><a href="#">Kebijakan Pengembalian</a></li>
-                    <li><a href="#">Syarat dan Ketentuan</a></li>
-                    <li><a href="#">Kebijakan Privasi</a></li>
-                    <li><a href="#">Metode Pembayaran</a></li>
+                    <li><a href="https://wa.me/6281397306005">Hubungi Kami</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Kontak Kami</h4>
                 <ul class="contact-info">
-                    <li><span><i class="fas fa-map-marker-alt"></i></span> Jl. Kopi No. 123, Jakarta Selatan</li>
-                    <li><span><i class="fas fa-phone"></i></span> +62 21 1234 5678</li>
-                    <li><span><i class="fas fa-envelope"></i></span> info@tohocoffee.com</li>
+                    <li><span><i class="fas fa-map-marker-alt"></i></span> Universitas Sumatera Utara</li>
+                    <li><span><i class="fas fa-phone"></i></span> +62 813-9730-6005</li>
                     <li><span><i class="fas fa-clock"></i></span> Senin - Jumat: 08.00 - 17.00</li>
                 </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Newsletter</h4>
-                <p>Berlangganan newsletter kami untuk mendapatkan info dan penawaran terbaru.</p>
-                <div class="newsletter">
-                    <input type="email" placeholder="Email Anda...">
-                    <button>Berlangganan</button>
-                </div>
             </div>
         </div>
         <div class="copyright">
