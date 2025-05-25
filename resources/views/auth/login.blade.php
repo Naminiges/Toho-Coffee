@@ -16,8 +16,14 @@
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
+                @auth
                 <li><a href="{{ route('welcome') }}">Beranda</a></li>
-                <li><a href="{{ route('products') }}">Produk</a></li>
+                <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+                <li><a href="{{ route('user-riwayat') }}">Riwayat</a></li>
+                @else
+                <li><a href="{{ route('welcome') }}">Beranda</a></li>
+                <li><a href="{{ route('products') }}">Katalog</a></li>
+                @endauth
             </ul>
             <div class="nav-actions">
                 <div class="auth-links">
@@ -104,7 +110,7 @@
             <div class="footer-column">
                 <h4>Informasi</h4>
                 <ul class="footer-links">
-                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="{{ route('products') }}">Tentang Kami</a></li>
                     <li><a href="{{ route('products') }}">Produk</a></li>
                 </ul>
             </div>

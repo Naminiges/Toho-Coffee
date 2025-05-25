@@ -16,12 +16,24 @@
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
+                @auth
                 <li><a href="{{ route('welcome') }}">Beranda</a></li>
-                <li><a href="{{ route('products') }}">Produk</a></li>
+                <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+                <li><a href="{{ route('user-riwayat') }}">Riwayat</a></li>
+                @else
+                <li><a href="{{ route('welcome') }}">Beranda</a></li>
+                <li><a href="{{ route('products') }}">Katalog</a></li>
+                @endauth
             </ul>
             <div class="nav-actions">
                 @auth
                     <!-- User Menu Dropdown -->
+                    <div class="cart-icon">
+                        <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </div>
                     <div class="user-menu">
                         <div class="user-trigger" onclick="toggleUserMenu()">
                             <div class="user-avatar">
@@ -52,7 +64,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('user.keranjang') }}" class="dropdown-item">
+                                    <a href="{{ route('user-keranjang') }}" class="dropdown-item">
                                         <i class="fas fa-shopping-bag"></i>
                                         <span>Pesanan Saya</span>
                                     </a>
@@ -294,7 +306,7 @@
             <div class="footer-column">
                 <h4>Informasi</h4>
                 <ul class="footer-links">
-                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="{{ route('welcome') }}">Tentang Kami</a></li>
                     <li><a href="{{ route('products') }}">Produk</a></li>
                 </ul>
             </div>

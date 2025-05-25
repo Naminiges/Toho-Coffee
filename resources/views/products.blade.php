@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Menu - TOHO</title>
+    <title>Daftar Produk - TOHO</title>
     @vite('resources/css/style.css')
 </head>
 <body>
@@ -15,8 +15,14 @@
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
+                @auth
                 <li><a href="{{ route('welcome') }}">Beranda</a></li>
-                <li><a href="{{ route('products') }}">Produk</a></li>
+                <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+                <li><a href="{{ route('user-riwayat') }}">Riwayat</a></li>
+                @else
+                <li><a href="{{ route('welcome') }}">Beranda</a></li>
+                <li><a href="{{ route('products') }}">Katalog</a></li>
+                @endauth
             </ul>
             <div class="nav-actions">
                 @auth
@@ -51,7 +57,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('user.keranjang') }}" class="dropdown-item">
+                                    <a href="{{ route('user-keranjang') }}" class="dropdown-item">
                                         <i class="fas fa-shopping-bag"></i>
                                         <span>Pesanan Saya</span>
                                     </a>
@@ -125,7 +131,7 @@
     <div class="container">
         <ul class="breadcrumb">
             <li><a href="{{ route('welcome') }}">Beranda</a></li>
-            <li><a href="{{ route('products') }}">Produk</a></li>
+            <li>Katalog</li>
         </ul>
 
         <div class="menu-filters">
@@ -136,7 +142,7 @@
 
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Cari menu favorit Anda...">
+            <input type="text" placeholder="Cari produk favorit Anda...">
         </div>
 
         <div class="menu-grid products-grid">
@@ -254,7 +260,7 @@
             <div class="footer-column">
                 <h4>Informasi</h4>
                 <ul class="footer-links">
-                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="{{ route('products') }}">Tentang Kami</a></li>
                     <li><a href="{{ route('products') }}">Produk</a></li>
                 </ul>
             </div>

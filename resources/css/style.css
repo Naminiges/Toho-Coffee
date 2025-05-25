@@ -1336,7 +1336,6 @@ input:read-only , textarea:read-only {
 
 .item-quantity {
     flex: 1;
-    text-align: center;
 }
 
 .item-subtotal {
