@@ -162,8 +162,7 @@
         </div>
 
         <div class="footer">
-            <strong>Terms & Conditions:</strong><br>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu risus vitae lacus tincidunt facilisis.
+            <strong>@2025 TOHO Coffee</strong><br>
         </div>
     </div>
 </body>
