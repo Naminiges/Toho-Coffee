@@ -63,6 +63,41 @@
         </div>
     </header>
 
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Konfirmasi Logout</h3>
+                <button class="modal-close" onclick="closeLogoutModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <p>Apakah Anda yakin ingin keluar dari akun Anda?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLogoutModal()">Batal</button>
+                <button class="btn btn-danger" onclick="performLogout()" id="confirmLogoutBtn">
+                    <span class="btn-text">Ya, Keluar</span>
+                    <span class="btn-loader" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Memproses...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Alert -->
+    <div class="alert-container" id="alertContainer" style="display: none;">
+        <div class="alert" id="alertMessage">
+            <i class="alert-icon"></i>
+            <span class="alert-text"></span>
+        </div>
+    </div>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
