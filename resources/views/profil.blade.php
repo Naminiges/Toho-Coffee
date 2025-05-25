@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat Pesanan - TOHO Coffee</title>
+    <title>Profil Pengguna - TOHO Coffee</title>
     @vite('resources/css/style.css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -118,240 +120,152 @@
 
     <!-- Page Header -->
     <div class="page-header">
-        <h2>Riwayat Pesanan</h2>
+        <h2>Profil Saya</h2>
     </div>
 
     <div class="container">
         <!-- Breadcrumb -->
         <ul class="breadcrumb">
             <li><a href="{{ route('welcome') }}">Beranda</a></li>
-            <li>Riwayat Pesanan</li>
+            <li>Profil Saya</li>
         </ul>
 
-        <!-- Filter Section -->
-        <div class="filter-section" style="justify-content: flex-start;">
-            <button class="filter-btn active">Semua</button>
-            <button class="filter-btn">Menunggu Konfirmasi</button>
-            <button class="filter-btn">Diproses</button>
-            <button class="filter-btn">Siap Diambil</button>
-            <button class="filter-btn">Selesai</button>
-            <button class="filter-btn">Dibatalkan</button>
-        </div>
-
-        <!-- Orders List -->
-        <div class="orders-list">
-            <!-- Order Card 1 -->
-            <div class="order-card">
-                <div class="order-header">
-                    <div>
-                        <h3>Order #TOHO-2024-001</h3>
-                        <p style="color: var(--dark-gray); font-size: 14px;">20 Maret 2024, 14:30</p>
+        <div class="profile-container">
+            <!-- Sidebar -->
+            <div class="profile-sidebar">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img src="{{ asset('images/logo-toho.jpg') }}" alt="Profile Picture">
                     </div>
-                    <div class="order-status status-ready">
-                        <i class="fas fa-check-circle"></i>
-                        Siap Diambil
-                    </div>
+                    <h3 class="profile-name">John Doe</h3>
+                    <p class="profile-email">john.doe@example.com</p>
                 </div>
-                <div class="order-content">
-                    <div class="order-items">
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Gayo">
-                            </div>
-                            <div class="order-item-details">
-                                <h4>Arabica Gayo Premium</h4>
-                                <p class="order-item-variant">Medium Roast, 200gr</p>
-                                <div class="order-item-price">Rp 85.000</div>
-                            </div>
-                        </div>
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Toraja">
-                            </div>
-                            <div class="order-item-details">
-                                <h4>Robusta Toraja Special</h4>
-                                <p class="order-item-variant">Dark Roast, 250gr</p>
-                                <div class="order-item-price">Rp 75.000</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="order-timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 14:30</div>
-                                <div class="timeline-text">Pesanan diterima</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 14:35</div>
-                                <div class="timeline-text">Pesanan dikonfirmasi</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 15:00</div>
-                                <div class="timeline-text">Pesanan siap diambil</div>
-                            </div>
-                        </div>
-                    </div>
+                <ul class="profile-menu">
+                    <li>
+                        <a href="{{ route('user-profil') }}" class="active">
+                            <i class="fas fa-user"></i>
+                            Informasi Pribadi
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('user-riwayat') }}">
+                            <i class="fas fa-shopping-bag"></i>
+                            Pesanan Saya
+                        </a>
+                    </li>
+                    <li>
+                    <li>
+                        <a href="#" class="logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
 
-                    <div class="order-summary">
-                        <div class="order-summary-item">
-                            <span>Subtotal</span>
-                            <span>Rp 160.000</span>
-                        </div>
-                        <div class="order-summary-item">
-                            <span>Total</span>
-                            <span>Rp 160.000</span>
-                        </div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Pesanan</div>
                     </div>
-                </div>
-                <div class="order-actions">
-                    <a href=" {{ route('user-detail-pesanan') }}" style="text-decoration : none;">
-                        <button class="btn btn-secondary">Detail Pesanan</button>
-                    </a>
-                    <button class="btn">Ambil Pesanan</button>
+                    <div class="stat-item">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Keranjang</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Alamat</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Order Card 2 -->
-            <div class="order-card">
-                <div class="order-header">
-                    <div>
-                        <h3>Order #TOHO-2024-002</h3>
-                        <p style="color: var(--dark-gray); font-size: 14px;">19 Maret 2024, 10:15</p>
-                    </div>
-                    <div class="order-status status-completed">
-                        <i class="fas fa-check-circle"></i>
-                        Selesai
-                    </div>
-                </div>
-                <div class="order-content">
-                    <div class="order-items">
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi3.jpg') }}" alt="TOHO Blend">
+            <!-- Main Content -->
+            <div class="profile-content">
+                <!-- Personal Information -->
+                <div class="profile-section">
+                    <h3>Informasi Pribadi</h3>
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">Nama Depan</label>
+                                <input type="text" id="firstName" class="form-control" value="John" required>
                             </div>
-                            <div class="order-item-details">
-                                <h4>TOHO Signature Blend</h4>
-                                <p class="order-item-variant">Medium-Dark Roast, 500gr</p>
-                                <div class="order-item-price">Rp 120.000</div>
+                            <div class="form-group">
+                                <label for="lastName">Nama Belakang</label>
+                                <input type="text" id="lastName" class="form-control" value="Doe" required>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="order-timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 10:15</div>
-                                <div class="timeline-text">Pesanan diterima</div>
-                            </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" value="john.doe@example.com" required>
                         </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 10:20</div>
-                                <div class="timeline-text">Pesanan dikonfirmasi</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 10:45</div>
-                                <div class="timeline-text">Pesanan siap diambil</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 11:30</div>
-                                <div class="timeline-text">Pesanan diambil</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="order-summary">
-                        <div class="order-summary-item">
-                            <span>Subtotal</span>
-                            <span>Rp 120.000</span>
+                        <div class="form-group">
+                            <label for="phone">Nomor Telepon</label>
+                            <input type="tel" id="phone" class="form-control" value="+62 812 3456 7890" required>
                         </div>
-                        <div class="order-summary-item">
-                            <span>Total</span>
-                            <span>Rp 120.000</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-actions">
-                    <a href=" {{ route('user-detail-pesanan') }}" style="text-decoration : none;">
-                        <button class="btn btn-secondary">Detail Pesanan</button>
-                    </a>
-                </div>
-            </div>
 
-            <!-- Order Card 3 -->
-            <div class="order-card">
-                <div class="order-header">
-                    <div>
-                        <h3>Order #TOHO-2024-003</h3>
-                        <p style="color: var(--dark-gray); font-size: 14px;">18 Maret 2024, 16:45</p>
-                    </div>
-                    <div class="order-status status-cancelled">
-                        <i class="fas fa-times-circle"></i>
-                        Dibatalkan
-                    </div>
-                </div>
-                <div class="order-content">
-                    <div class="order-items">
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi4.jpg') }}" alt="Pour Over Set">
-                            </div>
-                            <div class="order-item-details">
-                                <h4>Pour Over Set</h4>
-                                <p class="order-item-variant">Set Lengkap</p>
-                                <div class="order-item-price">Rp 275.000</div>
-                            </div>
+                        <div class="form-group">
+                            <label for="birthDate">Tanggal Lahir</label>
+                            <input type="date" id="birthDate" class="form-control" value="1990-01-01">
                         </div>
-                    </div>
 
-                    <div class="order-timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">18 Maret 2024, 16:45</div>
-                                <div class="timeline-text">Pesanan diterima</div>
+                        <div class="form-group">
+                            <label>Jenis Kelamin</label>
+                            <div style="display: flex; gap: 20px;">
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="radio" name="gender" value="male" checked>
+                                    Laki-laki
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="radio" name="gender" value="female">
+                                    Perempuan
+                                </label>
                             </div>
                         </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">18 Maret 2024, 17:00</div>
-                                <div class="timeline-text">Pesanan dibatalkan</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="order-summary">
-                        <div class="order-summary-item">
-                            <span>Subtotal</span>
-                            <span>Rp 275.000</span>
+                        <div class="profile-actions">
+                            <button type="submit" class="btn">Simpan Perubahan</button>
                         </div>
-                        <div class="order-summary-item">
-                            <span>Total</span>
-                            <span>Rp 275.000</span>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="order-actions">
-                    <a href=" {{ route('user-detail-pesanan') }}" style="text-decoration : none;">
-                        <button class="btn btn-secondary">Detail Pesanan</button>
-                    </a>
+
+                <!-- Change Password -->
+                <div class="profile-section">
+                    <h3>Ubah Password</h3>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Password Saat Ini</label>
+                            <div class="password-toggle">
+                                <input type="password" id="currentPassword" class="form-control" required>
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newPassword">Password Baru</label>
+                            <div class="password-toggle">
+                                <input type="password" id="newPassword" class="form-control" required>
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="validation-message">
+                                Password harus minimal 8 karakter dan mengandung huruf besar, huruf kecil, angka, dan karakter khusus
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Konfirmasi Password Baru</label>
+                            <div class="password-toggle">
+                                <input type="password" id="confirmPassword" class="form-control" required>
+                                <i class="fas fa-eye"></i>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <button type="submit" class="btn">Ubah Password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

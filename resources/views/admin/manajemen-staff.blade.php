@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Penjualan - Toho Coffee</title>
+    <title>Manajemen Staff - Toho Coffee</title>
     @vite('resources/css/style.css')
 </head>
 <body>
     <header>
-        <div class="navbar">
-            <div class="logo">
+        <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
+            <div class="logo"> <!-- Menggunakan class yang sudah ada -->
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
@@ -100,11 +100,11 @@
 
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
+        <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
+            <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
-                <div class="admin-name">Admin TOHO</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-name">Admin TOHO</div> <!-- Menggunakan class yang sudah ada -->
+                <div class="admin-role">Administrator</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
             <ul class="sidebar-menu">
@@ -133,13 +133,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-manajemen-staff') }}">
+                    <a href="{{ route('admin-manajemen-staff') }}" class="active">
                         <i class="fas fa-certificate"></i>
                         Staff
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-laporan') }}" class="active">
+                    <a href="{{ route('admin-laporan') }}">
                         <i class="fas fa-chart-pie"></i>
                         Laporan
                     </a>
@@ -151,106 +151,61 @@
         <main class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Laporan Penjualan</h2>
-                </div>
-                <div class="header-actions">
-                    <button class="btn btn-primary" onclick="printReport()">
-                        <i class="fas fa-print"></i> Cetak Laporan
-                    </button>
+                    <h2>Manajemen Staff</h2>
                 </div>
             </div>
 
-            <!-- Date Range Filter -->
-            <div class="filter-container report-filter"> {{-- Added report-filter class for specific styling --}}
-                <div class="date-input-group"> {{-- Grouping date inputs and text --}}
-                    <input type="date" id="startDate" class="form-control">
-                    <span>sampai</span>
-                    <input type="date" id="endDate" class="form-control">
-                </div>
-                <button class="btn btn-primary filter-button" onclick="filterReport()"> {{-- Added filter-button class and onclick --}}
-                    <i class="fas fa-filter"></i> Filter
-                </button>
-            </div>
-
-            <!-- Summary Cards -->
-            <div class="summary-cards">
-                <div class="card summary-card"> {{-- Added summary-card class --}}
-                    <div class="card-icon">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <div class="card-info">
-                        <h3>Total Penjualan</h3>
-                        <p class="card-value">150</p>
-                    </div>
-                </div>
-                <div class="card summary-card"> {{-- Added summary-card class --}}
-                    <div class="card-icon">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <div class="card-info">
-                        <h3>Produk Terjual</h3>
-                        <p class="card-value">450</p>
-                    </div>
-                </div>
-                <div class="card summary-card"> {{-- Added summary-card class --}}
-                    <div class="card-icon">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div class="card-info">
-                        <h3>Total Pendapatan</h3>
-                        <p class="card-value">Rp 15.000.000</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="charts-container">
-                <!-- Sales Trend Chart -->
-                <div class="chart-card">
-                    <h3>Tren Penjualan</h3>
-                    <canvas id="salesTrendChart"></canvas>
-                </div>
-                
-                <!-- Product Performance Chart -->
-                <div class="chart-card">
-                    <h3>Performa Produk</h3>
-                    <canvas id="productPerformanceChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Top Selling Products Table -->
-            <div class="product-table-container">
-                <h3>Produk Terlaris</h3>
-                <table class="product-table">
+            <!-- Customer Table -->
+            <div class="product-table-container"> {{-- Reusing product-table-container for consistent styling --}}
+                <table class="product-table"> {{-- Reusing product-table for consistent styling --}}
                     <thead>
                         <tr>
-                            <th>Produk</th>
-                            <th>Terjual</th>
-                            <th>Pendapatan</th>
-                            <th>Persentase</th>
+                            <th>ID Pelanggan</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Status Akun</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- Example Customer Row (Active) --}}
                         <tr>
-                            <td>Espresso</td>
-                            <td>120</td>
-                            <td>Rp 2.400.000</td>
-                            <td>25%</td>
+                            <td>#STF001</td>
+                            <td>Alice Smith</td>
+                            <td>alice.s@example.com</td>
+                            <td><span class="status-badge status-active">Aktif</span></td> {{-- Using status-active class --}}
+                            <td class="product-actions"> {{-- Reusing product-actions for button styling --}}
+                                {{-- Conditional Button: Show Nonaktifkan if Active --}}
+                                <button class="btn btn-secondary" onclick="updateCustomerStatus('CUST001', 'inactive')">
+                                    <i class="fas fa-user-slash"></i> Nonaktifkan
+                                </button>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>Latte</td>
-                            <td>95</td>
-                            <td>Rp 2.850.000</td>
-                            <td>20%</td>
+                        {{-- Example Customer Row (Inactive) --}}
+                         <tr>
+                            <td>#STF002</td>
+                            <td>Bob Johnson</td>
+                            <td>bob.j@example.com</td>
+                            <td><span class="status-badge status-inactive">Tidak Aktif</span></td> {{-- Using status-inactive class --}}
+                            <td class="product-actions"> {{-- Reusing product-actions for button styling --}}
+                                {{-- Conditional Button: Show Aktifkan if Inactive --}}
+                                <button class="btn btn-primary" onclick="updateCustomerStatus('CUST002', 'active')">
+                                    <i class="fas fa-user-check"></i> Aktifkan
+                                </button>
+                            </td>
                         </tr>
-                        <tr>
-                            <td>Cappuccino</td>
-                            <td>85</td>
-                            <td>Rp 2.550.000</td>
-                            <td>18%</td>
-                        </tr>
+                        <!-- More customer rows can be added here -->
                     </tbody>
                 </table>
+            </div>
+
+            <div class="pagination">
+                <ul>
+                    <li><a href="#" class="active">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#" class="next"><i class="fas fa-chevron-right"></i></a></li>
+                </ul>
             </div>
         </main>
     </div>

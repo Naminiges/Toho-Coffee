@@ -12,16 +12,28 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="Toho Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#home">Beranda</a></li>
-                <li><a href="#products">Produk</a></li>
+                @auth
+                <li><a href="{{ route('welcome') }}">Beranda</a></li>
+                <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+                <li><a href="{{ route('user-riwayat') }}">Riwayat</a></li>
+                @else
+                <li><a href="{{ route('welcome') }}">Beranda</a></li>
+                <li><a href="{{ route('products') }}">Katalog</a></li>
+                @endauth
             </ul>
             <div class="nav-actions">
                 @auth
                     <!-- User Menu Dropdown -->
+                    <div class="cart-icon">
+                        <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </div>
                     <div class="user-menu">
                         <div class="user-trigger" onclick="toggleUserMenu()">
                             <div class="user-avatar">
@@ -52,21 +64,9 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="dropdown-item">
+                                    <a href="{{ route('user-keranjang') }}" class="dropdown-item">
                                         <i class="fas fa-shopping-bag"></i>
                                         <span>Pesanan Saya</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fas fa-heart"></i>
-                                        <span>Favorit</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="dropdown-item">
-                                        <i class="fas fa-cog"></i>
-                                        <span>Pengaturan</span>
                                     </a>
                                 </li>
                             </ul>
@@ -134,8 +134,8 @@
         <div class="hero-content">
             <h2>Nikmati Kopi Premium Berkualitas Terbaik</h2>
             <p>Temukan kenikmatan kopi yang diproses dengan teliti dari biji pilihan dan dipanggang dengan sempurna untuk menghasilkan cita rasa terbaik.</p>
-            <a href="#products" class="cta-button">Belanja Sekarang</a>
-            <a href="#about" class="secondary-button">Pelajari Lebih Lanjut</a>
+            <a href="{{ route('login') }}" class="cta-button">Belanja Sekarang</a>
+            <a href="{{ route('login') }}" class="secondary-button">Pelajari Lebih Lanjut</a>
         </div>
     </section>
 
@@ -149,49 +149,45 @@
             <!-- Produk 1 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="" alt="Arabica Premium">
+                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Premium">
                 </div>
                 <div class="product-info">
                     <h4>Arabica Premium</h4>
                     <div class="price">Rp 95.000</div>
                     <div class="description">Kopi Arabica premium dengan cita rasa fruity dan aroma yang khas.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
             <!-- Produk 2 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="" alt="Robusta Gold">
+                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Gold">
                 </div>
                 <div class="product-info">
                     <h4>Robusta Gold</h4>
                     <div class="price">Rp 85.000</div>
                     <div class="description">Kopi Robusta dengan body yang kuat dan rasa cokelat yang kaya.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
             <!-- Produk 3 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="" alt="Toho Signature Blend">
+                    <img src="{{ asset('images/kopi3.jpg') }}" alt="Toho Signature Blend">
                 </div>
                 <div class="product-info">
                     <h4>Toho Signature Blend</h4>
                     <div class="price">Rp 105.000</div>
                     <div class="description">Campuran kopi spesial dengan rasa caramel dan sentuhan rempah.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
             <!-- Produk 4 -->
             <div class="product-card">
                 <div class="product-image">
-                    <img src="" alt="Single Origin Aceh Gayo">
+                    <img src="{{ asset('images/kopi4.jpg') }}" alt="Single Origin Aceh Gayo">
                 </div>
                 <div class="product-info">
                     <h4>Single Origin Aceh Gayo</h4>
                     <div class="price">Rp 120.000</div>
                     <div class="description">Kopi single origin dari Aceh Gayo dengan karakter rasa unik.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
         </div>
@@ -200,7 +196,7 @@
     <!-- About Section -->
     <section class="about" id="about">
         <div class="about-image">
-            <img src="" alt="About Toho Coffee">
+            <img src="{{ asset('images/diorama-toho.jpg') }}" alt="About Toho Coffee">
         </div>
         <div class="about-content">
             <h3>Tentang Toho Coffee</h3>
@@ -214,10 +210,6 @@
                 <div class="feature">
                     <h5><span><i class="fas fa-check"></i></span> Proses Terbaik</h5>
                     <p>Metode pengolahan modern dengan kontrol kualitas ketat.</p>
-                </div>
-                <div class="feature">
-                    <h5><span><i class="fas fa-check"></i></span> Pemanggangan Sempurna</h5>
-                    <p>Teknik pemanggangan presisi untuk rasa optimal.</p>
                 </div>
                 <div class="feature">
                     <h5><span><i class="fas fa-check"></i></span> Ramah Lingkungan</h5>
@@ -242,10 +234,10 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
-                            <img src="" alt="Budi Santoso">
+                            <img src="{{ asset('images/kopi5.jpg') }}" alt="Budi Santoso">
                         </div>
                         <div class="author-info">
-                            <h5>Budi Santoso</h5>
+                            <h5>Aditya Mufti</h5>
                             <span>Pelanggan Setia</span>
                         </div>
                     </div>
@@ -257,10 +249,10 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
-                            <img src="" alt="Ani Wijaya">
+                            <img src="{{ asset('images/kopi6.jpg') }}" alt="Ani Wijaya">
                         </div>
                         <div class="author-info">
-                            <h5>Ani Wijaya</h5>
+                            <h5>Muhammad Syahqi</h5>
                             <span>Barista</span>
                         </div>
                     </div>
@@ -272,10 +264,10 @@
                     </div>
                     <div class="testimonial-author">
                         <div class="author-image">
-                            <img src="" alt="Dimas Purnomo">
+                            <img src="{{ asset('images/kopi6.jpg') }}" alt="Dimas Purnomo">
                         </div>
                         <div class="author-info">
-                            <h5>Dimas Purnomo</h5>
+                            <h5>Nando</h5>
                             <span>Pemilik Kafe</span>
                         </div>
                     </div>
@@ -292,9 +284,9 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <div class="cta-content">
-            <h3>Dapatkan Diskon 10% untuk Pembelian Pertama Anda</h3>
-            <p>Bergabunglah dengan newsletter kami dan dapatkan diskon eksklusif serta informasi terbaru tentang produk dan promo spesial dari Toho Coffee.</p>
-            <a href="#" class="cta-button">Daftar Sekarang</a>
+            <h3>Dapatkan Kopi Pertama Anda</h3>
+            <p>Bergabunglah dengan Toho Coffee.</p>
+            <a href="{{ route('register') }}" class="cta-button">Daftar Sekarang</a>
         </div>
     </section>
 
@@ -303,53 +295,34 @@
         <div class="footer-content">
             <div class="footer-column">
                 <div class="logo">
-                    <img src="" alt="Toho Coffee Logo">
+                    <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
                     <h1>Toho Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.instagram.com/tohocoffee.id/"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
             <div class="footer-column">
                 <h4>Informasi</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Tentang Kami</a></li>
-                    <li><a href="#">Produk</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Cara Pemesanan</a></li>
-                    <li><a href="#">FAQ</a></li>
+                    <li><a href="{{ route('welcome') }}">Tentang Kami</a></li>
+                    <li><a href="{{ route('products') }}">Produk</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Layanan Pelanggan</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Hubungi Kami</a></li>
-                    <li><a href="#">Kebijakan Pengembalian</a></li>
-                    <li><a href="#">Syarat dan Ketentuan</a></li>
-                    <li><a href="#">Kebijakan Privasi</a></li>
-                    <li><a href="#">Metode Pembayaran</a></li>
+                    <li><a href="https://wa.me/6281397306005">Hubungi Kami</a></li>
                 </ul>
             </div>
             <div class="footer-column">
                 <h4>Kontak Kami</h4>
                 <ul class="contact-info">
-                    <li><span><i class="fas fa-map-marker-alt"></i></span> Jl. Kopi No. 123, Jakarta Selatan</li>
-                    <li><span><i class="fas fa-phone"></i></span> +62 21 1234 5678</li>
-                    <li><span><i class="fas fa-envelope"></i></span> info@tohocoffee.com</li>
+                    <li><span><i class="fas fa-map-marker-alt"></i></span> Universitas Sumatera Utara</li>
+                    <li><span><i class="fas fa-phone"></i></span> +62 813-9730-6005</li>
                     <li><span><i class="fas fa-clock"></i></span> Senin - Jumat: 08.00 - 17.00</li>
                 </ul>
-            </div>
-            <div class="footer-column">
-                <h4>Newsletter</h4>
-                <p>Berlangganan newsletter kami untuk mendapatkan info dan penawaran terbaru.</p>
-                <div class="newsletter">
-                    <input type="email" placeholder="Email Anda...">
-                    <button>Berlangganan</button>
-                </div>
             </div>
         </div>
         <div class="copyright">
