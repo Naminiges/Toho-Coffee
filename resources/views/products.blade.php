@@ -149,7 +149,6 @@
                     <h4>Espresso</h4>
                     <div class="price">Rp 15.000</div>
                     <div class="description">Shot kopi murni dengan intensitas tinggi dan aroma yang kuat.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -162,7 +161,6 @@
                     <h4>Cappuccino</h4>
                     <div class="price">Rp 25.000</div>
                     <div class="description">Espresso dengan steamed milk dan foam yang lembut di bagian atas.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -175,7 +173,6 @@
                     <h4>Cafe Latte</h4>
                     <div class="price">Rp 28.000</div>
                     <div class="description">Espresso dengan susu yang lebih banyak dan foam tipis di atasnya.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -188,7 +185,6 @@
                     <h4>Matcha Latte</h4>
                     <div class="price">Rp 30.000</div>
                     <div class="description">Minuman dengan bubuk teh hijau premium dan susu hangat.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -201,7 +197,6 @@
                     <h4>Chicken Sandwich</h4>
                     <div class="price">Rp 35.000</div>
                     <div class="description">Sandwich ayam dengan sayuran segar dan saus spesial.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -214,7 +209,6 @@
                     <h4>Butter Croissant</h4>
                     <div class="price">Rp 20.000</div>
                     <div class="description">Croissant dengan lapisan butter yang gurih dan tekstur renyah.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -227,7 +221,6 @@
                     <h4>Americano</h4>
                     <div class="price">Rp 18.000</div>
                     <div class="description">Espresso dengan tambahan air panas untuk rasa yang lebih ringan.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
 
@@ -240,7 +233,6 @@
                     <h4>Hot Chocolate</h4>
                     <div class="price">Rp 25.000</div>
                     <div class="description">Cokelat hangat dengan whipped cream yang lembut di atasnya.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
                 </div>
             </div>
         </div>

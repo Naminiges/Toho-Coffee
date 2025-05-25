@@ -118,12 +118,6 @@
             <a href="#" class="social-btn">
                 <i class="fab fa-google"></i>
             </a>
-            <a href="#" class="social-btn">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="#" class="social-btn">
-                <i class="fab fa-twitter"></i>
-            </a>
         </div>
 
         <div class="form-footer">

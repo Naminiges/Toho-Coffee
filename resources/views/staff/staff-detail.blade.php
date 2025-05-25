@@ -10,7 +10,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -23,28 +23,22 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="Staff Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Staff Profile">
                 <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Barista</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
             <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('staff-dashboard') }}" class="active">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('staff-manajemen-produk') }}">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                 <li>
-                    <a href="#" class="logout"> <!-- Menggunakan class yang sudah ada + logout style -->
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
                     </a>
                 </li>
             </ul>
@@ -127,7 +121,7 @@
                         <div class="order-items-list">
                             <div class="order-item">
                                 <div class="item-image">
-                                    <img src="" alt="Product Image">
+                                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Product Image">
                                 </div>
                                 <div class="item-details">
                                     <h4>Kopi Arabika Single Origin</h4>
@@ -138,7 +132,7 @@
                             </div>
                              <div class="order-item">
                                 <div class="item-image">
-                                    <img src="" alt="Product Image">
+                                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Product Image">
                                 </div>
                                 <div class="item-details">
                                     <h4>Pastry Cokelat</h4>

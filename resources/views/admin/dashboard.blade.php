@@ -31,39 +31,39 @@
 
             <ul class="sidebar-menu">
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('admin-dashboard') }}" class="active">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pesanan') }}">
                         <i class="fas fa-shopping-bag"></i>
                         Pesanan
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-produk') }}">
                         <i class="fas fa-box"></i>
                         Produk
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pelanggan') }}">
                         <i class="fas fa-users"></i>
                         Pelanggan
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
+                    <a href="{{ route('admin-manajemen-staff') }}">
+                        <i class="fas fa-certificate"></i>
+                        Staff
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                    <a href="{{ route('admin-laporan') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        Laporan
                     </a>
                 </li>
             </ul>
@@ -85,10 +85,6 @@
                     </div>
                     <div class="value">Rp 15.5M</div>
                     <div class="label">Total Pendapatan</div>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i>
-                        12% dari bulan lalu
-                    </div>
                 </div>
 
                 <div class="stat-card">
@@ -97,10 +93,6 @@
                     </div>
                     <div class="value">1,234</div>
                     <div class="label">Total Pesanan</div>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i>
-                        8% dari bulan lalu
-                    </div>
                 </div>
 
                 <div class="stat-card">
@@ -108,11 +100,7 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <div class="value">856</div>
-                    <div class="label">Pelanggan Baru</div>
-                    <div class="trend up">
-                        <i class="fas fa-arrow-up"></i>
-                        5% dari bulan lalu
-                    </div>
+                    <div class="label">Total Pelanggan</div>
                 </div>
 
                 <div class="stat-card">
@@ -121,10 +109,6 @@
                     </div>
                     <div class="value">45</div>
                     <div class="label">Stok Menipis</div>
-                    <div class="trend down">
-                        <i class="fas fa-arrow-down"></i>
-                        3% dari bulan lalu
-                    </div>
                 </div>
             </div>
 
@@ -167,7 +151,7 @@
                             <td>Rp 85.000</td>
                             <td><span class="status-badge status-ready">Siap Diambil</span></td>
                             <td>
-                                <button class="btn btn-secondary">Detail</button>
+                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
                             </td>
                         </tr>
                         <tr>
@@ -177,7 +161,7 @@
                             <td>Rp 120.000</td>
                             <td><span class="status-badge status-processing">Diproses</span></td>
                             <td>
-                                <button class="btn btn-secondary">Detail</button>
+                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
                             </td>
                         </tr>
                         <tr>
@@ -187,7 +171,7 @@
                             <td>Rp 75.000</td>
                             <td><span class="status-badge status-pending">Menunggu</span></td>
                             <td>
-                                <button class="btn btn-secondary">Detail</button>
+                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
                             </td>
                         </tr>
                     </tbody>

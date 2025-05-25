@@ -10,7 +10,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -23,46 +23,46 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="Admin Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
                 <div class="admin-name">Admin TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Administrator</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
-            <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
+            <ul class="sidebar-menu">
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('admin-manajemen-pesanan') }}" class="active">
                         <i class="fas fa-shopping-bag"></i>
                         Pesanan
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-produk') }}">
                         <i class="fas fa-box"></i>
                         Produk
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pelanggan') }}">
                         <i class="fas fa-users"></i>
                         Pelanggan
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
+                    <a href="{{ route('admin-manajemen-staff') }}">
+                        <i class="fas fa-certificate"></i>
+                        Staff
                     </a>
                 </li>
-                 <li>
-                    <a href="#" class="logout"> <!-- Menggunakan class yang sudah ada + logout style -->
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                <li>
+                    <a href="{{ route('admin-laporan') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        Laporan
                     </a>
                 </li>
             </ul>
@@ -145,7 +145,7 @@
                         <div class="order-items-list">
                             <div class="order-item">
                                 <div class="item-image">
-                                    <img src="" alt="Product Image">
+                                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Product Image">
                                 </div>
                                 <div class="item-details">
                                     <h4>Kopi Arabika Single Origin</h4>
@@ -156,7 +156,7 @@
                             </div>
                              <div class="order-item">
                                 <div class="item-image">
-                                    <img src="" alt="Product Image">
+                                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Product Image">
                                 </div>
                                 <div class="item-details">
                                     <h4>Pastry Cokelat</h4>

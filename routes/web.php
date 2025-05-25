@@ -17,7 +17,6 @@ Route::get('/forgot-password', function () {
 })->name('forgot-password');
 
 // user
-
 Route::get('/user/katalog', function () {
     return view('user.katalog');
 })->name('user-katalog');
@@ -59,6 +58,9 @@ Route::get('/admin/manajemen-pesanan/detail-pesanan', function () {
 Route::get('/admin/manajemen-pelanggan', function () {
     return view('admin.manajemen-pelanggan');
 })->name('admin-manajemen-pelanggan');
+Route::get('/admin/manajemen-staff', function () {
+    return view('admin.manajemen-staff');
+})->name('admin-manajemen-staff');
 Route::get('/admin/laporan', function () {
     return view('admin.laporan');
 })->name('admin-laporan');

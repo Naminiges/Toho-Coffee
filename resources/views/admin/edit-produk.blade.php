@@ -11,7 +11,7 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,46 +24,46 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="" alt="Admin Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
                 <div class="admin-name">Admin TOHO</div>
                 <div class="admin-role">Administrator</div>
             </div>
 
             <ul class="sidebar-menu">
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pesanan') }}">
                         <i class="fas fa-shopping-bag"></i>
                         Pesanan
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('admin-manajemen-produk') }}" class="active">
                         <i class="fas fa-box"></i>
                         Produk
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pelanggan') }}">
                         <i class="fas fa-users"></i>
                         Pelanggan
                     </a>
                 </li>
                 <li>
-                    <a href="#">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
+                    <a href="{{ route('admin-manajemen-staff') }}">
+                        <i class="fas fa-certificate"></i>
+                        Staff
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                    <a href="{{ route('admin-laporan') }}">
+                        <i class="fas fa-chart-pie"></i>
+                        Laporan
                     </a>
                 </li>
             </ul>
@@ -111,9 +111,6 @@
                         <label for="productImage">Gambar Produk</label>
                         <input type="file" id="productImage" name="image" class="form-control" accept="image/*">
                         <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG, PNG. Maks: 2MB</p>
-                        <div id="imagePreview" style="margin-top: 10px;">
-                            <img src="" alt="Preview" style="max-width: 200px; border-radius: 8px;">
-                        </div>
                     </div>
 
                     <div class="form-group">

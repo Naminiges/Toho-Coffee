@@ -11,7 +11,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,28 +24,22 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="Staff Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Staff Profile">
                 <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Barista</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
             <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('staff-dashboard') }}" class="active">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('staff-manajemen-produk') }}">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                 <li>
-                    <a href="#" class="logout"> <!-- Menggunakan class yang sudah ada + logout style -->
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
                     </a>
                 </li>
             </ul>
@@ -99,9 +93,7 @@
                             <td>Rp 150.000</td>
                             <td><span class="status-badge status-pending">Menunggu</span></td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary" onclick="viewOrderDetail('ORD001')">
-                                    <i class="fas fa-eye"></i> Detail
-                                </button>
+                                <a href=" {{ route('staff-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
                             </td>
                         </tr>
                         <tr>
@@ -111,9 +103,7 @@
                             <td>Rp 85.000</td>
                             <td><span class="status-badge status-processing">Diproses</span></td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary" onclick="viewOrderDetail('ORD002')">
-                                    <i class="fas fa-eye"></i> Detail
-                                </button>
+                                <a href=" {{ route('staff-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
                             </td>
                         </tr>
                         <tr>
@@ -123,9 +113,7 @@
                             <td>Rp 200.000</td>
                             <td><span class="status-badge status-ready">Siap</span></td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary" onclick="viewOrderDetail('ORD003')">
-                                    <i class="fas fa-eye"></i> Detail
-                                </button>
+                                <a href=" {{ route('staff-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
                             </td>
                         </tr>
                     </tbody>

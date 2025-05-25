@@ -10,7 +10,7 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -23,46 +23,46 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="" alt="Admin Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
                 <div class="admin-name">Admin TOHO</div>
                 <div class="admin-role">Administrator</div>
             </div>
 
             <ul class="sidebar-menu">
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pesanan') }}">
                         <i class="fas fa-shopping-bag"></i>
                         Pesanan
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-produk') }}">
                         <i class="fas fa-box"></i>
                         Produk
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin-manajemen-pelanggan') }}">
                         <i class="fas fa-users"></i>
                         Pelanggan
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="active">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
+                    <a href="{{ route('admin-manajemen-staff') }}">
+                        <i class="fas fa-certificate"></i>
+                        Staff
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                    <a href="{{ route('admin-laporan') }}" class="active">
+                        <i class="fas fa-chart-pie"></i>
+                        Laporan
                     </a>
                 </li>
             </ul>
@@ -102,7 +102,6 @@
                     <div class="card-info">
                         <h3>Total Penjualan</h3>
                         <p class="card-value">150</p>
-                        <p class="card-change positive">+12% dari bulan lalu</p>
                     </div>
                 </div>
                 <div class="card summary-card"> {{-- Added summary-card class --}}
@@ -112,7 +111,6 @@
                     <div class="card-info">
                         <h3>Produk Terjual</h3>
                         <p class="card-value">450</p>
-                        <p class="card-change positive">+8% dari bulan lalu</p>
                     </div>
                 </div>
                 <div class="card summary-card"> {{-- Added summary-card class --}}
@@ -122,7 +120,6 @@
                     <div class="card-info">
                         <h3>Total Pendapatan</h3>
                         <p class="card-value">Rp 15.000.000</p>
-                        <p class="card-change positive">+15% dari bulan lalu</p>
                     </div>
                 </div>
             </div>

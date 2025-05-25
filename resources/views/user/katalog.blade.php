@@ -11,17 +11,19 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="Toho Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
                 <h1>Toho Coffee</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#home">Beranda</a></li>
-                <li><a href="#products">Produk</a></li>
+                <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+                <li><a href="{{ route('user-riwayat') }}">Riwayat</a></li>
             </ul>
             <div class="nav-actions">
                 <div class="cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count">0</span>
+                    <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
                 </div>
                 <div class="user-icon">
                     <i class="fas fa-user"></i>
@@ -44,17 +46,15 @@
     <div class="container">
         <!-- Breadcrumb -->
         <ul class="breadcrumb">
-            <li><a href="index.html">Beranda</a></li>
-            <li>Katalog Produk Kopi</li>
+            <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+            <li>Katalog Produk</li>
         </ul>
 
         <!-- Menu Filters -->
         <div class="menu-filters">
             <button class="filter-btn active" data-category="all">Semua</button>
-            <button class="filter-btn" data-category="arabica">Arabica</button>
-            <button class="filter-btn" data-category="robusta">Robusta</button>
-            <button class="filter-btn" data-category="blend">Blend</button>
-            <button class="filter-btn" data-category="single-origin">Single Origin</button>
+            <button class="filter-btn" data-category="coffee">Kopi</button>
+            <button class="filter-btn" data-category="non-coffee">Non-Kopi</button>
         </div>
 
         <!-- Search Bar -->
@@ -68,7 +68,7 @@
             <!-- Product 1 -->
             <div class="product-card" data-category="arabica">
                 <div class="product-image">
-                    <img src="" alt="Arabica Aceh Gayo">
+                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Aceh Gayo">
                 </div>
                 <div class="product-info">
                     <h4>Arabica Aceh Gayo</h4>
@@ -81,7 +81,7 @@
             <!-- Product 2 -->
             <div class="product-card" data-category="robusta">
                 <div class="product-image">
-                    <img src="" alt="Robusta Lampung">
+                    <img src="{{ asset('images/kopi5.jpg') }}" alt="Robusta Lampung">
                 </div>
                 <div class="product-info">
                     <h4>Robusta Lampung</h4>
@@ -94,7 +94,7 @@
             <!-- Product 3 -->
             <div class="product-card" data-category="blend">
                 <div class="product-image">
-                    <img src="" alt="House Blend">
+                    <img src="{{ asset('images/kopi6.jpg') }}" alt="House Blend">
                 </div>
                 <div class="product-info">
                     <h4>House Blend</h4>
@@ -107,7 +107,7 @@
             <!-- Product 4 -->
             <div class="product-card" data-category="single-origin">
                 <div class="product-image">
-                    <img src="" alt="Toraja Kalosi">
+                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Toraja Kalosi">
                 </div>
                 <div class="product-info">
                     <h4>Toraja Kalosi</h4>
@@ -120,7 +120,7 @@
             <!-- Product 5 -->
             <div class="product-card" data-category="arabica">
                 <div class="product-image">
-                    <img src="" alt="Arabica Java Preanger">
+                    <img src="{{ asset('images/kopi3.jpg') }}" alt="Arabica Java Preanger">
                 </div>
                 <div class="product-info">
                     <h4>Arabica Java Preanger</h4>
@@ -133,7 +133,7 @@
             <!-- Product 6 -->
             <div class="product-card" data-category="robusta">
                 <div class="product-image">
-                    <img src="" alt="Robusta Temanggung">
+                    <img src="{{ asset('images/kopi7.jpg') }}" alt="Robusta Temanggung">
                 </div>
                 <div class="product-info">
                     <h4>Robusta Temanggung</h4>
@@ -146,7 +146,7 @@
             <!-- Product 7 -->
             <div class="product-card" data-category="blend">
                 <div class="product-image">
-                    <img src="" alt="Morning Blend">
+                    <img src="{{ asset('images/kopi4.jpg') }}" alt="Morning Blend">
                 </div>
                 <div class="product-info">
                     <h4>Morning Blend</h4>
@@ -159,7 +159,7 @@
             <!-- Product 8 -->
             <div class="product-card" data-category="single-origin">
                 <div class="product-image">
-                    <img src="" alt="Flores Bajawa">
+                    <img src="{{ asset('images/kopi8.jpg') }}" alt="Flores Bajawa">
                 </div>
                 <div class="product-info">
                     <h4>Flores Bajawa</h4>
@@ -169,90 +169,13 @@
                 </div>
             </div>
         </div>
-
-        <!-- Pagination -->
-        <ul class="pagination">
-            <li><a href="#" class="active">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#"><i class="fas fa-angle-right"></i></a></li>
-        </ul>
     </div>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-content">
-            <h3>Belum Tahu Mau Pilih Kopi Apa?</h3>
-            <p>Daftar sekarang dan dapatkan rekomendasi kopi sesuai dengan selera dan preferensi Anda.</p>
-            <a href="register.html" class="cta-button">Daftar Sekarang</a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>TOHO</h4>
-                <p>Menyajikan kopi lokal terbaik Indonesia dengan kualitas premium untuk para pecinta kopi sejati.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-
-            <div class="footer-column">
-                <h4>Menu Utama</h4>
-                <ul class="footer-links">
-                    <li><a href="index.html">Beranda</a></li>
-                    <li><a href="menu.html">Menu</a></li>
-                    <li><a href="about.html">Tentang Kami</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="contact.html">Kontak</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h4>Bantuan</h4>
-                <ul class="footer-links">
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Cara Pemesanan</a></li>
-                    <li><a href="#">Ketentuan Layanan</a></li>
-                    <li><a href="#">Kebijakan Privasi</a></li>
-                    <li><a href="#">Pengembalian & Refund</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h4>Kontak Kami</h4>
-                <ul class="contact-info">
-                    <li><span><i class="fas fa-map-marker-alt"></i></span> Jl. Kopi Nikmat No. 123, Jakarta Selatan</li>
-                    <li><span><i class="fas fa-phone"></i></span> +62 21 1234 5678</li>
-                    <li><span><i class="fas fa-envelope"></i></span> info@TOHO.id</li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h4>Newsletter</h4>
-                <p>Berlangganan untuk mendapatkan update dan promo terbaru</p>
-                <div class="newsletter">
-                    <input type="email" placeholder="Email Anda">
-                    <button type="submit">Berlangganan</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="copyright">
-            <p>&copy; 2025 TOHO. All Rights Reserved.</p>
-        </div>
-    </footer>
 
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
     </a>
 
-    @vite('resources/js/app.js')
+    @vite('resources/js/script.js')
 </body>
 </html>

@@ -11,7 +11,7 @@
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,28 +24,22 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="" alt="Admin Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
                 <div class="admin-name">Staff TOHO</div>
                 <div class="admin-role">Staff</div>
             </div>
 
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="#">
+                    <a href="{{ route('staff-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('staff-manajemen-produk') }}" class="active">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
                     </a>
                 </li>
             </ul>
@@ -87,7 +81,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="#" class="btn btn-cancel">Batal</a>
+                        <a href="{{ route('staff-manajemen-produk') }}" class="btn btn-cancel">Batal</a>
                         <button type="submit" class="btn">Simpan Perubahan</button>
                     </div>
                 </form>

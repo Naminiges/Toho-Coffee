@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Pesanan - Toho Coffee</title>
+    <title>Manajemen Staff - Toho Coffee</title>
     @vite('resources/css/style.css')
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
@@ -37,7 +36,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-manajemen-pesanan') }}" class="active">
+                    <a href="{{ route('admin-manajemen-pesanan') }}">
                         <i class="fas fa-shopping-bag"></i>
                         Pesanan
                     </a>
@@ -55,7 +54,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-manajemen-staff') }}">
+                    <a href="{{ route('admin-manajemen-staff') }}" class="active">
                         <i class="fas fa-certificate"></i>
                         Staff
                     </a>
@@ -73,78 +72,54 @@
         <main class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Manajemen Pesanan</h2>
+                    <h2>Manajemen Staff</h2>
                 </div>
             </div>
 
-            <!-- Filter Section -->
-            <div class="filter-section">
-                <div class="search-bar">
-                    <input type="text" placeholder="Cari pesanan...">
-                    <i class="fas fa-search"></i>
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-status="all">Semua</button>
-                    <button class="filter-btn" data-status="pending">Menunggu</button>
-                    <button class="filter-btn" data-status="processing">Diproses</button>
-                    <button class="filter-btn" data-status="ready">Siap</button>
-                    <button class="filter-btn" data-status="completed">Selesai</button>
-                    <button class="filter-btn" data-status="cancelled">Dibatalkan</button>
-                </div>
-                <div class="date-filter">
-                    <input type="date" id="orderDate" class="form-control">
-                </div>
-            </div>
-
-            <!-- Orders Table -->
-            <div class="product-table-container">
-                <table class="product-table">
+            <!-- Customer Table -->
+            <div class="product-table-container"> {{-- Reusing product-table-container for consistent styling --}}
+                <table class="product-table"> {{-- Reusing product-table for consistent styling --}}
                     <thead>
                         <tr>
-                            <th>ID Pesanan</th>
-                            <th>Tanggal</th>
-                            <th>Pelanggan</th>
-                            <th>Total</th>
-                            <th>Status</th>
+                            <th>ID Pelanggan</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Status Akun</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- Example Customer Row (Active) --}}
                         <tr>
-                            <td>#ORD001</td>
-                            <td>2024-03-20 14:30</td>
-                            <td>John Doe</td>
-                            <td>Rp 150.000</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
-                            <td class="product-actions">
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
+                            <td>#STF001</td>
+                            <td>Alice Smith</td>
+                            <td>alice.s@example.com</td>
+                            <td><span class="status-badge status-active">Aktif</span></td> {{-- Using status-active class --}}
+                            <td class="product-actions"> {{-- Reusing product-actions for button styling --}}
+                                {{-- Conditional Button: Show Nonaktifkan if Active --}}
+                                <button class="btn btn-secondary" onclick="updateCustomerStatus('CUST001', 'inactive')">
+                                    <i class="fas fa-user-slash"></i> Nonaktifkan
+                                </button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>#ORD002</td>
-                            <td>2024-03-20 13:15</td>
-                            <td>Jane Smith</td>
-                            <td>Rp 85.000</td>
-                            <td><span class="status-badge status-processing">Diproses</span></td>
-                            <td class="product-actions">
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
+                        {{-- Example Customer Row (Inactive) --}}
+                         <tr>
+                            <td>#STF002</td>
+                            <td>Bob Johnson</td>
+                            <td>bob.j@example.com</td>
+                            <td><span class="status-badge status-inactive">Tidak Aktif</span></td> {{-- Using status-inactive class --}}
+                            <td class="product-actions"> {{-- Reusing product-actions for button styling --}}
+                                {{-- Conditional Button: Show Aktifkan if Inactive --}}
+                                <button class="btn btn-primary" onclick="updateCustomerStatus('CUST002', 'active')">
+                                    <i class="fas fa-user-check"></i> Aktifkan
+                                </button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>#ORD003</td>
-                            <td>2024-03-20 12:45</td>
-                            <td>Mike Johnson</td>
-                            <td>Rp 200.000</td>
-                            <td><span class="status-badge status-ready">Siap</span></td>
-                            <td class="product-actions">
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
+                        <!-- More customer rows can be added here -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
             <div class="pagination">
                 <ul>
                     <li><a href="#" class="active">1</a></li>

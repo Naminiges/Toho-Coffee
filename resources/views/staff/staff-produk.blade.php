@@ -11,7 +11,7 @@
     <header>
         <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
             <div class="logo"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <div class="nav-actions">
@@ -24,28 +24,22 @@
         <!-- Sidebar -->
         <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
             <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
-                <img src="" alt="Staff Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Staff Profile">
                 <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
                 <div class="admin-role">Staff</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
             <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="#">
+                    <a href="{{ route('staff-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('staff-manajemen-produk') }}" class="active">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                 <li>
-                    <a href="#" class="logout"> <!-- Menggunakan class yang sudah ada + logout style -->
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
                     </a>
                 </li>
             </ul>
@@ -68,7 +62,6 @@
                             <th>Nama Produk</th>
                             <th>Kategori</th>
                             <th>Harga</th>
-                            <th>Stok</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -76,55 +69,59 @@
                     <tbody>
                         <!-- Contoh Baris Produk (akan diisi data dari backend) -->
                         <tr>
-                            <td><img src="" alt="Produk 1"></td>
+                            <td><img src="{{ asset('images/kopi1.jpg') }}" alt="Produk 1"></td>
                             <td>Arabica Gayo Premium</td>
                             <td>Kopi</td>
                             <td>Rp 85.000</td>
-                            <td>50</td>
                             <td>
                                 <button class="btn status-active">Aktif</button>
                             </td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
+                                <a href="{{ route('staff-edit') }}">
+                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                </a>
                             </td>
                         </tr>
                          <tr>
-                            <td><img src="" alt="Produk 2"></td>
+                            <td><img src="{{ asset('images/kopi2.jpg') }}" alt="Produk 2"></td>
                             <td>Robusta Toraja Special</td>
                             <td>Kopi</td>
                             <td>Rp 75.000</td>
-                            <td>30</td>
                             <td>
                                 <button class="btn status-inactive">Nonaktif</button>
                             </td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
+                                <a href="{{ route('staff-edit') }}">
+                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                </a>
                             </td>
                         </tr>
                          <tr>
-                            <td><img src="" alt="Produk 3"></td>
+                            <td><img src="{{ asset('images/kopi3.jpg') }}" alt="Produk 3"></td>
                             <td>TOHO Signature Blend</td>
                             <td>Kopi</td>
                             <td>Rp 120.000</td>
-                            <td>100</td>
                             <td>
                                 <button class="btn status-active">Aktif</button>
                             </td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
+                                <a href="{{ route('staff-edit') }}">
+                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                </a>
                             </td>
                         </tr>
                           <tr>
-                            <td><img src="" alt="Produk 4"></td>
+                            <td><img src="{{ asset('images/kopi4.jpg') }}" alt="Produk 4"></td>
                             <td>French Press 350ml</td>
                             <td>Merchandise</td>
                             <td>Rp 150.000</td>
-                            <td>15</td>
                             <td>
                                 <button class="btn status-inactive">Nonaktif</button>
                             </td>
                             <td class="product-actions">
-                                <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button> <!-- Menggunakan class yang sudah ada -->
+                                <a href="{{ route('staff-edit') }}">
+                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
+                                </a>
                             </td>
                         </tr>
                     </tbody>
