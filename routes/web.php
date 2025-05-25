@@ -32,9 +32,12 @@ Route::get('/user/riwayat', function () {
 Route::get('/user/riwayat/detail-pesanan', function () {
     return view('user.detail-pesanan');
 })->name('user-detail-pesanan');
-Route::get('/user/profil', function () {
-    return view('user.profil');
+Route::get('/profil', function () {
+    return view('profil');
 })->name('user-profil');
+Route::get('/invoice', function () {
+    return view('invoice');
+})->name('invoice');
 
 // admin
 Route::get('/admin', function () {

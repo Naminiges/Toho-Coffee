@@ -187,7 +187,7 @@
                         <i class="fas fa-box"></i>
                     </div>
                     <div class="value">45</div>
-                    <div class="label">Stok Menipis</div>
+                    <div class="label">Produk Tersedia</div>
                 </div>
             </div>
 
