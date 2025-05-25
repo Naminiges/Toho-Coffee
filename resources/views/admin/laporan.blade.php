@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - TOHO Coffee</title>
+    <title>Laporan Penjualan - Toho Coffee</title>
     @vite('resources/css/style.css')
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
@@ -110,7 +109,7 @@
 
             <ul class="sidebar-menu">
                 <li>
-                    <a href="{{ route('admin-dashboard') }}" class="active">
+                    <a href="{{ route('admin-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
@@ -140,7 +139,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-laporan') }}">
+                    <a href="{{ route('admin-laporan') }}" class="active">
                         <i class="fas fa-chart-pie"></i>
                         Laporan
                     </a>
@@ -149,114 +148,111 @@
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <main class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Dashboard</h2>
+                    <h2>Laporan Penjualan</h2>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="printReport()">
+                        <i class="fas fa-print"></i> Cetak Laporan
+                    </button>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="icon blue">
+            <!-- Date Range Filter -->
+            <div class="filter-container report-filter"> {{-- Added report-filter class for specific styling --}}
+                <div class="date-input-group"> {{-- Grouping date inputs and text --}}
+                    <input type="date" id="startDate" class="form-control">
+                    <span>sampai</span>
+                    <input type="date" id="endDate" class="form-control">
+                </div>
+                <button class="btn btn-primary filter-button" onclick="filterReport()"> {{-- Added filter-button class and onclick --}}
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card summary-card"> {{-- Added summary-card class --}}
+                    <div class="card-icon">
                         <i class="fas fa-shopping-cart"></i>
                     </div>
-                    <div class="value">Rp 15.5M</div>
-                    <div class="label">Total Pendapatan</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon green">
-                        <i class="fas fa-shopping-bag"></i>
+                    <div class="card-info">
+                        <h3>Total Penjualan</h3>
+                        <p class="card-value">150</p>
                     </div>
-                    <div class="value">1,234</div>
-                    <div class="label">Total Pesanan</div>
                 </div>
-
-                <div class="stat-card">
-                    <div class="icon orange">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="value">856</div>
-                    <div class="label">Total Pelanggan</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon red">
+                <div class="card summary-card"> {{-- Added summary-card class --}}
+                    <div class="card-icon">
                         <i class="fas fa-box"></i>
                     </div>
-                    <div class="value">45</div>
-                    <div class="label">Produk Tersedia</div>
-                </div>
-            </div>
-
-            <!-- Charts Grid -->
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>Grafik Penjualan</h3>
-                    <div class="chart-placeholder">
-                        Grafik penjualan akan ditampilkan di sini
+                    <div class="card-info">
+                        <h3>Produk Terjual</h3>
+                        <p class="card-value">450</p>
                     </div>
                 </div>
-
-                <div class="chart-card">
-                    <h3>Produk Terlaris</h3>
-                    <div class="chart-placeholder">
-                        Grafik produk terlaris akan ditampilkan di sini
+                <div class="card summary-card"> {{-- Added summary-card class --}}
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="card-info">
+                        <h3>Total Pendapatan</h3>
+                        <p class="card-value">Rp 15.000.000</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Recent Orders -->
-            <div class="recent-orders">
-                <h3>Pesanan Terbaru</h3>
-                <table class="orders-table">
+            <!-- Charts Section -->
+            <div class="charts-container">
+                <!-- Sales Trend Chart -->
+                <div class="chart-card">
+                    <h3>Tren Penjualan</h3>
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+                
+                <!-- Product Performance Chart -->
+                <div class="chart-card">
+                    <h3>Performa Produk</h3>
+                    <canvas id="productPerformanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Selling Products Table -->
+            <div class="product-table-container">
+                <h3>Produk Terlaris</h3>
+                <table class="product-table">
                     <thead>
                         <tr>
-                            <th>ID Pesanan</th>
-                            <th>Pelanggan</th>
-                            <th>Tanggal</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                            <th>Produk</th>
+                            <th>Terjual</th>
+                            <th>Pendapatan</th>
+                            <th>Persentase</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>#TOHO-2024-001</td>
-                            <td>John Doe</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 85.000</td>
-                            <td><span class="status-badge status-ready">Siap Diambil</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
+                            <td>Espresso</td>
+                            <td>120</td>
+                            <td>Rp 2.400.000</td>
+                            <td>25%</td>
                         </tr>
                         <tr>
-                            <td>#TOHO-2024-002</td>
-                            <td>Jane Smith</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 120.000</td>
-                            <td><span class="status-badge status-processing">Diproses</span></td>
-                            <td>
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
+                            <td>Latte</td>
+                            <td>95</td>
+                            <td>Rp 2.850.000</td>
+                            <td>20%</td>
                         </tr>
                         <tr>
-                            <td>#TOHO-2024-003</td>
-                            <td>Mike Johnson</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 75.000</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
+                            <td>Cappuccino</td>
+                            <td>85</td>
+                            <td>Rp 2.550.000</td>
+                            <td>18%</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </main>
     </div>
 
     @vite('resources/js/script.js')

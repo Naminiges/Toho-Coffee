@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - TOHO Coffee</title>
+    <title>Edit Produk - TOHO Coffee Admin</title>
     @vite('resources/css/style.css')
 </head>
 <body>
@@ -99,50 +99,26 @@
         </div>
     </div>
 
-    <div class="dashboard-container">
+    <div class="product-management-container">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
-                <div class="admin-name">Admin TOHO</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-name">Staff TOHO</div>
+                <div class="admin-role">Staff</div>
             </div>
 
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="{{ route('admin-dashboard') }}" class="active">
+                    <a href="{{ route('staff-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-manajemen-pesanan') }}">
-                        <i class="fas fa-shopping-bag"></i>
-                        Pesanan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-manajemen-produk') }}">
+                    <a href="{{ route('staff-manajemen-produk') }}" class="active">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-manajemen-pelanggan') }}">
-                        <i class="fas fa-users"></i>
-                        Pelanggan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-manajemen-staff') }}">
-                        <i class="fas fa-certificate"></i>
-                        Staff
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-laporan') }}">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
                     </a>
                 </li>
             </ul>
@@ -152,109 +128,42 @@
         <div class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Dashboard</h2>
+                    <h2>Edit Produk</h2>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="icon blue">
-                        <i class="fas fa-shopping-cart"></i>
+            <!-- Product Form Section -->
+            <div class="product-form-section active">
+                <form id="editProductForm" action="#" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="productName">Nama Produk</label>
+                        <input type="text" id="productName" name="name" class="form-control" value="" readonly>
                     </div>
-                    <div class="value">Rp 15.5M</div>
-                    <div class="label">Total Pendapatan</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon green">
-                        <i class="fas fa-shopping-bag"></i>
+                    <div class="form-group">
+                        <label for="productCategory">Kategori</label>
+                        <input type="text" id="productCategory" name="category" class="form-control" value="" readonly>
                     </div>
-                    <div class="value">1,234</div>
-                    <div class="label">Total Pesanan</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon orange">
-                        <i class="fas fa-users"></i>
+                    <div class="form-group">
+                        <label for="productDescription">Deskripsi</label>
+                        <textarea id="productDescription" name="description" class="form-control" rows="3" readonly></textarea>
                     </div>
-                    <div class="value">856</div>
-                    <div class="label">Total Pelanggan</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon red">
-                        <i class="fas fa-box"></i>
+                    <div class="form-group">   
+                        <label for="productPrice">Harga (Rp)</label> 
+                        <input type="number" id="productPrice" name="price" class="form-control" min="0" value="" readonly>
                     </div>
-                    <div class="value">45</div>
-                    <div class="label">Produk Tersedia</div>
-                </div>
-            </div>
-
-            <!-- Charts Grid -->
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>Grafik Penjualan</h3>
-                    <div class="chart-placeholder">
-                        Grafik penjualan akan ditampilkan di sini
+                    <div class="form-group">
+                        <label for="productStatus">Status</label>
+                        <select id="productStatus" name="status" class="form-control" required>
+                            <option value="active" >Aktif</option>
+                            <option value="inactive" >Nonaktif</option>
+                        </select>
                     </div>
-                </div>
 
-                <div class="chart-card">
-                    <h3>Produk Terlaris</h3>
-                    <div class="chart-placeholder">
-                        Grafik produk terlaris akan ditampilkan di sini
+                    <div class="form-actions">
+                        <a href="{{ route('staff-manajemen-produk') }}" class="btn btn-cancel">Batal</a>
+                        <button type="submit" class="btn">Simpan Perubahan</button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="recent-orders">
-                <h3>Pesanan Terbaru</h3>
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>ID Pesanan</th>
-                            <th>Pelanggan</th>
-                            <th>Tanggal</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#TOHO-2024-001</td>
-                            <td>John Doe</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 85.000</td>
-                            <td><span class="status-badge status-ready">Siap Diambil</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#TOHO-2024-002</td>
-                            <td>Jane Smith</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 120.000</td>
-                            <td><span class="status-badge status-processing">Diproses</span></td>
-                            <td>
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#TOHO-2024-003</td>
-                            <td>Mike Johnson</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 75.000</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                </form>
             </div>
         </div>
     </div>
@@ -400,3 +309,68 @@
     </script>
 </body>
 </html>
+
+<?php
+// <form id="editProductForm" action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+// @csrf
+// @method('PUT')
+// <a href="{{ route('admin.products.index') }}" class="btn btn-cancel">Batal</a>
+// <div class="product-form-section active">
+//     <form id="editProductForm" action="#" method="POST" enctype="multipart/form-data">
+//         <div class="form-row">
+//             <div class="form-group">
+//                 <label for="productName">Nama Produk</label>
+//                 <input type="text" id="productName" name="name" class="form-control" value="{{ $product->name }}" required>
+//             </div>
+//             <div class="form-group">
+//                 <label for="productCategory">Kategori</label>
+//                 <select id="productCategory" name="category" class="form-control" required>
+//                     <option value="">-- Pilih Kategori --</option>
+//                     <option value="kopi" {{ $product->category == 'kopi' ? 'selected' : '' }}>Kopi</option>
+//                     <option value="teh" {{ $product->category == 'teh' ? 'selected' : '' }}>Teh</option>
+//                     <option value="snack" {{ $product->category == 'snack' ? 'selected' : '' }}>Snack</option>
+//                     <option value="merchandise" {{ $product->category == 'merchandise' ? 'selected' : '' }}>Merchandise</option>
+//                 </select>
+//             </div>
+//         </div>
+
+//         <div class="form-group">
+//             <label for="productDescription">Deskripsi</label>
+//             <textarea id="productDescription" name="description" class="form-control" rows="3" required>{{ $product->description }}</textarea>
+//         </div>
+
+//         <div class="form-row">
+//             <div class="form-group">
+//                 <label for="productPrice">Harga (Rp)</label>
+//                 <input type="number" id="productPrice" name="price" class="form-control" min="0" value="{{ $product->price }}" required>
+//             </div>
+//             <div class="form-group">
+//                 <label for="productStock">Stok</label>
+//                 <input type="number" id="productStock" name="stock" class="form-control" min="0" value="{{ $product->stock }}" required>
+//             </div>
+//         </div>
+
+//         <div class="form-group">
+//             <label for="productImage">Gambar Produk</label>
+//             <input type="file" id="productImage" name="image" class="form-control" accept="image/*">
+//             <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG, PNG. Maks: 2MB</p>
+//             <div id="imagePreview" style="margin-top: 10px;">
+//                 <img src="{{ asset('storage/' . $product->image) }}" alt="Preview" style="max-width: 200px; border-radius: 8px;">
+//             </div>
+//         </div>
+
+//         <div class="form-group">
+//             <label for="productStatus">Status</label>
+//             <select id="productStatus" name="status" class="form-control" required>
+//                 <option value="active" {{ $product->status == 'active' ? 'selected' : '' }}>Aktif</option>
+//                 <option value="inactive" {{ $product->status == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
+//             </select>
+//         </div>
+
+//         <div class="form-actions">
+//             <a href="#" class="btn btn-cancel">Batal</a>
+//             <button type="submit" class="btn">Simpan Perubahan</button>
+//         </div>
+//     </form>
+//     </div>
+?>

@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - TOHO Coffee</title>
+    <title>Detail Pesanan - Toho Coffee</title>
     @vite('resources/css/style.css')
 </head>
 <body>
-    <!-- Header -->
     <header>
-        <div class="navbar">
-            <div class="logo">
+        <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
+            <div class="logo"> <!-- Menggunakan class yang sudah ada -->
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
@@ -101,162 +100,205 @@
 
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
-                <div class="admin-name">Admin TOHO</div>
-                <div class="admin-role">Administrator</div>
+        <div class="sidebar"> <!-- Menggunakan class yang sudah ada -->
+            <div class="sidebar-header"> <!-- Menggunakan class yang sudah ada -->
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Staff Profile">
+                <div class="admin-name">Staff TOHO</div> <!-- Menggunakan class yang sudah ada -->
+                <div class="admin-role">Barista</div> <!-- Menggunakan class yang sudah ada -->
             </div>
 
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
                 <li>
-                    <a href="{{ route('admin-dashboard') }}" class="active">
+                    <a href="{{ route('staff-dashboard') }}" class="active">
                         <i class="fas fa-chart-line"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('admin-manajemen-pesanan') }}">
-                        <i class="fas fa-shopping-bag"></i>
-                        Pesanan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-manajemen-produk') }}">
+                    <a href="{{ route('staff-manajemen-produk') }}">
                         <i class="fas fa-box"></i>
                         Produk
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-manajemen-pelanggan') }}">
-                        <i class="fas fa-users"></i>
-                        Pelanggan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-manajemen-staff') }}">
-                        <i class="fas fa-certificate"></i>
-                        Staff
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('admin-laporan') }}">
-                        <i class="fas fa-chart-pie"></i>
-                        Laporan
                     </a>
                 </li>
             </ul>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
+        <main class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Dashboard</h2>
+                    <h2>Detail Pesanan #ORD001</h2>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="icon blue">
-                        <i class="fas fa-shopping-cart"></i>
+            <div class="order-detail-container">
+                <div class="order-details-left">
+                    <!-- Order Info Card -->
+                    <div class="order-info-card">
+                        <h3>Informasi Pesanan</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>ID Pesanan:</label>
+                                <span>#ORD001</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Tanggal Pesanan:</label>
+                                <span>2024-03-20 14:30</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Pelanggan:</label>
+                                <span>John Doe</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Email:</label>
+                                <span>john.doe@example.com</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Telepon:</label>
+                                <span>+62 812 3456 7890</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Metode Pembayaran:</label>
+                                <span>Transfer Bank</span>
+                            </div>
+                            <div class="info-item full-width">
+                                <label>Alamat Pengiriman:</label>
+                                <span>Jalan Contoh No. 123, Kota Fiktif, Provinsi Antah Berantah, 12345</span>
+                            </div>
+                        </div>
+
+                        {{-- Order Status Display --}}
+                        <div class="order-status-badge status-completed">
+                            <i class="fas fa-check-circle"></i> Selesai
+                        </div>
+
+                        {{-- Status Update Form --}}
+                        <div class="status-update-form" style="margin-top: 20px;"> {{-- Added margin-top for spacing --}}
+                            <div class="form-group">
+                                <input type="hidden" value="">
+                                <label for="orderStatus">Ubah Status Pesanan:</label>
+                                <select id="orderStatus" class="form-control">
+                                    <option value="pending">Menunggu</option>
+                                    <option value="processing">Diproses</option>
+                                    <option value="ready">Siap</option>
+                                    <option value="completed" selected>Selesai</option> {{-- Set the current status as selected --}}
+                                    <option value="cancelled">Dibatalkan</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="updateOrderStatusDetail('ORD001')">
+                                <i class="fas fa-sync-alt"></i> Update Status
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-print"></i> Print Invoice
+                            </button>
+                        </div>
                     </div>
-                    <div class="value">Rp 15.5M</div>
-                    <div class="label">Total Pendapatan</div>
+
+                     <!-- Order Items List -->
+                    <div class="order-info-card">
+                        <h3>Item Pesanan</h3>
+                        <div class="order-items-list">
+                            <div class="order-item">
+                                <div class="item-image">
+                                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Product Image">
+                                </div>
+                                <div class="item-details">
+                                    <h4>Kopi Arabika Single Origin</h4>
+                                    <div class="item-variant">Variant: 250g, Roast: Medium</div>
+                                    <div class="item-price">Rp 50.000 x 2</div>
+                                </div>
+                                <div class="item-subtotal">Rp 100.000</div>
+                            </div>
+                             <div class="order-item">
+                                <div class="item-image">
+                                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Product Image">
+                                </div>
+                                <div class="item-details">
+                                    <h4>Pastry Cokelat</h4>
+                                    <div class="item-variant">Qty: 3</div>
+                                    <div class="item-price">Rp 15.000 x 3</div>
+                                </div>
+                                <div class="item-subtotal">Rp 45.000</div>
+                            </div>
+                            <!-- More items can be added here -->
+                        </div>
+                    </div>
+
+                     <!-- Order Summary -->
+                    <div class="order-info-card">
+                         <h3>Ringkasan Pesanan</h3>
+                        <div class="order-summary">
+                            <div class="summary-item">
+                                <span>Subtotal</span>
+                                <span>Rp 145.000</span>
+                            </div>
+                            <div class="summary-item">
+                                <span>Ongkos Kirim</span>
+                                <span>Rp 5.000</span>
+                            </div>
+                            <div class="summary-item summary-total">
+                                <span>Total</span>
+                                <span>Rp 150.000</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="icon green">
-                        <i class="fas fa-shopping-bag"></i>
+                <div class="order-details-right">
+                    <!-- Order Timeline -->
+                    <div class="order-info-card">
+                        <h3>Riwayat Status</h3>
+                        <div class="order-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-icon"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2024-03-20 14:30</div>
+                                    <div class="timeline-text">Pesanan Dibuat</div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                 <div class="timeline-icon"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2024-03-20 14:35</div>
+                                    <div class="timeline-text">Pembayaran Dikonfirmasi</div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2024-03-20 15:00</div>
+                                    <div class="timeline-text">Pesanan Diproses</div>
+                                </div>
+                            </div>
+                             <div class="timeline-item">
+                                <div class="timeline-icon"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2024-03-20 16:00</div>
+                                    <div class="timeline-text">Pesanan Siap Diambil/Dikirim</div>
+                                </div>
+                            </div>
+                             <div class="timeline-item">
+                                <div class="timeline-icon"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2024-03-20 17:30</div>
+                                    <div class="timeline-text">Pesanan Selesai</div>
+                                </div>
+                            </div>
+                            <!-- More timeline items can be added here -->
+                        </div>
                     </div>
-                    <div class="value">1,234</div>
-                    <div class="label">Total Pesanan</div>
-                </div>
 
-                <div class="stat-card">
-                    <div class="icon orange">
-                        <i class="fas fa-users"></i>
+                     <!-- QR Code -->
+                    <div class="order-info-card qr-code-container">
+                         <h3>Kode QR Pesanan</h3>
+                        <div class="qr-code">
+                            <img src="" alt="QR Code">
+                            <p>Scan QR code untuk verifikasi pesanan.</p>
+                        </div>
                     </div>
-                    <div class="value">856</div>
-                    <div class="label">Total Pelanggan</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="icon red">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <div class="value">45</div>
-                    <div class="label">Produk Tersedia</div>
                 </div>
             </div>
-
-            <!-- Charts Grid -->
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>Grafik Penjualan</h3>
-                    <div class="chart-placeholder">
-                        Grafik penjualan akan ditampilkan di sini
-                    </div>
-                </div>
-
-                <div class="chart-card">
-                    <h3>Produk Terlaris</h3>
-                    <div class="chart-placeholder">
-                        Grafik produk terlaris akan ditampilkan di sini
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="recent-orders">
-                <h3>Pesanan Terbaru</h3>
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>ID Pesanan</th>
-                            <th>Pelanggan</th>
-                            <th>Tanggal</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#TOHO-2024-001</td>
-                            <td>John Doe</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 85.000</td>
-                            <td><span class="status-badge status-ready">Siap Diambil</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#TOHO-2024-002</td>
-                            <td>Jane Smith</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 120.000</td>
-                            <td><span class="status-badge status-processing">Diproses</span></td>
-                            <td>
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#TOHO-2024-003</td>
-                            <td>Mike Johnson</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 75.000</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </main>
     </div>
 
     @vite('resources/js/script.js')
