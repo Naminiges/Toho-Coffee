@@ -15,8 +15,8 @@ return new class extends Migration
             $table->uuid('id_member')->primary();
             $table->uuid('user_id');
             $table->string('member_phone', 14)->nullable();
-            $table->date('birth_date');
-            $table->enum('gender', ['laki-laki', 'perempuan']);
+            $table->date('birth_date')->nullable();
+            $table->enum('gender', ['laki-laki', 'perempuan'])->nullable();
             $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
         });
     }

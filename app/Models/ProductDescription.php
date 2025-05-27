@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class ProductDescription extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+
+    protected $table = '';
+    protected $primaryKey = '';
+    protected $keyType = '';
+    public $incrementing = '';
+    public $timestamps = '';
 
     /**
      * The attributes that are mass assignable.
@@ -17,12 +21,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'google_id',
-        'password',
-        'role',
-        'user_status',
+        // Tambahkan atribut lain yang dapat diisi dan diperlukan
     ];
 
     /**
@@ -31,8 +30,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        // Tambahkan atribut yang ingin disembunyikan
     ];
 
     /**
@@ -43,8 +41,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            // Tambahkan casting yang diperlukan
         ];
     }
 }
