@@ -14,7 +14,7 @@
         <div class="navbar">
             <div class="logo">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
-                <h1>Toho Coffee</h1>
+                <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
                 <li><a href="{{ route('welcome') }}">Beranda</a></li>
