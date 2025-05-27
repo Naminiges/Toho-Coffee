@@ -59,13 +59,8 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
                 'user_status' => $request->user_status,
-            ]); 
-
-            Member::create([
-                'id_member' => Str::uuid(),
-                'user_id' => User::where('role', 'user')->latest()->pluck('user_id')->first()
             ]);
-            
+
             // Login user setelah berhasil registrasi
             Auth::login($user);
 

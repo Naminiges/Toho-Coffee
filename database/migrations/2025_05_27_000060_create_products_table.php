@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id_product')->primary();
-            $table->uuid('description_id');
+            $table->id('id_product');
+            $table->bigInteger('description_id');
             $table->string('product_name');
             $table->decimal('product_price', 10, 2);
             $table->enum('product_status', ['aktif', 'nonaktif']);
