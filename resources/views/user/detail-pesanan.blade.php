@@ -246,12 +246,7 @@
 
             <!-- Right Column -->
             <div class="order-detail-sidebar">
-                <!-- QR Code -->
-                <div class="qr-code">
-                    <img src="" alt="QR Code">
-                    <p>Tunjukkan QR Code ini saat mengambil pesanan</p>
-                </div>
-
+                
                 <!-- Customer Info -->
                 <div class="order-info-card">
                     <h3>Informasi Pelanggan</h3>
@@ -268,7 +263,7 @@
                         <span>+62 812 3456 7890</span>
                     </div>
                 </div>
-
+                
                 <!-- Payment Info -->
                 <div class="order-info-card">
                     <h3>Informasi Pembayaran</h3>
@@ -289,10 +284,16 @@
                         <span>20 Maret 2024, 14:31</span>
                     </div>
                 </div>
-
+                
                 <div class="qr-code">
                     <img src="" alt="Bukti Transfer">
                     <p>Bukti Transfer</p>
+                    
+                    <a href="{{ route('invoice') }}">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-print"></i> Print Invoice
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
