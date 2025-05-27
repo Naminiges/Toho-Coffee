@@ -162,8 +162,8 @@
                                 <span>Transfer Bank</span>
                             </div>
                             <div class="info-item full-width">
-                                <label>Alamat Pengiriman:</label>
-                                <span>Jalan Contoh No. 123, Kota Fiktif, Provinsi Antah Berantah, 12345</span>
+                                <label>Lokasi Pengambilan:</label>
+                                <span>TOHO Coffee - Cabang Utama</span>
                             </div>
                         </div>
 
@@ -188,9 +188,11 @@
                             <button class="btn btn-primary" onclick="updateOrderStatusDetail('ORD001')">
                                 <i class="fas fa-sync-alt"></i> Update Status
                             </button>
-                            <button class="btn btn-secondary">
-                                <i class="fas fa-print"></i> Print Invoice
-                            </button>
+                            <a href="{{ route('invoice') }}">
+                                <button class="btn btn-secondary">
+                                    <i class="fas fa-print"></i> Print Invoice
+                                </button>
+                            </a>
                         </div>
                     </div>
 
@@ -274,7 +276,7 @@
                                 <div class="timeline-icon"></div>
                                 <div class="timeline-content">
                                     <div class="timeline-date">2024-03-20 16:00</div>
-                                    <div class="timeline-text">Pesanan Siap Diambil/Dikirim</div>
+                                    <div class="timeline-text">Pesanan Siap Diambil</div>
                                 </div>
                             </div>
                              <div class="timeline-item">
@@ -294,6 +296,14 @@
                         <div class="qr-code">
                             <img src="" alt="QR Code">
                             <p>Scan QR code untuk verifikasi pesanan.</p>
+                        </div>
+                    </div>
+
+                    <div class="order-info-card qr-code-container">
+                         <h3>Bukti Transfer</h3>
+                        <div class="qr-code">
+                            <img src="" alt="Bukti Transfer">
+                            <p>Validasi Bukti Transfer</p>
                         </div>
                     </div>
                 </div>

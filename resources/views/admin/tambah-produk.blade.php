@@ -193,10 +193,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="productStatus">Status</label>
-                        <select id="productStatus" name="status" class="form-control" required>
-                            <option value="active">Aktif</option>
-                            <option value="inactive">Nonaktif</option>
+                        <label for="productTemperature">Temperature</label>
+                        <select id="productTemperature" name="temperature" class="form-control" required>
+                            <option value="active">Cold</option>
+                            <option value="inactive">Hot</option>
                         </select>
                     </div>
 
