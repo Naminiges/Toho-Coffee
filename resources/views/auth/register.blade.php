@@ -12,7 +12,7 @@
         <div class="navbar">
             <div class="logo">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
-                <h1>Toho Coffee</h1>
+                <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
                 @auth
@@ -108,6 +108,9 @@
                 <span class="error-message" id="password-match-error"></span>
             </div>
 
+            <input type="hidden" name="role" value="user">
+            <input type="hidden" name="user_status" value="aktif">
+
             <button type="submit" class="btn btn-block" id="register-btn">
                 <span class="btn-text">Daftar Sekarang</span>
                 <span class="btn-loader" style="display: none;">
@@ -137,7 +140,7 @@
             <div class="footer-column">
                 <div class="logo">
                     <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
-                    <h1>Toho Coffee</h1>
+                    <h1>TOHO Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>
                 <div class="social-links">
