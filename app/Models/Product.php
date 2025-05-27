@@ -2,46 +2,47 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
-    protected $table = '';
-    protected $primaryKey = '';
-    protected $keyType = '';
-    public $incrementing = '';
-    public $timestamps = '';
+    protected $table = 'products';
+    protected $primaryKey = 'id_product';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        // Tambahkan atribut lain yang dapat diisi dan diperlukan
+        'description_id',
+        'product_name',
+        'product_price',
+        'product_status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        // Tambahkan atribut yang ingin disembunyikan
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            // Tambahkan casting yang diperlukan
+            'product_price' => 'decimal:2',
+            'product_status' => 'string',
         ];
+    }
+
+    // Relationships
+    public function productDescription()
+    {
+        return $this->belongsTo(ProductDescription::class, 'description_id', 'id_description');
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'id_product');
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id', 'id_product');
     }
 }
