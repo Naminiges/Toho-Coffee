@@ -108,6 +108,9 @@
                 <span class="error-message" id="password-match-error"></span>
             </div>
 
+            <input type="hidden" name="role" value="user">
+            <input type="hidden" name="user_status" value="aktif">
+
             <button type="submit" class="btn btn-block" id="register-btn">
                 <span class="btn-text">Daftar Sekarang</span>
                 <span class="btn-loader" style="display: none;">

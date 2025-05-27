@@ -49,11 +49,13 @@ class AuthController extends Controller
         }
 
         try {
-            // Buat user baru
+            // Buat user baru dengan nilai default untuk role dan user_status
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
+                'role' => $request->role ?? 'user', // Default role 'user'
+                'user_status' => $request->user_status ?? 'aktif', // Default status 'aktif'
             ]);
 
             // Login user setelah berhasil registrasi
@@ -245,7 +247,7 @@ class AuthController extends Controller
             return response()->json([
                 'authenticated' => true,
                 'user' => [
-                    'id' => Auth::id(),
+                    'id' => Auth::user()->id_user, // Menggunakan id_user
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email,
                 ]
@@ -284,7 +286,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id_user . ',id_user', // Menggunakan id_user
             'password' => 'nullable|string|min:6|confirmed',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',

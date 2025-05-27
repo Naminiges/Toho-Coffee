@@ -52,14 +52,14 @@ const Utils = {
 // Toggle Menu (Async)
 const initMobileMenu = async () => {
     try {
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
 
         if (hamburger && navLinks) {
             hamburger.addEventListener('click', async () => {
-                navLinks.classList.toggle('active');
+    navLinks.classList.toggle('active');
                 await Utils.delay(100); // Smooth animation
-            });
+});
         }
     } catch (error) {
         console.error('Error initializing mobile menu:', error);
@@ -69,32 +69,32 @@ const initMobileMenu = async () => {
 // Testimonial Slider (Async)
 const initTestimonialSlider = async () => {
     try {
-        const testimonialSlides = document.querySelector('.testimonial-slides');
-        const dots = document.querySelectorAll('.control-dot');
-        let currentSlide = 0;
+const testimonialSlides = document.querySelector('.testimonial-slides');
+const dots = document.querySelectorAll('.control-dot');
+let currentSlide = 0;
 
         if (!testimonialSlides || !dots.length) return;
 
         const showSlide = async (index) => {
-            testimonialSlides.style.transform = `translateX(-${index * 100}%)`;
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === index);
-            });
-            currentSlide = index;
+    testimonialSlides.style.transform = `translateX(-${index * 100}%)`;
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+    });
+    currentSlide = index;
             await Utils.delay(50); // Smooth transition
         };
 
-        dots.forEach((dot, index) => {
+dots.forEach((dot, index) => {
             dot.addEventListener('click', async () => {
                 await showSlide(index);
-            });
-        });
+    });
+});
 
         // Auto Slide with async
         const autoSlide = async () => {
             while (true) {
                 await Utils.delay(5000);
-                let nextSlide = (currentSlide + 1) % dots.length;
+    let nextSlide = (currentSlide + 1) % dots.length;
                 await showSlide(nextSlide);
             }
         };
@@ -108,22 +108,22 @@ const initTestimonialSlider = async () => {
 // Back to Top Button (Async)
 const initBackToTop = async () => {
     try {
-        const backToTopButton = document.querySelector('.back-to-top');
+const backToTopButton = document.querySelector('.back-to-top');
         if (!backToTopButton) return;
 
         window.addEventListener('scroll', async () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('visible');
-            } else {
-                backToTopButton.classList.remove('visible');
-            }
-        });
+    if (window.pageYOffset > 300) {
+        backToTopButton.classList.add('visible');
+    } else {
+        backToTopButton.classList.remove('visible');
+    }
+});
 
         backToTopButton.addEventListener('click', async (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
             await Utils.delay(500); // Wait for scroll animation
-        });
+});
     } catch (error) {
         console.error('Error initializing back to top:', error);
     }
@@ -132,10 +132,10 @@ const initBackToTop = async () => {
 // Shopping Cart (Async with Laravel API)
 const initShoppingCart = async () => {
     try {
-        const addToCartButtons = document.querySelectorAll('.add-to-cart');
-        const cartCount = document.querySelector('.cart-count');
+const addToCartButtons = document.querySelectorAll('.add-to-cart');
+const cartCount = document.querySelector('.cart-count');
 
-        addToCartButtons.forEach(button => {
+addToCartButtons.forEach(button => {
             button.addEventListener('click', async (e) => {
                 const originalText = button.textContent;
                 const productId = button.dataset.productId;
@@ -166,9 +166,9 @@ const initShoppingCart = async () => {
                         }
 
                         // Show success animation
-                        button.textContent = 'Ditambahkan!';
-                        button.style.backgroundColor = '#165d42';
-
+        button.textContent = 'Ditambahkan!';
+        button.style.backgroundColor = '#165d42';
+        
                         Utils.showNotification('Produk berhasil ditambahkan ke keranjang!');
 
                         await Utils.delay(1000);
@@ -181,10 +181,10 @@ const initShoppingCart = async () => {
                     Utils.showNotification(error.message, 'error');
                 } finally {
                     Utils.hideLoading(button, originalText);
-                    button.style.backgroundColor = '';
+            button.style.backgroundColor = '';
                 }
-            });
-        });
+    });
+});
     } catch (error) {
         console.error('Error initializing shopping cart:', error);
     }
@@ -193,19 +193,19 @@ const initShoppingCart = async () => {
 // Sticky Header (Async)
 const initStickyHeader = async () => {
     try {
-        const header = document.querySelector('header');
+const header = document.querySelector('header');
         if (!header) return;
 
         let ticking = false;
 
         const updateHeader = async () => {
-            if (window.pageYOffset > 100) {
-                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            } else {
-                header.style.backgroundColor = 'var(--white)';
-                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            }
+    if (window.pageYOffset > 100) {
+        header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+        header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+    } else {
+        header.style.backgroundColor = 'var(--white)';
+        header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+    }
             ticking = false;
         };
 
@@ -223,33 +223,33 @@ const initStickyHeader = async () => {
 // Smooth Scrolling (Async)
 const initSmoothScrolling = async () => {
     try {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', async function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
                     const headerHeight = document.querySelector('header')?.offsetHeight || 0;
-                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                    
-                    // Close mobile menu if open
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+            
+            // Close mobile menu if open
                     const navLinks = document.querySelector('.nav-links');
                     if (navLinks?.classList.contains('active')) {
-                        navLinks.classList.remove('active');
-                    }
+                navLinks.classList.remove('active');
+            }
                     
                     await Utils.delay(300); // Wait for scroll
-                }
-            });
-        });
+        }
+    });
+});
     } catch (error) {
         console.error('Error initializing smooth scrolling:', error);
     }
@@ -258,22 +258,22 @@ const initSmoothScrolling = async () => {
 // Menu Filters (Async with Laravel API)
 const initMenuFilters = async () => {
     try {
-        const filterButtons = document.querySelectorAll('.filter-btn');
+    const filterButtons = document.querySelectorAll('.filter-btn');
         const searchInput = document.querySelector('.search-bar input');
 
         // Filter functionality
-        if (filterButtons.length) {
-            filterButtons.forEach(btn => {
+    if (filterButtons.length) {
+        filterButtons.forEach(btn => {
                 btn.addEventListener('click', async function() {
                     const originalText = this.textContent;
                     
                     try {
-                        // Remove active class from all buttons
-                        filterButtons.forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        const category = this.getAttribute('data-category');
-                        
+                // Remove active class from all buttons
+                filterButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
                         Utils.showLoading(this);
                         await filterProducts(category);
                         
@@ -283,16 +283,16 @@ const initMenuFilters = async () => {
                     } finally {
                         Utils.hideLoading(this, originalText);
                     }
-                });
             });
-        }
-
+        });
+    }
+    
         // Search functionality with debounce
-        if (searchInput) {
+    if (searchInput) {
             let searchTimeout;
-            searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function() {
                 clearTimeout(searchTimeout);
-                const searchTerm = this.value.toLowerCase().trim();
+            const searchTerm = this.value.toLowerCase().trim();
                 
                 searchTimeout = setTimeout(async () => {
                     await searchProducts(searchTerm);
@@ -325,8 +325,8 @@ const filterProducts = async (category) => {
         console.error('Filter products error:', error);
         // Fallback to client-side filtering
         const products = document.querySelectorAll('.product-card');
-        products.forEach(product => {
-            const productCategory = product.getAttribute('data-category');
+    products.forEach(product => {
+        const productCategory = product.getAttribute('data-category');
             product.style.display = (category === 'all' || productCategory === category) ? 'block' : 'none';
         });
     }
@@ -339,7 +339,7 @@ const searchProducts = async (searchTerm) => {
             // Show all products if search is empty
             const products = document.querySelectorAll('.product-card');
             products.forEach(product => {
-                product.style.display = 'block';
+            product.style.display = 'block';
             });
             return;
         }
@@ -381,7 +381,7 @@ const updateProductDisplay = async (products) => {
         productContainer.innerHTML = '';
 
         // Add new products
-        products.forEach(product => {
+    products.forEach(product => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.setAttribute('data-category', product.category);
@@ -408,70 +408,70 @@ const updateProductDisplay = async (products) => {
 // Product Detail Functions (Async)
 const initProductDetail = async () => {
     try {
-        // Gallery thumbnails
-        const thumbnails = document.querySelectorAll('.thumbnail');
-        const mainImage = document.querySelector('.main-image img');
-        
-        if (thumbnails.length && mainImage) {
-            thumbnails.forEach(thumb => {
+    // Gallery thumbnails
+    const thumbnails = document.querySelectorAll('.thumbnail');
+    const mainImage = document.querySelector('.main-image img');
+    
+    if (thumbnails.length && mainImage) {
+        thumbnails.forEach(thumb => {
                 thumb.addEventListener('click', async function() {
-                    const imgSrc = this.querySelector('img').getAttribute('src');
+                const imgSrc = this.querySelector('img').getAttribute('src');
                     
                     // Fade effect
                     mainImage.style.opacity = '0.5';
                     await Utils.delay(150);
                     
-                    mainImage.setAttribute('src', imgSrc);
+                mainImage.setAttribute('src', imgSrc);
                     mainImage.style.opacity = '1';
-                    
-                    // Update active thumbnail
-                    thumbnails.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                });
+                
+                // Update active thumbnail
+                thumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
             });
-        }
-        
-        // Product Tabs
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        
-        if (tabButtons.length && tabContents.length) {
-            tabButtons.forEach(btn => {
+        });
+    }
+    
+    // Product Tabs
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    if (tabButtons.length && tabContents.length) {
+        tabButtons.forEach(btn => {
                 btn.addEventListener('click', async function() {
-                    const target = this.getAttribute('data-tab');
-                    
+                const target = this.getAttribute('data-tab');
+                
                     // Hide all tab contents with fade
-                    tabContents.forEach(content => {
+                tabContents.forEach(content => {
                         content.style.opacity = '0';
                         setTimeout(() => content.classList.remove('active'), 150);
-                    });
+                });
                     
                     await Utils.delay(150);
-                    
-                    // Show selected tab content
+                
+                // Show selected tab content
                     const targetContent = document.getElementById(target);
                     if (targetContent) {
                         targetContent.classList.add('active');
                         targetContent.style.opacity = '1';
                     }
-                    
-                    // Update active tab button
-                    tabButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                });
+                
+                // Update active tab button
+                tabButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
             });
-        }
+        });
+    }
     } catch (error) {
         console.error('Error initializing product detail:', error);
-    }
+}
 };
 
 // Auth Forms (Async with Laravel validation)
 const initAuthForms = async () => {
     try {
-        // Password visibility toggle
-        const passwordToggles = document.querySelectorAll('.password-toggle i');
-        
+    // Password visibility toggle
+    const passwordToggles = document.querySelectorAll('.password-toggle i');
+    
         passwordToggles.forEach(toggle => {
             toggle.addEventListener('click', async function() {
                 const passwordInput = this.previousElementSibling;
@@ -487,30 +487,30 @@ const initAuthForms = async () => {
                 await Utils.delay(100);
             });
         });
-        
+    
         // Login Form
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) {
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
             loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
+            e.preventDefault();
                 await handleFormSubmission(this, '/login');
             });
         }
         
         // Register Form
         const registerForm = document.getElementById('register-form');
-        if (registerForm) {
+    if (registerForm) {
             registerForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
+            e.preventDefault();
                 await handleFormSubmission(this, '/register');
             });
         }
         
         // Forgot Password Form
         const forgotPasswordForm = document.getElementById('forgot-password-form');
-        if (forgotPasswordForm) {
+    if (forgotPasswordForm) {
             forgotPasswordForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
+            e.preventDefault();
                 await handleFormSubmission(this, '/forgot-password');
             });
         }
@@ -580,12 +580,12 @@ const handleFormSubmission = async (form, endpoint) => {
 // Cart Management (Async)
 const initCartManagement = async () => {
     try {
-        const decreaseBtns = document.querySelectorAll('.cart-item .quantity-btn.decrease');
-        const increaseBtns = document.querySelectorAll('.cart-item .quantity-btn.increase');
-        const quantityInputs = document.querySelectorAll('.cart-item .quantity-input');
-        const removeButtons = document.querySelectorAll('.remove-item');
-        const clearCartButton = document.querySelector('.clear-cart');
-        const updateCartButton = document.querySelector('.update-cart');
+    const decreaseBtns = document.querySelectorAll('.cart-item .quantity-btn.decrease');
+    const increaseBtns = document.querySelectorAll('.cart-item .quantity-btn.increase');
+    const quantityInputs = document.querySelectorAll('.cart-item .quantity-input');
+    const removeButtons = document.querySelectorAll('.remove-item');
+    const clearCartButton = document.querySelector('.clear-cart');
+    const updateCartButton = document.querySelector('.update-cart');
 
         // Update cart item quantity
         const updateCartItem = async (itemId, quantity) => {
@@ -618,20 +618,20 @@ const initCartManagement = async () => {
         };
 
         // Quantity buttons
-        decreaseBtns.forEach((btn, index) => {
+    decreaseBtns.forEach((btn, index) => {
             btn.addEventListener('click', async function() {
                 const quantityInput = quantityInputs[index];
                 const currentValue = parseInt(quantityInput.value);
                 const itemId = this.dataset.itemId;
                 
-                if (currentValue > 1) {
+            if (currentValue > 1) {
                     quantityInput.value = currentValue - 1;
                     await updateCartItem(itemId, currentValue - 1);
-                }
-            });
+            }
         });
+    });
 
-        increaseBtns.forEach((btn, index) => {
+    increaseBtns.forEach((btn, index) => {
             btn.addEventListener('click', async function() {
                 const quantityInput = quantityInputs[index];
                 const currentValue = parseInt(quantityInput.value);
@@ -639,13 +639,13 @@ const initCartManagement = async () => {
                 
                 quantityInput.value = currentValue + 1;
                 await updateCartItem(itemId, currentValue + 1);
-            });
         });
+    });
 
         // Remove item buttons
-        removeButtons.forEach(btn => {
+    removeButtons.forEach(btn => {
             btn.addEventListener('click', async function() {
-                const item = this.closest('.cart-item');
+            const item = this.closest('.cart-item');
                 const itemId = this.dataset.itemId;
                 
                 if (confirm('Hapus item ini dari keranjang?')) {
@@ -675,11 +675,11 @@ const initCartManagement = async () => {
                         Utils.showNotification(error.message, 'error');
                     }
                 }
-            });
         });
+    });
 
         // Clear cart button
-        if (clearCartButton) {
+    if (clearCartButton) {
             clearCartButton.addEventListener('click', async function() {
                 if (confirm('Kosongkan seluruh keranjang?')) {
                     const originalText = this.textContent;
@@ -708,9 +708,9 @@ const initCartManagement = async () => {
                     } finally {
                         Utils.hideLoading(this, originalText);
                     }
-                }
-            });
-        }
+            }
+        });
+    }
 
     } catch (error) {
         console.error('Error initializing cart management:', error);
@@ -757,21 +757,21 @@ const updateCartTotal = async () => {
 const initAdminFunctions = async () => {
     try {
         // Product management
-        const addProductBtn = document.getElementById('addProductBtn');
-        const productFormSection = document.getElementById('productFormSection');
-        const cancelFormBtn = document.getElementById('cancelFormBtn');
+const addProductBtn = document.getElementById('addProductBtn');
+const productFormSection = document.getElementById('productFormSection');
+const cancelFormBtn = document.getElementById('cancelFormBtn');
         const productForm = document.getElementById('addMenuForm');
 
         if (addProductBtn && productFormSection) {
             addProductBtn.addEventListener('click', async () => {
-                productFormSection.classList.add('active');
+    productFormSection.classList.add('active');
                 await Utils.delay(100);
-            });
+});
         }
 
         if (cancelFormBtn && productFormSection) {
             cancelFormBtn.addEventListener('click', async () => {
-                productFormSection.classList.remove('active');
+    productFormSection.classList.remove('active');
                 await Utils.delay(100);
             });
         }
@@ -809,7 +809,7 @@ const initAdminFunctions = async () => {
                         } else {
                             location.reload();
                         }
-                    } else {
+    } else {
                         throw new Error(data.message || 'Gagal menambahkan produk');
                     }
                     
@@ -849,53 +849,53 @@ const initCharts = async () => {
 
         const chartData = await response.json();
 
-        // Sales Trend Chart
+    // Sales Trend Chart
         const salesTrendCtx = document.getElementById('salesTrendChart');
         if (salesTrendCtx) {
             new Chart(salesTrendCtx.getContext('2d'), {
-                type: 'line',
-                data: {
+        type: 'line',
+        data: {
                     labels: chartData.sales_trend.labels,
-                    datasets: [{
-                        label: 'Penjualan',
+            datasets: [{
+                label: 'Penjualan',
                         data: chartData.sales_trend.data,
                         borderColor: '#4CAF50',
-                        tension: 0.1,
+                tension: 0.1,
                         fill: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+                y: {
+                    beginAtZero: true
                 }
-            });
+            }
+        }
+    });
         }
 
-        // Product Performance Chart
+    // Product Performance Chart
         const productPerformanceCtx = document.getElementById('productPerformanceChart');
         if (productPerformanceCtx) {
             new Chart(productPerformanceCtx.getContext('2d'), {
-                type: 'bar',
-                data: {
+        type: 'bar',
+        data: {
                     labels: chartData.product_performance.labels,
-                    datasets: [{
-                        label: 'Jumlah Terjual',
+            datasets: [{
+                label: 'Jumlah Terjual',
                         data: chartData.product_performance.data,
                         backgroundColor: '#4CAF50'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                y: {
+                    beginAtZero: true
+                }
                     }
                 }
             });
@@ -934,10 +934,10 @@ const initStaticCharts = () => {
                     scales: {
                         y: {
                             beginAtZero: true
-                        }
-                    }
                 }
-            });
+            }
+        }
+    });
         }
 
         // Static Product Performance Chart
@@ -1000,7 +1000,7 @@ const printReport = async () => {
         nonPrintElements.forEach(el => el.style.display = 'none');
         
         await Utils.delay(100);
-        window.print();
+    window.print();
         
         // Restore elements after printing
         setTimeout(() => {
