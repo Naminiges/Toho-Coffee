@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders_details', function (Blueprint $table) {
             $table->id('id_order_detail');
-            $table->bigInteger('order_id');
+            $table->unsignedBigInteger('order_id');
             $table->string('pickup_telephone', 14);
             $table->string('pickup_email');
             $table->string('pickup_place');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('payment_method');
             $table->string('payment_status');
             $table->string('bank_number');
-            $table->bigInteger('product_id');
+            $table->unsignedBigInteger('product_id');
             $table->decimal('product_price', 10, 2);
             $table->integer('product_quantity');
             $table->foreign('order_id')->references('id_orders')->on('orders')->onDelete('cascade');
