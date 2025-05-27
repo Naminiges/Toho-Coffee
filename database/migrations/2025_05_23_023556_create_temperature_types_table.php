@@ -8,9 +8,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('temperature_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 50); // e.g. 'cold', 'hot'
-            $table->timestamps();
+            $table->uuid('id_temperature')->primary();
+            $table->enum('temperature', ['hot', 'cold']);
         });
     }
 

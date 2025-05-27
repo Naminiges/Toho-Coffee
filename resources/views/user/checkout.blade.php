@@ -158,7 +158,7 @@
                                 <label for="pickup1">
                                     <strong>TOHO Coffee - Cabang Utama</strong><br>
                                     Universitas Sumatera Utara, Medan<br>
-                                    Buka: 08:00 - 22:00
+                                    Buka: 08:00 - 17:00
                                 </label>
                             </div>
                         </div>
@@ -166,7 +166,12 @@
 
                     <div class="form-group">
                         <label for="pickupTime">Waktu Pengambilan</label>
-                        <input type="datetime-local" id="pickupTime" class="form-control" required>
+                        <input type="datetime-local" max="" min="" id="pickupTime" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transferProof">Bukti Transfer</label>
+                        <input type="file" id="transferProof" class="form-control" accept="image/*" required>
                     </div>
 
                     <div class="form-group">
@@ -237,7 +242,7 @@
                     <span>Rp 282.800</span>
                 </div>
                 
-                <button type="submit" form="checkoutForm" class="btn btn-block">Buat Pesanan</button>
+                <button id="orderBtn" type="submit" form="checkoutForm" class="btn btn-block">Buat Pesanan</button>
                 
                 <div class="secure-checkout">
                     <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
