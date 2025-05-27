@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_orders');
             $table->string('orders_code', 20)->unique();
             $table->string('staff_name', 100)->nullable();
-            $table->bigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('member_name', 100)->nullable();
             $table->longText('member_notes')->nullable();
             $table->string('member_bank', 100)->nullable();

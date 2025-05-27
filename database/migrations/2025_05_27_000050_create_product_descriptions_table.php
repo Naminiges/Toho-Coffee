@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_descriptions', function (Blueprint $table) {
             $table->id('id_description');
-            $table->bigInteger('category_id');
-            $table->bigInteger('temperature_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('temperature_id');
             $table->binary('product_photo');
             $table->longText('product_description');
             $table->foreign('category_id')->references('id_category')->on('categories')->onDelete('cascade');
