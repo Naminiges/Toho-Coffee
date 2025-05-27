@@ -8,9 +8,10 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->enum('status', ['active', 'inactive']);
+            $table->char(36)->primary();
+            $table->foreignId('description_id')->constrained('product_description')->onDelete('cascade');
+            $table->string('product_name');
+            $table->enum('status', ['aktif', 'nonaktif']);
             $table->string('description')->nullable();
             $table->timestamps();
         });

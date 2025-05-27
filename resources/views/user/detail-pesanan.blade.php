@@ -289,6 +289,11 @@
                         <span>20 Maret 2024, 14:31</span>
                     </div>
                 </div>
+
+                <div class="qr-code">
+                    <img src="" alt="Bukti Transfer">
+                    <p>Bukti Transfer</p>
+                </div>
             </div>
         </div>
     </div>

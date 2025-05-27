@@ -2027,6 +2027,11 @@ input:read-only , textarea:read-only {
     background: var(--medium-gray);
 }
 
+.btn:disabled {
+    background-color: var(--dark-gray);
+    cursor: not-allowed;
+}
+
 .validation-message {
     font-size: 12px;
     margin-top: 5px;
