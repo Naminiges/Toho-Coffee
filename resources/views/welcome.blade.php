@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toho Coffee - Nikmati Kopi Premium</title>
+    <title>TOHO Coffee - Nikmati Kopi Premium</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/style.css')
 </head>
@@ -13,7 +13,7 @@
         <div class="navbar">
             <div class="logo">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
-                <h1>Toho Coffee</h1>
+                <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
                 @auth

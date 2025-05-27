@@ -13,7 +13,7 @@
         <div class="navbar">
             <div class="logo">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
-                <h1>Toho Coffee</h1>
+                <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
                 @auth
@@ -99,7 +99,7 @@
             <div class="footer-column">
                 <div class="logo">
                     <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
-                    <h1>Toho Coffee</h1>
+                    <h1>TOHO Coffee</h1>
                 </div>
                 <p>Kopi premium untuk pengalaman menikmati kopi terbaik di rumah ataupun di kafe Anda.</p>
                 <div class="social-links">

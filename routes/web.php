@@ -15,6 +15,10 @@ Route::get('/login', function () {
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
 })->name('forgot-password');
+Route::get('/invoice', function () {
+    return view('invoice');
+});
+
 
 // user
 Route::get('/user/katalog', function () {

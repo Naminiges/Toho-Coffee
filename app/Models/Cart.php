@@ -2,46 +2,41 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Cart extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
-    protected $table = '';
-    protected $primaryKey = '';
-    protected $keyType = '';
-    public $incrementing = '';
-    public $timestamps = '';
-    
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'carts';
+    protected $primaryKey = 'id_cart';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
     protected $fillable = [
-        // Tambahkan atribut lain yang dapat diisi dan diperlukan
+        'member_id',
+        'product_id',
+        'item_quantity',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        // Tambahkan atribut yang ingin disembunyikan
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            // Tambahkan casting yang diperlukan
+            'item_quantity' => 'integer',
         ];
+    }
+
+    // Relationships
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id', 'id_member');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id_product');
     }
 }

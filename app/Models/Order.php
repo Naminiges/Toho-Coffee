@@ -2,46 +2,52 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
-    protected $table = '';
-    protected $primaryKey = '';
-    protected $keyType = '';
-    public $incrementing = '';
-    public $timestamps = '';
+    protected $table = 'orders';
+    protected $primaryKey = 'id_orders';
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        // Tambahkan atribut lain yang dapat diisi dan diperlukan
+        'orders_code',
+        'staff_name',
+        'member_id',
+        'member_name',
+        'member_notes',
+        'member_bank',
+        'proof_payment',
+        'order_status',
+        'total_price',
+        'order_date',
+        'order_complete',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        // Tambahkan atribut yang ingin disembunyikan
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
-            // Tambahkan casting yang diperlukan
+            'total_price' => 'decimal:2',
+            'order_status' => 'string',
+            'order_date' => 'datetime',
+            'order_complete' => 'datetime',
         ];
+    }
+
+    // Relationships
+    public function member()
+    {
+        return $this->belongsTo(Member::class, 'member_id', 'id_member');
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id_orders');
     }
 }
