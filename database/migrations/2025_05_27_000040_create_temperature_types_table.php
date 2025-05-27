@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('temperature_types', function (Blueprint $table) {
-            $table->uuid('id_temperature')->primary();
+            $table->id('id_temperature');
             $table->enum('temperature', ['hot', 'cold']);
         });
     }

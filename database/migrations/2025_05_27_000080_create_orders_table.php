@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->uuid('id_orders')->primary();
+            $table->id('id_orders');
             $table->string('orders_code', 20)->unique();
             $table->string('staff_name', 100)->nullable();
-            $table->uuid('member_id')->nullable();
+            $table->bigInteger('user_id')->nullable();
             $table->string('member_name', 100)->nullable();
             $table->longText('member_notes')->nullable();
             $table->string('member_bank', 100)->nullable();
@@ -24,7 +24,6 @@ return new class extends Migration
             $table->decimal('total_price', 10, 2);
             $table->timestamp('order_date');
             $table->timestamp('order_complete')->nullable();
-            $table->foreign('member_id')->references('id_member')->on('members')->onDelete('set null');
         });
     }
 
