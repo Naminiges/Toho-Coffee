@@ -8,25 +8,16 @@
             font-family: 'Arial', sans-serif;
             margin: 40px;
             color: #333;
-<<<<<<< HEAD
-=======
             background-color: #f9f9f9;
->>>>>>> origin/main
         }
 
         .invoice-box {
             max-width: 800px;
             margin: auto;
-<<<<<<< HEAD
-            border: 1px solid #eee;
-            padding: 30px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-=======
             border: 1px solid #ddd;
             padding: 30px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #fff;
->>>>>>> origin/main
         }
         
         .toho-font {
