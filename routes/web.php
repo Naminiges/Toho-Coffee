@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CartController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -137,3 +138,28 @@ Route::get('/test-reset-password', function () {
         'email' => 'test@example.com'
     ]);
 })->name('test-reset-password');
+
+// Tambahkan routes ini ke file routes/web.php
+
+use App\Http\Controllers\ProductController;
+
+// Public routes for products
+Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+
+// AJAX routes for dynamic functionality
+Route::get('/api/products/search', [ProductController::class, 'search'])->name('products.search');
+Route::get('/api/products/category/{category}', [ProductController::class, 'getByCategory'])->name('products.by-category');
+
+// Admin routes (jika diperlukan, dengan middleware auth dan admin)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('products', ProductController::class)->except(['index', 'show']);
+    Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
+    Route::post('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
+});
+
+// Cart routes (jika diperlukan)
+Route::middleware('auth')->group(function () {
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
+});
