@@ -48,11 +48,7 @@
         }
 
         table th {
-<<<<<<< HEAD
-            background: #eee;
-=======
             background: #f4f4f4;
->>>>>>> origin/main
             font-weight: bold;
         }
 
@@ -80,29 +76,6 @@
 <body>
     <div class="invoice-box">
         <div style="display: flex; justify-content: space-between;">
-<<<<<<< HEAD
-
-    <div class="company-logo" style="display: flex; align-items: center;">
-        <div style="
-            background: #f4f4f4;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        ">
-            <img src="{{ asset('images/tohologo.jpg') }}" alt="Logo" style="height: 60px; display: block;">
-        </div>
-
-    <div>
-        <h2 style="margin: 0;">
-            <span class="toho-font">TOHO</span> Coffee
-        </h2>
-        <small style="color: #777;">Authentic Taste</small>
-    </div>
-
-    </div>
-
-
-=======
             <div class="company-logo" style="display: flex; align-items: center;">
                 <div style="
                     background: #f4f4f4;
@@ -119,7 +92,6 @@
                     <small style="color: #777;">Authentic Taste</small>
                 </div>
             </div>
->>>>>>> origin/main
             <div class="invoice-header">
                 <h2>Invoice</h2>
                 <p>Invoice #: 57999<br>
@@ -186,25 +158,12 @@
         </div>
 
         <div class="signature">
-<<<<<<< HEAD
-            <p>_______________________</p>
-=======
->>>>>>> origin/main
             <p>TOHO Coffee</p>
         </div>
 
         <div class="footer">
-<<<<<<< HEAD
-            <strong>Terms & Conditions:</strong><br>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu risus vitae lacus tincidunt facilisis.
-        </div>
-    </div>
-</body>
-</html>
-=======
             <strong>@2025 TOHO Coffee</strong><br>
         </div>
     </div>
 </body>
 </html>
->>>>>>> origin/main
