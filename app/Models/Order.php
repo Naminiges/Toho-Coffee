@@ -41,11 +41,6 @@ class Order extends Model
     }
 
     // Relationships
-    public function member()
-    {
-        return $this->belongsTo(Member::class, 'member_id', 'id_member');
-    }
-
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'order_id', 'id_orders');

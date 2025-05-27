@@ -40,15 +40,4 @@ class User extends Authenticatable
             'user_status' => 'string',
         ];
     }
-
-    // Relationships
-    public function member()
-    {
-        return $this->hasOne(Member::class, 'user_id', 'id_user');
-    }
-
-    public function staff()
-    {
-        return $this->hasOne(Staff::class, 'user_id', 'id_user');
-    }
 }
