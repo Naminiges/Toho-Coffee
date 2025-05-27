@@ -3,29 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Keranjang Belanja - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <img src="/api/placeholder/40/40" alt="TOHO Coffee Logo">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Toho Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
             <ul class="nav-links">
-                <li><a href="#home">Beranda</a></li>
-                <li><a href="#products">Produk</a></li>
+                <li><a href="{{ route('welcome') }}">Beranda</a></li>
+                <li><a href="{{ route('user-katalog') }}">Katalog</a></li>
+                <li><a href="{{ route('user-riwayat') }}">Riwayat</a></li>
             </ul>
             <div class="nav-actions">
-                <i class="fas fa-search search-icon"></i>
-                <i class="fas fa-shopping-cart cart-icon">
-                    <span class="cart-count">3</span>
-                </i>
-                <i class="fas fa-user user-icon"></i>
+                    <!-- User Menu Dropdown -->
+                    <div class="cart-icon">
+                        <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </div>
+                    <div class="user-menu">
+                        <div class="user-trigger" onclick="toggleUserMenu()">
+                            <div class="user-avatar">
+                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                            </div>
+                            <div class="user-info">
+                                <span class="user-name">{{ Auth::user()->name }}</span>
+                                <span class="user-email">{{ Auth::user()->email }}</span>
+                            </div>
+                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                        </div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="dropdown-header">
+                                <div class="user-avatar-large">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <div class="user-details">
+                                    <div class="user-name-large">{{ Auth::user()->name }}</div>
+                                    <div class="user-email-small">{{ Auth::user()->email }}</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('profile') }}" class="dropdown-item">
+                                        <i class="fas fa-user"></i>
+                                        <span>Profile Saya</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('user-keranjang') }}" class="dropdown-item">
+                                        <i class="fas fa-shopping-bag"></i>
+                                        <span>Pesanan Saya</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-footer">
+                                <button onclick="confirmLogout()" class="logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Keluar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
             </div>
             <div class="hamburger">
                 <div></div>
@@ -35,6 +82,41 @@
         </div>
     </header>
 
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Konfirmasi Logout</h3>
+                <button class="modal-close" onclick="closeLogoutModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <p>Apakah Anda yakin ingin keluar dari akun Anda?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLogoutModal()">Batal</button>
+                <button class="btn btn-danger" onclick="performLogout()" id="confirmLogoutBtn">
+                    <span class="btn-text">Ya, Keluar</span>
+                    <span class="btn-loader" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Memproses...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Alert -->
+    <div class="alert-container" id="alertContainer" style="display: none;">
+        <div class="alert" id="alertMessage">
+            <i class="alert-icon"></i>
+            <span class="alert-text"></span>
+        </div>
+    </div>
+
     <!-- Page Header -->
     <div class="page-header">
         <h2>Keranjang Belanja</h2>
@@ -43,7 +125,7 @@
     <div class="container">
         <!-- Breadcrumb -->
         <ul class="breadcrumb">
-            <li><a href="index.html">Beranda</a></li>
+            <li><a href="{{ route('welcome') }}">Beranda</a></li>
             <li>Keranjang Belanja</li>
         </ul>
 
@@ -54,7 +136,7 @@
                 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="Arabica Gayo">
+                        <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Gayo">
                     </div>
                     <div class="item-details">
                         <h4>Arabica Gayo Premium</h4>
@@ -76,7 +158,7 @@
 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="Robusta Toraja">
+                        <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Toraja">
                     </div>
                     <div class="item-details">
                         <h4>Robusta Toraja Special</h4>
@@ -98,7 +180,7 @@
 
                 <div class="cart-item">
                     <div class="item-image">
-                        <img src="/api/placeholder/100/100" alt="TOHO Blend">
+                        <img src="{{ asset('images/kopi3.jpg') }}" alt="TOHO Blend">
                     </div>
                     <div class="item-details">
                         <h4>TOHO Signature Blend</h4>
@@ -120,7 +202,7 @@
 
                 <div class="cart-actions">
                     <div class="continue-shopping">
-                        <a href="menu.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Lanjut Belanja</a>
+                        <a href="{{ route('user-katalog') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Lanjut Belanja</a>
                     </div>
                     <div class="cart-buttons">
                         <button class="btn btn-secondary clear-cart">Kosongkan Keranjang</button>
@@ -139,26 +221,16 @@
                 </div>
                 
                 <div class="summary-item">
-                    <span>Diskon</span>
-                    <span>- Rp 0</span>
-                </div>
-                
-                <div class="summary-item">
-                    <span>Estimasi Pengiriman</span>
-                    <span>Rp 15.000</span>
-                </div>
-                
-                <div class="coupon-code">
-                    <input type="text" placeholder="Kode Kupon" class="form-control">
-                    <button class="btn">Terapkan</button>
+                    <span>PPn 10%</span>
+                    <span>Rp 2.800</span>
                 </div>
                 
                 <div class="summary-total">
                     <span>Total</span>
-                    <span>Rp 295.000</span>
+                    <span>Rp 282.800</span>
                 </div>
                 
-                <a href="checkout.html" class="btn btn-block">Lanjut ke Pembayaran</a>
+                <a href="{{ route('user-checkout') }}" class="btn btn-block">Lanjut ke Pembayaran</a>
                 
                 <div class="secure-checkout">
                     <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
@@ -167,126 +239,182 @@
                 <div class="payment-methods">
                     <span>Metode Pembayaran:</span>
                     <div class="payment-icons">
-                        <i class="fab fa-cc-visa"></i>
-                        <i class="fab fa-cc-mastercard"></i>
-                        <i class="fab fa-paypal"></i>
                         <i class="fas fa-wallet"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Related Products -->
-        <div class="related-products">
-            <h3>Mungkin Anda Juga Suka</h3>
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
-                    </div>
-                    <div class="product-info">
-                        <h4>TOHO Coffee Drip Bag</h4>
-                        <div class="price">Rp 45.000</div>
-                        <div class="description">Kemasan praktis 5 sachet kopi drip premium.</div>
-                        <button class="add-to-cart">Tambah ke Keranjang</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
-                    </div>
-                    <div class="product-info">
-                        <h4>Pour Over Set</h4>
-                        <div class="price">Rp 275.000</div>
-                        <div class="description">Set lengkap untuk metode seduh pour over.</div>
-                        <button class="add-to-cart">Tambah ke Keranjang</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
-                    </div>
-                    <div class="product-info">
-                        <h4>TOHO Tumbler</h4>
-                        <div class="price">Rp 130.000</div>
-                        <div class="description">Tumbler termos 500ml untuk kopi selalu panas.</div>
-                        <button class="add-to-cart">Tambah ke Keranjang</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <img src="/api/placeholder/280/250" alt="TOHO Coffee">
-                    </div>
-                    <div class="product-info">
-                        <h4>Manual Grinder</h4>
-                        <div class="price">Rp 225.000</div>
-                        <div class="description">Penggiling kopi manual keramik presisi tinggi.</div>
-                        <button class="add-to-cart">Tambah ke Keranjang</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>TOHO Coffee</h4>
-                <p>Kopi berkualitas dari petani lokal terbaik Indonesia langsung ke cangkir Anda.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            
-            <div class="footer-column">
-                <h4>Links</h4>
-                <ul class="footer-links">
-                    <li><a href="index.html">Beranda</a></li>
-                    <li><a href="menu.html">Menu</a></li>
-                    <li><a href="about.html">Tentang Kami</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="contact.html">Kontak</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h4>Kontak</h4>
-                <ul class="contact-info">
-                    <li><span><i class="fas fa-map-marker-alt"></i></span> Jl. Kopi No. 123, Jakarta</li>
-                    <li><span><i class="fas fa-phone"></i></span> +62 21 123 4567</li>
-                    <li><span><i class="fas fa-envelope"></i></span> info@tohocoffee.com</li>
-                    <li><span><i class="fas fa-clock"></i></span> Senin-Jumat: 08.00-20.00</li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h4>Newsletter</h4>
-                <p>Dapatkan informasi terbaru dan promo spesial.</p>
-                <div class="newsletter">
-                    <input type="email" placeholder="Email Anda" required>
-                    <button>Berlangganan</button>
-                </div>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            <p>&copy; 2025 TOHO Coffee. Semua Hak Dilindungi.</p>
-        </div>
-    </footer>
-
     <!-- Back to Top -->
     <a href="#" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
     </a>
 
-    <!-- Custom JS -->
-    @vite('resources/js/script.css')
+    @vite('resources/js/script.js')
+    <script>
+        // Quantity selector
+        const decreaseBtn = document.querySelector('.quantity-btn.decrease');
+        const increaseBtn = document.querySelector('.quantity-btn.increase');
+        const quantityInput = document.querySelector('.quantity-input');
+        
+        if (decreaseBtn && increaseBtn && quantityInput) {
+            decreaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+            
+            increaseBtn.addEventListener('click', function() {
+                const currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+            
+            // Ensure quantity is always valid
+            quantityInput.addEventListener('change', function() {
+                let value = parseInt(this.value);
+                if (isNaN(value) || value < 1) {
+                    this.value = 1;
+                }
+            });
+        }
+
+        // Setup CSRF token for AJAX requests
+        window.Laravel = {
+            csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        };
+
+        // User Menu Functions
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            const trigger = document.querySelector('.user-trigger');
+            const arrow = document.querySelector('.dropdown-arrow');
+            
+            dropdown.classList.toggle('show');
+            trigger.classList.toggle('active');
+            
+            if (dropdown.classList.contains('show')) {
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (userMenu && !userMenu.contains(event.target)) {
+                dropdown.classList.remove('show');
+                document.querySelector('.user-trigger').classList.remove('active');
+                document.querySelector('.dropdown-arrow').style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Logout Functions
+        function confirmLogout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+            // Close user dropdown
+            document.getElementById('userDropdown').classList.remove('show');
+            document.querySelector('.user-trigger').classList.remove('active');
+            document.querySelector('.dropdown-arrow').style.transform = 'rotate(0deg)';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function performLogout() {
+            const confirmBtn = document.getElementById('confirmLogoutBtn');
+            const btnText = confirmBtn.querySelector('.btn-text');
+            const btnLoader = confirmBtn.querySelector('.btn-loader');
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            confirmBtn.disabled = true;
+            
+            // Create form for logout
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '{{ route("logout") }}';
+            
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = window.Laravel.csrfToken;
+            form.appendChild(csrfInput);
+            
+            // Add to DOM and submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        // Alert Functions
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertMessage = document.getElementById('alertMessage');
+            const alertIcon = alertMessage.querySelector('.alert-icon');
+            const alertText = alertMessage.querySelector('.alert-text');
+            
+            // Set alert content
+            alertText.textContent = message;
+            alertMessage.className = `alert alert-${type}`;
+            
+            // Set icon based on type
+            if (type === 'success') {
+                alertIcon.className = 'alert-icon fas fa-check-circle';
+            } else if (type === 'error') {
+                alertIcon.className = 'alert-icon fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                alertIcon.className = 'alert-icon fas fa-exclamation-triangle';
+            }
+            
+            // Show alert
+            alertContainer.style.display = 'flex';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alertContainer.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message if exists
+        @if(session('success'))
+            showAlert('success', '{{ session("success") }}');
+        @endif
+
+        // Show error message if exists
+        @if(session('error'))
+            showAlert('error', '{{ session("error") }}');
+        @endif
+
+        // Close alert when clicking on it
+        document.getElementById('alertContainer').addEventListener('click', function() {
+            this.style.display = 'none';
+        });
+
+        // Prevent modal from closing when clicking inside modal content
+        document.querySelector('.modal-content').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Close modal when clicking on overlay
+        document.getElementById('logoutModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLogoutModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLogoutModal();
+            }
+        });
+    </script>
 </body>
 </html>
