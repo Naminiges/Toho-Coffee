@@ -266,7 +266,7 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
-        return view('user.profil', [
+        return view('profil', [
             'user' => Auth::user()
         ]);
     }
