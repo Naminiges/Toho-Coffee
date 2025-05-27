@@ -206,25 +206,6 @@
                             <input type="tel" id="phone" class="form-control" value="+62 812 3456 7890" required>
                         </div>
 
-                        <div class="form-group">
-                            <label for="birthDate">Tanggal Lahir</label>
-                            <input type="date" id="birthDate" class="form-control" value="1990-01-01">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Jenis Kelamin</label>
-                            <div style="display: flex; gap: 20px;">
-                                <label style="display: flex; align-items: center; gap: 5px;">
-                                    <input type="radio" name="gender" value="male" checked>
-                                    Laki-laki
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 5px;">
-                                    <input type="radio" name="gender" value="female">
-                                    Perempuan
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="profile-actions">
                             <button type="submit" class="btn">Simpan Perubahan</button>
                         </div>

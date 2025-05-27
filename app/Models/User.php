@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasUuids;
+    use HasFactory, Notifiable;
 
     protected $table = 'users';
     protected $primaryKey = 'id_user';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    public $incrementing = true; // Menggunakan auto increment
+    protected $keyType = 'int'; // Primary key adalah integer
 
     protected $fillable = [
         'name',
@@ -23,6 +22,7 @@ class User extends Authenticatable
         'password',
         'role',
         'user_status',
+        'user_phone',
         'email_verified_at',
     ];
 
@@ -41,14 +41,23 @@ class User extends Authenticatable
         ];
     }
 
-    // Relationships
-    public function member()
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
     {
-        return $this->hasOne(Member::class, 'user_id', 'id_user');
+        return 'id_user';
     }
 
-    public function staff()
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
     {
-        return $this->hasOne(Staff::class, 'user_id', 'id_user');
+        return $this->getAttribute('id_user');
     }
 }

@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -53,19 +51,13 @@ class AuthController extends Controller
         try {
             // Buat user baru dengan nilai default untuk role dan user_status
             $user = User::create([
-                'id_user' => Str::uuid(),
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => $request->role,
-                'user_status' => $request->user_status,
-            ]); 
-
-            Member::create([
-                'id_member' => Str::uuid(),
-                'user_id' => User::where('role', 'user')->latest()->pluck('user_id')->first()
+                'role' => $request->role ?? 'user', // Default role 'user'
+                'user_status' => $request->user_status ?? 'aktif', // Default status 'aktif'
             ]);
-            
+
             // Login user setelah berhasil registrasi
             Auth::login($user);
 
@@ -255,7 +247,7 @@ class AuthController extends Controller
             return response()->json([
                 'authenticated' => true,
                 'user' => [
-                    'id' => Auth::id(),
+                    'id' => Auth::user()->id_user, // Menggunakan id_user
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email,
                 ]
@@ -294,7 +286,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id_user . ',id_user', // Menggunakan id_user
             'password' => 'nullable|string|min:6|confirmed',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
