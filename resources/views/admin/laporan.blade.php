@@ -202,22 +202,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Charts Section -->
-            <div class="charts-container">
-                <!-- Sales Trend Chart -->
-                <div class="chart-card">
-                    <h3>Tren Penjualan</h3>
-                    <canvas id="salesTrendChart"></canvas>
-                </div>
-                
-                <!-- Product Performance Chart -->
-                <div class="chart-card">
-                    <h3>Performa Produk</h3>
-                    <canvas id="productPerformanceChart"></canvas>
-                </div>
-            </div>
-
+            
             <!-- Top Selling Products Table -->
             <div class="product-table-container">
                 <h3>Produk Terlaris</h3>
