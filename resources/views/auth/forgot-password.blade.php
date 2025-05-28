@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lupa Password - Green Garden</title>
+    <title>Reset Password - Toho Coffee</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/style.css')
 </head>
@@ -38,57 +38,97 @@
         </div>
     </header>
 
-    <!-- Forgot Password Form -->
+    <!-- Reset Password Form -->
     <div class="auth-container">
         <div class="auth-header">
-            <h2>Lupa Password</h2>
-            <p>Masukkan email Anda untuk menerima link reset password</p>
+            <h2>Reset Password</h2>
+            <p>Masukkan password baru untuk akun Anda</p>
         </div>
 
-        <!-- Alert untuk menampilkan pesan -->
-        <div id="alert-container" style="display: none;">
-            <div id="alert-message" class="alert"></div>
-        </div>
+        <!-- Alert untuk menampilkan pesan error -->
+        @if ($errors->any())
+            <div class="alert alert-error">
+                <ul style="margin: 0; padding-left: 20px;">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <form id="forgot-password-form" class="auth-form">
+        <!-- Alert untuk menampilkan pesan sukses -->
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('password.update') }}" class="auth-form">
             @csrf
+            
+            <!-- Hidden token and email fields -->
+            <input type="hidden" name="token" value="{{ $token }}">
+            <input type="hidden" name="email" value="{{ $email }}">
+            
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" class="form-control" 
-                       placeholder="Masukkan email Anda" required>
-                <span class="error-message" id="email-error"></span>
+                       value="{{ old('email', $email) }}" readonly
+                       style="background-color: #f8f9fa; cursor: not-allowed;">
                 <div class="form-help">
-                    <small>Pastikan email yang Anda masukkan sesuai dengan email yang terdaftar di akun Anda.</small>
+                    <small>Email yang akan direset passwordnya</small>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="password">Password Baru</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password" name="password" class="form-control @error('password') is-invalid @enderror" 
+                           placeholder="Masukkan password baru (minimal 6 karakter)" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                        <i class="fas fa-eye" id="password-eye"></i>
+                    </button>
+                </div>
+                @error('password')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+                <div class="password-strength" id="password-strength"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirmation">Konfirmasi Password</label>
+                <div class="password-input-wrapper">
+                    <input type="password" id="password_confirmation" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" 
+                           placeholder="Konfirmasi password baru" required>
+                    <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation')">
+                        <i class="fas fa-eye" id="password_confirmation-eye"></i>
+                    </button>
+                </div>
+                @error('password_confirmation')
+                    <span class="error-message">{{ $message }}</span>
+                @enderror
+                <div class="form-help">
+                    <small>Masukkan kembali password yang sama</small>
+                </div>
+            </div>
+
+            <div class="password-requirements">
+                <h4>Persyaratan Password:</h4>
+                <ul class="requirements-list">
+                    <li id="length-req"><i class="fas fa-times"></i> Minimal 6 karakter</li>
+                    <li id="match-req"><i class="fas fa-times"></i> Password harus sama</li>
+                </ul>
+            </div>
             
-            <button type="submit" class="btn btn-block" id="forgot-btn">
-                <span class="btn-text">
-                    <i class="fas fa-paper-plane"></i>
-                    Kirim Link Reset
-                </span>
-                <span class="btn-loader" style="display: none;">
-                    <i class="fas fa-spinner fa-spin"></i> Mengirim...
-                </span>
+            <button type="submit" class="btn btn-block" id="reset-btn">
+                <i class="fas fa-key"></i>
+                Reset Password
             </button>
         </form>
 
         <div class="form-actions">
             <div class="back-to-login">
                 <p>Ingat password Anda? <a href="{{ route('login') }}">Login di sini</a></p>
-            </div>
-            
-            <div class="help-section">
-                <h4>Butuh bantuan?</h4>
-                <ul class="help-list">
-                    <li><i class="fas fa-check-circle"></i> Periksa folder spam/junk email Anda</li>
-                    <li><i class="fas fa-check-circle"></i> Link reset akan dikirim dalam 1-2 menit</li>
-                    <li><i class="fas fa-check-circle"></i> Link berlaku selama 60 menit</li>
-                </ul>
-                <p class="contact-support">
-                    Masih mengalami masalah? 
-                    <a href="mailto:support@tohocoffee.com">Hubungi Support</a>
-                </p>
             </div>
         </div>
     </div>
@@ -141,126 +181,116 @@
     <!-- Scripts -->
     @vite('resources/js/app.js')
     <script>
-        // Setup CSRF token for AJAX requests
-        window.Laravel = {
-            csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        };
-
-        // Forgot password form submission
-        document.getElementById('forgot-password-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Password toggle functionality
+        function togglePassword(fieldId) {
+            const passwordField = document.getElementById(fieldId);
+            const eyeIcon = document.getElementById(fieldId + '-eye');
             
-            const formData = new FormData(this);
-            const forgotBtn = document.getElementById('forgot-btn');
-            const btnText = forgotBtn.querySelector('.btn-text');
-            const btnLoader = forgotBtn.querySelector('.btn-loader');
-            const emailInput = document.getElementById('email');
-            
-            // Clear previous errors
-            document.getElementById('email-error').textContent = '';
-            document.getElementById('alert-container').style.display = 'none';
-            emailInput.classList.remove('is-invalid');
-            
-            // Validate email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput.value)) {
-                document.getElementById('email-error').textContent = 'Format email tidak valid';
-                emailInput.classList.add('is-invalid');
-                return;
-            }
-            
-            // Show loading state
-            btnText.style.display = 'none';
-            btnLoader.style.display = 'inline-block';
-            forgotBtn.disabled = true;
-            
-            fetch('{{ route("password.email") }}', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': window.Laravel.csrfToken,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showAlert('success', data.message);
-                    emailInput.value = '';
-                    
-                    // Show success state on button
-                    setTimeout(() => {
-                        btnText.innerHTML = '<i class="fas fa-check-circle"></i> Link Terkirim';
-                        btnText.style.display = 'inline-block';
-                        btnLoader.style.display = 'none';
-                        forgotBtn.disabled = false;
-                        
-                        // Reset button after 3 seconds
-                        setTimeout(() => {
-                            btnText.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Link Reset';
-                        }, 3000);
-                    }, 1000);
-                } else {
-                    if (data.errors) {
-                        // Show field-specific errors
-                        Object.keys(data.errors).forEach(field => {
-                            const errorElement = document.getElementById(field + '-error');
-                            if (errorElement) {
-                                errorElement.textContent = data.errors[field][0];
-                                if (field === 'email') {
-                                    emailInput.classList.add('is-invalid');
-                                }
-                            }
-                        });
-                    } else {
-                        showAlert('error', data.message);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('error', 'Terjadi kesalahan sistem. Silakan coba lagi.');
-            })
-            .finally(() => {
-                // Reset button state if not success
-                if (!forgotBtn.querySelector('.btn-text').innerHTML.includes('check-circle')) {
-                    btnText.style.display = 'inline-block';
-                    btnLoader.style.display = 'none';
-                    forgotBtn.disabled = false;
-                }
-            });
-        });
-
-        function showAlert(type, message) {
-            const alertContainer = document.getElementById('alert-container');
-            const alertMessage = document.getElementById('alert-message');
-            
-            alertMessage.textContent = message;
-            alertMessage.className = `alert alert-${type}`;
-            alertContainer.style.display = 'block';
-            
-            // Scroll to alert
-            alertContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Auto hide after 8 seconds for success messages
-            if (type === 'success') {
-                setTimeout(() => {
-                    alertContainer.style.display = 'none';
-                }, 8000);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
             }
         }
 
-        // Email validation on input
-        document.getElementById('email').addEventListener('input', function() {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const errorElement = document.getElementById('email-error');
-            
-            if (this.value && !emailRegex.test(this.value)) {
-                this.classList.add('is-invalid');
-                errorElement.textContent = 'Format email tidak valid';
+        // Password strength and validation
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('password_confirmation');
+        const lengthReq = document.getElementById('length-req');
+        const matchReq = document.getElementById('match-req');
+        const strengthIndicator = document.getElementById('password-strength');
+
+        function updateRequirements() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Length requirement
+            if (password.length >= 6) {
+                lengthReq.innerHTML = '<i class="fas fa-check"></i> Minimal 6 karakter';
+                lengthReq.classList.add('valid');
             } else {
-                this.classList.remove('is-invalid');
-                errorElement.textContent = '';
+                lengthReq.innerHTML = '<i class="fas fa-times"></i> Minimal 6 karakter';
+                lengthReq.classList.remove('valid');
+            }
+
+            // Match requirement
+            if (password && confirmPassword && password === confirmPassword) {
+                matchReq.innerHTML = '<i class="fas fa-check"></i> Password harus sama';
+                matchReq.classList.add('valid');
+            } else {
+                matchReq.innerHTML = '<i class="fas fa-times"></i> Password harus sama';
+                matchReq.classList.remove('valid');
+            }
+
+            // Password strength
+            updatePasswordStrength(password);
+        }
+
+        function updatePasswordStrength(password) {
+            let strength = 0;
+            let strengthText = '';
+            let strengthClass = '';
+
+            if (password.length >= 6) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+            switch (strength) {
+                case 0:
+                case 1:
+                    strengthText = 'Sangat Lemah';
+                    strengthClass = 'very-weak';
+                    break;
+                case 2:
+                    strengthText = 'Lemah';
+                    strengthClass = 'weak';
+                    break;
+                case 3:
+                    strengthText = 'Sedang';
+                    strengthClass = 'medium';
+                    break;
+                case 4:
+                    strengthText = 'Kuat';
+                    strengthClass = 'strong';
+                    break;
+                case 5:
+                    strengthText = 'Sangat Kuat';
+                    strengthClass = 'very-strong';
+                    break;
+            }
+
+            if (password.length > 0) {
+                strengthIndicator.innerHTML = `Kekuatan Password: <span class="${strengthClass}">${strengthText}</span>`;
+                strengthIndicator.style.display = 'block';
+            } else {
+                strengthIndicator.style.display = 'none';
+            }
+        }
+
+        passwordInput.addEventListener('input', updateRequirements);
+        confirmPasswordInput.addEventListener('input', updateRequirements);
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (password.length < 6) {
+                e.preventDefault();
+                alert('Password harus minimal 6 karakter');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Konfirmasi password tidak cocok');
+                return false;
             }
         });
     </script>
@@ -272,7 +302,7 @@
             border-radius: 8px;
             font-size: 14px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
         }
         
@@ -286,6 +316,7 @@
             content: "✓";
             font-weight: bold;
             font-size: 16px;
+            margin-top: 2px;
         }
         
         .alert-error {
@@ -298,6 +329,7 @@
             content: "⚠";
             font-weight: bold;
             font-size: 16px;
+            margin-top: 2px;
         }
         
         .error-message {
@@ -310,6 +342,77 @@
         .is-invalid {
             border-color: #dc3545 !important;
             box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
+        }
+        
+        .password-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+        }
+        
+        .password-toggle:hover {
+            color: #333;
+        }
+        
+        .password-strength {
+            margin-top: 8px;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .password-strength .very-weak { color: #dc3545; }
+        .password-strength .weak { color: #fd7e14; }
+        .password-strength .medium { color: #ffc107; }
+        .password-strength .strong { color: #198754; }
+        .password-strength .very-strong { color: #0d6efd; }
+        
+        .password-requirements {
+            background-color: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .password-requirements h4 {
+            margin: 0 0 12px 0;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .requirements-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .requirements-list li.valid {
+            color: #28a745;
+        }
+        
+        .requirements-list li i {
+            width: 12px;
+            font-size: 10px;
         }
         
         .form-help {
@@ -328,7 +431,6 @@
         
         .back-to-login {
             text-align: center;
-            margin-bottom: 32px;
         }
         
         .back-to-login p {
@@ -344,64 +446,6 @@
         
         .back-to-login a:hover {
             text-decoration: underline;
-        }
-        
-        .help-section {
-            background-color: #f8f9fa;
-            padding: 24px;
-            border-radius: 8px;
-            border-left: 4px solid #007bff;
-        }
-        
-        .help-section h4 {
-            margin: 0 0 16px 0;
-            color: #333;
-            font-size: 16px;
-        }
-        
-        .help-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 16px 0;
-        }
-        
-        .help-list li {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #555;
-        }
-        
-        .help-list i {
-            color: #28a745;
-            font-size: 12px;
-        }
-        
-        .contact-support {
-            margin: 0;
-            font-size: 14px;
-            color: #6c757d;
-        }
-        
-        .contact-support a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .contact-support a:hover {
-            text-decoration: underline;
-        }
-        
-        .btn-loader {
-            display: none;
-        }
-        
-        .btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
         }
         
         .btn .fas {
