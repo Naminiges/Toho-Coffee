@@ -98,6 +98,28 @@
 .product-card:focus-within {
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
 }
+
+.select-custom {
+    padding: 8px 16px;
+    padding-right: 40px;
+    border-radius: 12px;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    appearance: none;
+
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='10'%20height='10'%20viewBox='0%200%2010%2010'%3E%3Cpolygon%20points='0,0%2010,0%205,7'%20style='fill:%23666;'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+}
+
+.select-custom:hover {
+    background-color: #e2e8f0;
+    border-color: #999;
+}
+
 </style>
 </head>
 <body>
@@ -261,7 +283,7 @@
                 <!-- Sort Options -->
                 <div class="sort-section">
                     <form method="GET" action="{{ route('products') }}" id="sortForm">
-                        <select name="sort_by" onchange="document.getElementById('sortForm').submit()">
+                        <select name="sort_by" class="select-custom" onchange="document.getElementById('sortForm').submit()">
                             <option value="product_name" {{ request('sort_by') == 'product_name' ? 'selected' : '' }}>
                                 Nama Produk
                             </option>
@@ -272,7 +294,7 @@
                                 Terbaru
                             </option>
                         </select>
-                        <select name="sort_order" onchange="document.getElementById('sortForm').submit()">
+                        <select name="sort_order" class="select-custom" onchange="document.getElementById('sortForm').submit()">
                             <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>
                                 A-Z / Rendah-Tinggi
                             </option>
