@@ -172,10 +172,6 @@
                         <div class="stat-value">5</div>
                         <div class="stat-label">Keranjang</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Alamat</div>
-                    </div>
                 </div>
             </div>
 

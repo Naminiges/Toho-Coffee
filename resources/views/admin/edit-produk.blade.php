@@ -201,7 +201,7 @@
                     </div>
 
                     <div class="form-actions">
-                        <a href="#" class="btn btn-cancel">Batal</a>
+                        <a href="{{route('admin-manajemen-produk')}}" class="btn btn-cancel">Batal</a>
                         <button type="submit" class="btn">Simpan Perubahan</button>
                     </div>
                 </form>

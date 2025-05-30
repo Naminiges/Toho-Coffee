@@ -204,10 +204,6 @@
                     <div class="continue-shopping">
                         <a href="{{ route('user-katalog') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Lanjut Belanja</a>
                     </div>
-                    <div class="cart-buttons">
-                        <button class="btn btn-secondary clear-cart">Kosongkan Keranjang</button>
-                        <button class="btn update-cart">Perbarui Keranjang</button>
-                    </div>
                 </div>
             </div>
 
