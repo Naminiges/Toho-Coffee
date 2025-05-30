@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Produk - TOHO Coffee Admin</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/style.css')
 </head>
 <body>
@@ -158,32 +159,33 @@
 
             <!-- Product Form Section -->
             <div class="product-form-section active">
-                <form id="editProductForm" action="#" method="POST" enctype="multipart/form-data">
+                <form id="editProductForm" action="{{ route('admin-update-produk', $product->id_product) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
                     <div class="form-row">
                         <div class="form-group">
                             <label for="productName">Nama Produk</label>
-                            <input type="text" id="productName" name="name" class="form-control" value="" required>
+                            <input type="text" id="productName" name="name" class="form-control" value="{{ old('name', $product->product_name) }}" required>
                         </div>
                         <div class="form-group">
                             <label for="productCategory">Kategori</label>
                             <select id="productCategory" name="category" class="form-control" required>
                                 <option value="">-- Pilih Kategori --</option>
-                                <option value="kopi" >Kopi</option>
-                                <option value="teh" >Teh</option>
-                                <option value="snack" >Snack</option>
-                                <option value="merchandise" >Merchandise</option>
+                                <option value="kopi" {{ old('category', $product->description->category->category ?? '') == 'kopi' ? 'selected' : '' }}>Kopi</option>
+                                <option value="non-kopi" {{ old('category', $product->description->category->category ?? '') == 'non-kopi' ? 'selected' : '' }}>Non-Kopi</option>
+                                <option value="mix" {{ old('category', $product->description->category->category ?? '') == 'mix' ? 'selected' : '' }}>Mix</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="productDescription">Deskripsi</label>
-                        <textarea id="productDescription" name="description" class="form-control" rows="3" required></textarea>
+                        <textarea id="productDescription" name="description" class="form-control" rows="3" required>{{ old('description', $product->description->product_description ?? '') }}</textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="productPrice">Harga (Rp)</label>
-                        <input type="number" id="productPrice" name="price" class="form-control" min="0" value="" required>
+                        <input type="number" id="productPrice" name="price" class="form-control" min="0" value="{{ old('price', $product->product_price) }}" required>
                     </div>
 
                     <div class="form-group">
@@ -195,8 +197,8 @@
                     <div class="form-group">
                         <label for="productStatus">Status</label>
                         <select id="productStatus" name="status" class="form-control" required>
-                            <option value="active" >Aktif</option>
-                            <option value="inactive" >Nonaktif</option>
+                            <option value="active" {{ old('status', $product->product_status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                            <option value="inactive" {{ old('status', $product->product_status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                         </select>
                     </div>
 

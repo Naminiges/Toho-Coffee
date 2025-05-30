@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductDescription;
+use App\Models\TemperatureType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +52,7 @@ class ProductController extends Controller
             $products = $query->paginate(12)->withQueryString();
 
             // Get categories for filter dropdown (if needed)
-            $categories = DB::table('categories')->get();
+            $categories = Category::all();
 
             return view('products', compact('products', 'categories'));
 
@@ -59,16 +62,60 @@ class ProductController extends Controller
         }
     }
 
+    private function getProductData(Request $request)
+    {
+        $query = Product::with(['description.category', 'description.temperatureType'])
+                    ->orderBy('created_at', 'desc');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $query->search($request->search);
+        }
+
+        if ($request->has('category') && !empty($request->category) && $request->category !== 'all') {
+            $query->byCategory($request->category);
+        }
+
+        if ($request->has('status') && !empty($request->status) && $request->status !== 'all') {
+            $request->status === 'aktif' ? $query->active() : $query->inactive();
+        }
+
+        $products = $query->paginate(10)->withQueryString();
+        $categories = Category::all();
+        $temperatureType = TemperatureType::all();
+
+        return compact('products', 'categories', 'temperatureType');
+    }
+
+    public function adminIndex(Request $request)
+    {
+        try {
+        $data = $this->getProductData($request);
+        return view('admin.manajemen-produk', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
+        }
+    }
+
+    public function staffIndex(Request $request)
+    {
+        try {
+            $data = $this->getProductData($request);
+            return view('staff.staff-produk', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         try {
-            $categories = DB::table('categories')->get();
-            $temperatureTypes = DB::table('temperature_types')->get();
+            $categories = Category::all();
+            $temperatureTypes = TemperatureType::all();
             
-            return view('admin.products.create', compact('categories', 'temperatureTypes'));
+            return view('admin.tambah-produk', compact('categories', 'temperatureTypes'));
         } catch (\Exception $e) {
             return redirect()->back()
                            ->with('error', 'Terjadi kesalahan saat memuat form: ' . $e->getMessage());
@@ -81,35 +128,73 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+            // Validate the request
             $validated = $request->validate([
-                'product_name' => 'required|string|max:255',
-                'product_price' => 'required|numeric|min:0',
-                'product_status' => 'required|in:aktif,nonaktif',
-                'description_id' => 'required|exists:product_descriptions,id_description',
-                'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'name' => 'required|string|max:255',
+                'category' => 'required|string|in:kopi,non-kopi,mix',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'temperature' => 'required|string|in:active,inactive'
             ], [
-                'product_name.required' => 'Nama produk harus diisi',
-                'product_price.required' => 'Harga produk harus diisi',
-                'product_price.numeric' => 'Harga produk harus berupa angka',
-                'product_price.min' => 'Harga produk tidak boleh kurang dari 0',
-                'product_status.required' => 'Status produk harus dipilih',
-                'description_id.required' => 'Deskripsi produk harus dipilih',
-                'description_id.exists' => 'Deskripsi produk tidak valid',
-                'product_image.image' => 'File harus berupa gambar',
-                'product_image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
-                'product_image.max' => 'Ukuran gambar maksimal 2MB'
+                'name.required' => 'Nama produk harus diisi',
+                'name.max' => 'Nama produk maksimal 255 karakter',
+                'category.required' => 'Kategori harus dipilih',
+                'category.in' => 'Kategori tidak valid',
+                'description.required' => 'Deskripsi produk harus diisi',
+                'price.required' => 'Harga produk harus diisi',
+                'price.numeric' => 'Harga produk harus berupa angka',
+                'price.min' => 'Harga produk tidak boleh kurang dari 0',
+                'image.required' => 'Gambar produk harus diupload',
+                'image.image' => 'File harus berupa gambar',
+                'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
+                'image.max' => 'Ukuran gambar maksimal 2MB',
+                'temperature.required' => 'Temperature harus dipilih',
+                'temperature.in' => 'Temperature tidak valid'
             ]);
 
-            // Handle image upload if provided
-            if ($request->hasFile('product_image')) {
-                $imageName = time() . '.' . $request->product_image->extension();
-                $request->product_image->move(public_path('images/products'), $imageName);
-                $validated['product_image'] = $imageName;
+            // Get category ID based on category name
+            $category = Category::where('category', $validated['category'])->first();
+            if (!$category) {
+                throw new \Exception('Kategori tidak ditemukan');
             }
 
-            Product::create($validated);
+            // Get temperature ID based on temperature value
+            // Assuming 'active' means 'cold' and 'inactive' means 'hot'
+            $temperatureValue = $validated['temperature'] === 'active' ? 'cold' : 'hot';
+            $temperatureType = TemperatureType::where('temperature', $temperatureValue)->first();
+            if (!$temperatureType) {
+                throw new \Exception('Temperature type tidak ditemukan');
+            }
 
-            return redirect()->route('admin.products.index')
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName();
+                
+                // Store image in public/images/products directory
+                $image->move(public_path('images/products'), $imageName);
+                $imagePath = 'images/products/' . $imageName;
+            }
+
+            // Create ProductDescription first
+            $productDescription = ProductDescription::create([
+                'category_id' => $category->id_category,
+                'temperature_id' => $temperatureType->id_temperature,
+                'product_photo' => $imagePath,
+                'product_description' => $validated['description'],
+            ]);
+
+            // Create Product
+            $product = Product::create([
+                'description_id' => $productDescription->id_description,
+                'product_name' => $validated['name'],
+                'product_price' => $validated['price'],
+                'product_status' => 'aktif', // Default status is active
+            ]);
+
+            return redirect()->route('admin-manajemen-produk')
                            ->with('success', 'Produk berhasil ditambahkan');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -117,6 +202,12 @@ class ProductController extends Controller
                            ->withErrors($e->errors())
                            ->withInput();
         } catch (\Exception $e) {
+            
+            // Delete uploaded image if exists and there's an error
+            if (isset($imagePath) && file_exists(public_path($imagePath))) {
+                unlink(public_path($imagePath));
+            }
+            
             return redirect()->back()
                            ->with('error', 'Terjadi kesalahan saat menyimpan produk: ' . $e->getMessage())
                            ->withInput();
@@ -153,14 +244,26 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         try {
-            $categories = DB::table('categories')->get();
-            $temperatureTypes = DB::table('temperature_types')->get();
-            $product->load('description');
+            // Load relasi yang diperlukan
+            $product->load(['description.category', 'description.temperatureType']);
             
-            return view('admin.products.edit', compact('product', 'categories', 'temperatureTypes'));
+            return view('admin.edit-produk', compact('product'));
         } catch (\Exception $e) {
-            return redirect()->back()
-                           ->with('error', 'Terjadi kesalahan saat memuat form edit: ' . $e->getMessage());
+            return redirect()->route('admin-manajemen-produk')
+                        ->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
+        }
+    }
+
+    public function staffEdit(Product $product)
+    {
+        try {
+            // Load relasi yang diperlukan
+            $product->load(['description.category', 'description.temperatureType']);
+            
+            return view('staff.staff-edit', compact('product'));
+        } catch (\Exception $e) {
+            return redirect()->route('staff-manajemen-produk')
+                        ->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
         }
     }
 
@@ -170,50 +273,101 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         try {
+            // Validasi sesuai dengan form di blade
             $validated = $request->validate([
-                'product_name' => 'required|string|max:255',
-                'product_price' => 'required|numeric|min:0',
-                'product_status' => 'required|in:aktif,nonaktif',
-                'description_id' => 'required|exists:product_descriptions,id_description',
-                'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'name' => 'required|string|max:255',
+                'category' => 'required|string|in:kopi,teh,snack,merchandise',
+                'description' => 'required|string',
+                'price' => 'required|numeric|min:0',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'status' => 'required|in:active,inactive'
             ], [
-                'product_name.required' => 'Nama produk harus diisi',
-                'product_price.required' => 'Harga produk harus diisi',
-                'product_price.numeric' => 'Harga produk harus berupa angka',
-                'product_price.min' => 'Harga produk tidak boleh kurang dari 0',
-                'product_status.required' => 'Status produk harus dipilih',
-                'description_id.required' => 'Deskripsi produk harus dipilih',
-                'description_id.exists' => 'Deskripsi produk tidak valid',
-                'product_image.image' => 'File harus berupa gambar',
-                'product_image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
-                'product_image.max' => 'Ukuran gambar maksimal 2MB'
+                'name.required' => 'Nama produk harus diisi',
+                'category.required' => 'Kategori harus dipilih',
+                'description.required' => 'Deskripsi produk harus diisi',
+                'price.required' => 'Harga produk harus diisi',
+                'price.numeric' => 'Harga produk harus berupa angka',
+                'image.image' => 'File harus berupa gambar',
+                'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif',
+                'image.max' => 'Ukuran gambar maksimal 2MB',
+                'status.required' => 'Status produk harus dipilih'
             ]);
 
-            // Handle image upload if provided
-            if ($request->hasFile('product_image')) {
-                // Delete old image if exists
-                if ($product->product_image && file_exists(public_path('images/products/' . $product->product_image))) {
-                    unlink(public_path('images/products/' . $product->product_image));
+            // Load description untuk update
+            $product->load('description');
+
+            // Handle image upload jika ada
+            if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
+                if ($product->description->product_photo && file_exists(public_path($product->description->product_photo))) {
+                    unlink(public_path($product->description->product_photo));
                 }
 
-                $imageName = time() . '.' . $request->product_image->extension();
-                $request->product_image->move(public_path('images/products'), $imageName);
-                $validated['product_image'] = $imageName;
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName();
+                $image->move(public_path('images/products'), $imageName);
+                $imagePath = 'images/products/' . $imageName;
             }
 
-            $product->update($validated);
+            // Update Product
+            $product->update([
+                'product_name' => $validated['name'],
+                'product_price' => $validated['price'],
+                'product_status' => $validated['status'] === 'active' ? 'aktif' : 'nonaktif'
+            ]);
 
-            return redirect()->route('admin.products.index')
-                           ->with('success', 'Produk berhasil diperbarui');
+            // Update ProductDescription
+            $updateData = [
+                'product_description' => $validated['description']
+            ];
+
+            if (isset($imagePath)) {
+                $updateData['product_photo'] = $imagePath;
+            }
+
+            $product->description->update($updateData);
+
+            return redirect()->route('admin-manajemen-produk')
+                        ->with('success', 'Produk berhasil diperbarui');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
-                           ->withErrors($e->errors())
-                           ->withInput();
+                        ->withErrors($e->errors())
+                        ->withInput();
         } catch (\Exception $e) {
             return redirect()->back()
-                           ->with('error', 'Terjadi kesalahan saat memperbarui produk: ' . $e->getMessage())
-                           ->withInput();
+                        ->with('error', 'Terjadi kesalahan saat memperbarui produk: ' . $e->getMessage())
+                        ->withInput();
+        }
+    }
+
+    public function staffUpdate(Request $request, Product $product)
+    {
+        try {
+            // Validasi hanya untuk status
+            $validated = $request->validate([
+                'status' => 'required|in:active,inactive'
+            ], [
+                'status.required' => 'Status produk harus dipilih',
+                'status.in' => 'Status tidak valid'
+            ]);
+
+            // Update hanya status produk
+            $product->update([
+                'product_status' => $validated['status'] === 'active' ? 'aktif' : 'nonaktif'
+            ]);
+
+            return redirect()->route('staff-manajemen-produk')
+                        ->with('success', 'Status produk berhasil diperbarui');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                        ->withErrors($e->errors())
+                        ->withInput();
+        } catch (\Exception $e) {
+            return redirect()->back()
+                        ->with('error', 'Terjadi kesalahan saat memperbarui status produk: ' . $e->getMessage())
+                        ->withInput();
         }
     }
 

@@ -136,7 +136,6 @@
         </ul>
 
         <!-- Filter and Search Section -->
-        <div class="filter-section">
             <div class="menu-filters">
                 <button class="filter-btn {{ !request('category') || request('category') == 'all' ? 'active' : '' }}" 
                         onclick="filterProducts('all')">Semua</button>
@@ -193,7 +192,6 @@
                     </form>
                 </div>
             </div>
-        </div>
 
         <!-- Products Grid -->
         <div class="menu-grid products-grid" id="productsGrid">

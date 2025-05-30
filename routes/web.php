@@ -1,12 +1,10 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
-
-Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
+use App\Http\Controllers\ProductController;
 
 Route::get('/products', function () {
     return view('products');
@@ -46,17 +44,21 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin-dashboard');
 
-Route::get('/admin/manajemen-produk', function () {
-    return view('admin.manajemen-produk');
-})->name('admin-manajemen-produk');
+Route::get('/', [UserController::class, 'landingPage'])->name('welcome');
 
-Route::get('/admin/manajemen-produk/tambah-produk', function () {
-    return view('admin.tambah-produk');
-})->name('admin-tambah-produk');
+Route::get('/admin/manajemen-produk', [ProductController::class, 'adminIndex'])->name('admin-manajemen-produk');
+Route::get('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'create'])->name('admin-tambah-produk');
+Route::post('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'store'])->name('admin-produk-store');
+Route::get('/admin/manajemen-produk/edit-produk/{product}', [ProductController::class, 'edit'])->name('admin-edit-produk');
+Route::put('/admin/manajemen-produk/edit-produk/{product}', [ProductController::class, 'update'])->name('admin-update-produk');
+Route::get('/admin/manajemen-pelanggan', [UserController::class, 'adminCustomers'])->name('admin-manajemen-pelanggan');
+Route::get('/admin/manajemen-staff', [UserController::class, 'adminStaff'])->name('admin-manajemen-staff');
+Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulk-action');
 
-Route::get('/admin/manajemen-produk/edit-produk', function () {
-    return view('admin.edit-produk');
-})->name('admin-edit-produk');
+Route::get('/staff/manajemen-produk', [ProductController::class, 'staffIndex'])->name('staff-manajemen-produk');
+Route::get('/staff/manajemen-produk/edit-produk/{product}', [ProductController::class, 'staffEdit'])->name('staff-edit');
+Route::put('/staff/manajemen-produk/edit-produk/{product}', [ProductController::class, 'staffUpdate'])->name('staff-update');
 
 Route::get('/admin/manajemen-pesanan', function () {
     return view('admin.manajemen-pesanan');
@@ -65,14 +67,6 @@ Route::get('/admin/manajemen-pesanan', function () {
 Route::get('/admin/manajemen-pesanan/detail-pesanan', function () {
     return view('admin.detail-pesanan');
 })->name('admin-detail-pesanan');
-
-Route::get('/admin/manajemen-pelanggan', function () {
-    return view('admin.manajemen-pelanggan');
-})->name('admin-manajemen-pelanggan');
-
-Route::get('/admin/manajemen-staff', function () {
-    return view('admin.manajemen-staff');
-})->name('admin-manajemen-staff');
 
 Route::get('/admin/laporan', function () {
     return view('admin.laporan');
@@ -86,14 +80,6 @@ Route::get('/staff', function () {
 Route::get('/staff/detail-pesanan', function () {
     return view('staff.staff-detail');
 })->name('staff-detail-pesanan');
-
-Route::get('/staff/manajemen-produk', function () {
-    return view('staff.staff-produk');
-})->name('staff-manajemen-produk');
-
-Route::get('/staff/manajemen-produk/edit-produk', function () {
-    return view('staff.staff-edit');
-})->name('staff-edit');
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {
@@ -138,10 +124,6 @@ Route::get('/test-reset-password', function () {
         'email' => 'test@example.com'
     ]);
 })->name('test-reset-password');
-
-// Tambahkan routes ini ke file routes/web.php
-
-use App\Http\Controllers\ProductController;
 
 // Public routes for products
 Route::get('/products', [ProductController::class, 'index'])->name('products');
