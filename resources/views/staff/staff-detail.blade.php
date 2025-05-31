@@ -290,15 +290,6 @@
                         </div>
                     </div>
 
-                     <!-- QR Code -->
-                    <div class="order-info-card qr-code-container">
-                         <h3>Kode QR Pesanan</h3>
-                        <div class="qr-code">
-                            <img src="" alt="QR Code">
-                            <p>Scan QR code untuk verifikasi pesanan.</p>
-                        </div>
-                    </div>
-
                     <div class="order-info-card qr-code-container">
                          <h3>Bukti Transfer</h3>
                         <div class="qr-code">

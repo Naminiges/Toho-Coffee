@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Pengguna - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Header -->
@@ -172,10 +170,6 @@
                         <div class="stat-value">5</div>
                         <div class="stat-label">Keranjang</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Alamat</div>
-                    </div>
                 </div>
             </div>
 
@@ -204,25 +198,6 @@
                         <div class="form-group">
                             <label for="phone">Nomor Telepon</label>
                             <input type="tel" id="phone" class="form-control" value="+62 812 3456 7890" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="birthDate">Tanggal Lahir</label>
-                            <input type="date" id="birthDate" class="form-control" value="1990-01-01">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Jenis Kelamin</label>
-                            <div style="display: flex; gap: 20px;">
-                                <label style="display: flex; align-items: center; gap: 5px;">
-                                    <input type="radio" name="gender" value="male" checked>
-                                    Laki-laki
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 5px;">
-                                    <input type="radio" name="gender" value="female">
-                                    Perempuan
-                                </label>
-                            </div>
                         </div>
 
                         <div class="profile-actions">

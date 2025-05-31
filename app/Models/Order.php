@@ -2,24 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Order extends Model
 {
-    use HasFactory, HasUuids;
-
     protected $table = 'orders';
     protected $primaryKey = 'id_orders';
-    public $incrementing = false;
-    protected $keyType = 'string';
-    public $timestamps = false;
+    public $timestamps = false; // Karena menggunakan order_date dan order_complete
 
     protected $fillable = [
         'orders_code',
         'staff_name',
-        'member_id',
+        'user_id',
         'member_name',
         'member_notes',
         'member_bank',
@@ -27,27 +25,221 @@ class Order extends Model
         'order_status',
         'total_price',
         'order_date',
-        'order_complete',
+        'order_complete'
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'total_price' => 'decimal:2',
+        'order_date' => 'datetime',
+        'order_complete' => 'datetime',
+        'proof_payment' => 'binary'
+    ];
+
+    // Status enum values
+    const STATUS_MENUNGGU = 'menunggu';
+    const STATUS_DIPROSES = 'diproses';
+    const STATUS_SIAP = 'siap';
+    const STATUS_SELESAI = 'selesai';
+    const STATUS_DIBATALKAN = 'dibatalkan';
+
+    // Relasi ke User
+    public function user(): BelongsTo
     {
+        return $this->belongsTo(User::class, 'user_id', 'id_user');
+    }
+
+    // Relasi ke OrderDetails
+    public function orderDetails(): HasMany
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id_orders');
+    }
+
+    // Method untuk menghitung total dari order details
+    public function calculateTotal(): void
+    {
+        $total = $this->orderDetails()
+            ->selectRaw('SUM(product_price * product_quantity) as total')
+            ->value('total') ?? 0;
+        
+        $this->update(['total_price' => $total]);
+    }
+
+    // Method untuk generate order code
+    public static function generateOrderCode(): string
+    {
+        $date = Carbon::now()->format('Ymd');
+        $lastOrder = self::whereDate('order_date', Carbon::today())
+                         ->orderBy('id_orders', 'desc')
+                         ->first();
+        
+        $sequence = 1;
+        if ($lastOrder) {
+            $lastSequence = (int) substr($lastOrder->orders_code, -3);
+            $sequence = $lastSequence + 1;
+        }
+        
+        return 'ORD' . $date . str_pad($sequence, 3, '0', STR_PAD_LEFT);
+    }
+
+    // Scope untuk filter berdasarkan status
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('order_status', $status);
+    }
+
+    // Scope untuk filter berdasarkan tanggal
+    public function scopeByDate($query, $date)
+    {
+        return $query->whereDate('order_date', $date);
+    }
+
+    // Scope untuk filter berdasarkan user
+    public function scopeByUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    // Accessor untuk formatted total price
+    public function getFormattedTotalPriceAttribute(): string
+    {
+        return 'Rp ' . number_format($this->total_price, 0, ',', '.');
+    }
+
+    // Accessor untuk formatted order date
+    public function getFormattedOrderDateAttribute(): string
+    {
+        return $this->order_date->format('d/m/Y H:i:s');
+    }
+
+    // Accessor untuk status badge color
+    public function getStatusColorAttribute(): string
+    {
+        return match($this->order_status) {
+            self::STATUS_MENUNGGU => 'warning',
+            self::STATUS_DIPROSES => 'info',
+            self::STATUS_SIAP => 'primary',
+            self::STATUS_SELESAI => 'success',
+            self::STATUS_DIBATALKAN => 'danger',
+            default => 'secondary'
+        };
+    }
+
+    // Method untuk update status order
+    public function updateStatus(string $status): bool
+    {
+        $validStatuses = [
+            self::STATUS_MENUNGGU,
+            self::STATUS_DIPROSES,
+            self::STATUS_SIAP,
+            self::STATUS_SELESAI,
+            self::STATUS_DIBATALKAN
+        ];
+
+        if (!in_array($status, $validStatuses)) {
+            return false;
+        }
+
+        $updateData = ['order_status' => $status];
+        
+        // Set order_complete jika status selesai
+        if ($status === self::STATUS_SELESAI) {
+            $updateData['order_complete'] = Carbon::now();
+        }
+
+        return $this->update($updateData);
+    }
+
+    // Method untuk check apakah order dapat dibatalkan
+    public function canBeCancelled(): bool
+    {
+        return in_array($this->order_status, [
+            self::STATUS_MENUNGGU,
+            self::STATUS_DIPROSES
+        ]);
+    }
+
+    // Method untuk get available status transitions
+    public function getAvailableStatusTransitions(): array
+    {
+        return match($this->order_status) {
+            self::STATUS_MENUNGGU => [
+                self::STATUS_DIPROSES,
+                self::STATUS_DIBATALKAN
+            ],
+            self::STATUS_DIPROSES => [
+                self::STATUS_SIAP,
+                self::STATUS_DIBATALKAN
+            ],
+            self::STATUS_SIAP => [
+                self::STATUS_SELESAI
+            ],
+            default => []
+        };
+    }
+
+    // Method untuk get order summary
+    public function getOrderSummary(): array
+    {
+        $details = $this->orderDetails;
+        
         return [
-            'total_price' => 'decimal:2',
-            'order_status' => 'string',
-            'order_date' => 'datetime',
-            'order_complete' => 'datetime',
+            'total_items' => $details->sum('product_quantity'),
+            'total_amount' => $this->total_price,
+            'status' => $this->order_status,
+            'order_date' => $this->order_date,
+            'items_count' => $details->count()
         ];
     }
 
-    // Relationships
-    public function member()
+    // Event listeners
+    protected static function boot()
     {
-        return $this->belongsTo(Member::class, 'member_id', 'id_member');
+        parent::boot();
+
+        // Auto generate order code saat creating
+        static::creating(function ($order) {
+            if (empty($order->orders_code)) {
+                $order->orders_code = self::generateOrderCode();
+            }
+            
+            if (empty($order->order_date)) {
+                $order->order_date = Carbon::now();
+            }
+            
+            if (empty($order->order_status)) {
+                $order->order_status = self::STATUS_MENUNGGU;
+            }
+        });
+
+        // Update total_price saat order details berubah
+        static::saved(function ($order) {
+            if ($order->orderDetails()->exists()) {
+                $order->calculateTotal();
+            }
+        });
     }
 
-    public function orderDetails()
+    // Static method untuk get all status options
+    public static function getStatusOptions(): array
     {
-        return $this->hasMany(OrderDetail::class, 'order_id', 'id_orders');
+        return [
+            self::STATUS_MENUNGGU => 'Menunggu',
+            self::STATUS_DIPROSES => 'Diproses',
+            self::STATUS_SIAP => 'Siap',
+            self::STATUS_SELESAI => 'Selesai',
+            self::STATUS_DIBATALKAN => 'Dibatalkan'
+        ];
+    }
+
+    // Method untuk export order data
+    public function toArray(): array
+    {
+        $array = parent::toArray();
+        $array['formatted_total_price'] = $this->formatted_total_price;
+        $array['formatted_order_date'] = $this->formatted_order_date;
+        $array['status_color'] = $this->status_color;
+        $array['order_summary'] = $this->getOrderSummary();
+        
+        return $array;
     }
 }

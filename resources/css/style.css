@@ -2046,7 +2046,8 @@ input:read-only , textarea:read-only {
 }
 
 .profile-stats {
-    display: grid;
+    display: flex;
+    justify-content: space-around;
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
     margin-top: 20px;
@@ -3081,6 +3082,85 @@ textarea.form-control {
     font-size: 14px;
     font-weight: 500;
     flex-grow: 1;
+}
+
+/* No Products Found */
+.no-products {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin: 20px 0;
+    grid-column: 1 / -1; /* Spans full width in grid */
+}
+
+.no-products-icon {
+    font-size: 4rem;
+    color: var(--medium-gray);
+    margin-bottom: 20px;
+}
+
+.no-products h3 {
+    color: var(--dark-gray);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.no-products p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.no-products .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.no-products .btn:hover {
+    background-color: var(--light-primary);
+    transform: translateY(-2px);
+}
+
+/* Sort Section */
+.sort-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.sort-section select {
+    padding: 8px 12px;
+    border: 1px solid var(--medium-gray);
+    border-radius: 5px;
+    background-color: var(--white);
+    color: var(--dark-gray);
+    font-family: var(--font-main);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sort-section select:hover {
+    border-color: var(--primary-color);
+}
+
+.sort-section select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(29, 113, 81, 0.1);
 }
 
 /* Responsive Design for User Menu & Auth */

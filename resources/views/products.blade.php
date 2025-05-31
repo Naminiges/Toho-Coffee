@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Daftar Produk - TOHO</title>
     @vite('resources/css/style.css')
 </head>
@@ -134,114 +135,127 @@
             <li>Katalog</li>
         </ul>
 
-        <div class="menu-filters">
-            <button class="filter-btn active" data-category="all">Semua</button>
-            <button class="filter-btn" data-category="coffee">Kopi</button>
-            <button class="filter-btn" data-category="non-coffee">Non-Kopi</button>
-        </div>
-
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Cari produk favorit Anda...">
-        </div>
-
-        <div class="menu-grid products-grid">
-            <!-- Product 1 -->
-            <div class="product-card" data-category="coffee">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Espresso">
-                </div>
-                <div class="product-info">
-                    <h4>Espresso</h4>
-                    <div class="price">Rp 15.000</div>
-                    <div class="description">Shot kopi murni dengan intensitas tinggi dan aroma yang kuat.</div>
-                </div>
+        <!-- Filter and Search Section -->
+        <div class="filter-section">
+            <div class="menu-filters">
+                <button class="filter-btn {{ !request('category') || request('category') == 'all' ? 'active' : '' }}" 
+                        onclick="filterProducts('all')">Semua</button>
+                @if(isset($categories))
+                    @foreach($categories as $category)
+                        <button class="filter-btn {{ request('category') == $category->id_category ? 'active' : '' }}" 
+                                onclick="filterProducts('{{ $category->id_category }}')">
+                            {{ $category->category_name }}
+                        </button>
+                    @endforeach
+                @else
+                    <button class="filter-btn" onclick="filterProducts('coffee')">Kopi</button>
+                    <button class="filter-btn" onclick="filterProducts('non-coffee')">Non-Kopi</button>
+                @endif
+                <!-- Sort Options -->
             </div>
-
-            <!-- Product 2 -->
-            <div class="product-card" data-category="coffee">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Cappuccino">
-                </div>
-                <div class="product-info">
-                    <h4>Cappuccino</h4>
-                    <div class="price">Rp 25.000</div>
-                    <div class="description">Espresso dengan steamed milk dan foam yang lembut di bagian atas.</div>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="product-card" data-category="coffee">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi3.jpg') }}" alt="Latte">
-                </div>
-                <div class="product-info">
-                    <h4>Cafe Latte</h4>
-                    <div class="price">Rp 28.000</div>
-                    <div class="description">Espresso dengan susu yang lebih banyak dan foam tipis di atasnya.</div>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="product-card" data-category="non-coffee">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi4.jpg') }}" alt="Matcha Latte">
-                </div>
-                <div class="product-info">
-                    <h4>Matcha Latte</h4>
-                    <div class="price">Rp 30.000</div>
-                    <div class="description">Minuman dengan bubuk teh hijau premium dan susu hangat.</div>
-                </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div class="product-card" data-category="food">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi5.jpg') }}" alt="Chicken Sandwich">
-                </div>
-                <div class="product-info">
-                    <h4>Chicken Sandwich</h4>
-                    <div class="price">Rp 35.000</div>
-                    <div class="description">Sandwich ayam dengan sayuran segar dan saus spesial.</div>
-                </div>
-            </div>
-
-            <!-- Product 6 -->
-            <div class="product-card" data-category="pastry">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi6.jpg') }}" alt="Croissant">
-                </div>
-                <div class="product-info">
-                    <h4>Butter Croissant</h4>
-                    <div class="price">Rp 20.000</div>
-                    <div class="description">Croissant dengan lapisan butter yang gurih dan tekstur renyah.</div>
-                </div>
-            </div>
-
-            <!-- Product 7 -->
-            <div class="product-card" data-category="coffee">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi7.jpg') }}" alt="Americano">
-                </div>
-                <div class="product-info">
-                    <h4>Americano</h4>
-                    <div class="price">Rp 18.000</div>
-                    <div class="description">Espresso dengan tambahan air panas untuk rasa yang lebih ringan.</div>
-                </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="product-card" data-category="non-coffee">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi8.jpg') }}" alt="Hot Chocolate">
-                </div>
-                <div class="product-info">
-                    <h4>Hot Chocolate</h4>
-                    <div class="price">Rp 25.000</div>
-                    <div class="description">Cokelat hangat dengan whipped cream yang lembut di atasnya.</div>
-                </div>
+            <div class="sort-section">
+                <form method="GET" action="{{ route('products') }}" id="sortForm">
+                    <select name="sort_by" onchange="document.getElementById('sortForm').submit()">
+                        <option value="product_name" {{ request('sort_by') == 'product_name' ? 'selected' : '' }}>
+                            Nama Produk
+                        </option>
+                        <option value="product_price" {{ request('sort_by') == 'product_price' ? 'selected' : '' }}>
+                            Harga
+                        </option>
+                        <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>
+                            Terbaru
+                        </option>
+                    </select>
+                    <select name="sort_order" onchange="document.getElementById('sortForm').submit()">
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>
+                            A-Z / Rendah-Tinggi
+                        </option>
+                        <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>
+                            Z-A / Tinggi-Rendah
+                        </option>
+                    </select>
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                </form>
             </div>
         </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <form method="GET" action="{{ route('products') }}" id="searchForm">
+                    <input type="text" 
+                            name="search" 
+                            value="{{ request('search') }}" 
+                            placeholder="Cari produk favorit Anda..."
+                            onchange="document.getElementById('searchForm').submit()">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                </form>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="menu-grid products-grid" id="productsGrid">
+            @if(isset($products) && $products->count() > 0)
+                @foreach($products as $product)
+                    <div class="product-card" 
+                         data-category="{{ $product->category->id_category ?? 'unknown' }}"
+                         data-price="{{ $product->product_price }}">
+                        <div class="product-image">
+                            @if($product->product_name)
+                                <img src="{{ asset('images/products/' . $product->product_name . '.jpg') }}" 
+                                     alt="{{ $product->product_name }}"
+                                     onerror="this.src='{{ asset('images/placeholder-product.jpg') }}'">
+                            @else
+                                <img src="{{ asset('images/placeholder-product.jpg') }}" 
+                                     alt="{{ $product->product_name }}">
+                            @endif
+                            
+                            <!-- Product Status Badge -->
+                            @if($product->product_status === 'nonaktif')
+                                <div class="status-badge inactive">Tidak Tersedia</div>
+                            @endif
+                        </div>
+                        
+                        <div class="product-info">
+                            <h4>{{ $product->product_name }}</h4>
+                            <div class="price">{{ $product->formatted_price }}</div>
+                            
+                            @if($product->description && $product->description->product_description)
+                                <div class="description">
+                                    {{ Str::limit($product->description->product_description, 100) }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <!-- No Products Found -->
+                <div class="no-products">
+                    <div class="no-products-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Tidak ada produk ditemukan</h3>
+                    <p>
+                        @if(request('search'))
+                            Pencarian untuk "{{ request('search') }}" tidak menghasilkan produk.
+                        @else
+                            Belum ada produk yang tersedia untuk kategori ini.
+                        @endif
+                    </p>
+                    <a href="{{ route('products') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Lihat Semua Produk
+                    </a>
+                </div>
+            @endif
+        </div>
+
+        <!-- Pagination -->
+        @if(isset($products) && $products->hasPages())
+            <div class="pagination-wrapper">
+                {{ $products->links() }}
+            </div>
+        @endif
     </div>
 
     <!-- Footer -->
@@ -296,6 +310,17 @@
         window.Laravel = {
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         };
+
+        // Filter Products Function
+        function filterProducts(category) {
+            const url = new URL(window.location.href);
+            if (category === 'all') {
+                url.searchParams.delete('category');
+            } else {
+                url.searchParams.set('category', category);
+            }
+            window.location.href = url.toString();
+        }
 
         // User Menu Functions
         function toggleUserMenu() {

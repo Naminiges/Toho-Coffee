@@ -160,7 +160,7 @@
                 <table class="product-table"> {{-- Reusing product-table for consistent styling --}}
                     <thead>
                         <tr>
-                            <th>ID Pelanggan</th>
+                            <th>ID Staff</th>
                             <th>Nama</th>
                             <th>Email</th>
                             <th>Status Akun</th>
@@ -168,44 +168,47 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Example Customer Row (Active) --}}
-                        <tr>
-                            <td>#STF001</td>
-                            <td>Alice Smith</td>
-                            <td>alice.s@example.com</td>
-                            <td><span class="status-badge status-active">Aktif</span></td> {{-- Using status-active class --}}
-                            <td class="product-actions"> {{-- Reusing product-actions for button styling --}}
-                                {{-- Conditional Button: Show Nonaktifkan if Active --}}
-                                <button class="btn btn-secondary" onclick="updateCustomerStatus('CUST001', 'inactive')">
-                                    <i class="fas fa-user-slash"></i> Nonaktifkan
-                                </button>
-                            </td>
-                        </tr>
-                        {{-- Example Customer Row (Inactive) --}}
-                         <tr>
-                            <td>#STF002</td>
-                            <td>Bob Johnson</td>
-                            <td>bob.j@example.com</td>
-                            <td><span class="status-badge status-inactive">Tidak Aktif</span></td> {{-- Using status-inactive class --}}
-                            <td class="product-actions"> {{-- Reusing product-actions for button styling --}}
-                                {{-- Conditional Button: Show Aktifkan if Inactive --}}
-                                <button class="btn btn-primary" onclick="updateCustomerStatus('CUST002', 'active')">
-                                    <i class="fas fa-user-check"></i> Aktifkan
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- More customer rows can be added here -->
+                        @forelse($staffs as $staff)
+                            <tr>
+                                <td>#CUST{{ str_pad($staff->id_user, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>{{ $staff->name }}</td>
+                                <td>{{ $staff->email }}</td>
+                                <td>
+                                    <span class="status-badge {{ $staff->user_status === 'aktif' ? 'status-active' : 'status-inactive' }}">
+                                        {{ $staff->user_status === 'aktif' ? 'Aktif' : 'Tidak Aktif' }}
+                                    </span>
+                                </td>
+                                <td class="product-actions">
+                                    @if($staff->user_status === 'aktif')
+                                        <form action="{{ route('users.toggle-status', $staff->id_user) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-secondary" onclick="return confirm('Yakin ingin menonaktifkan akun ini?')">
+                                                <i class="fas fa-user-slash"></i> Nonaktifkan
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('users.toggle-status', $staff->id_user) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary" onclick="return confirm('Yakin ingin mengaktifkan akun ini?')">
+                                                <i class="fas fa-user-check"></i> Aktifkan
+                                            </button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem;">
+                                    <p>Tidak ada data staff.</p>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             <div class="pagination">
-                <ul>
-                    <li><a href="#" class="active">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#" class="next"><i class="fas fa-chevron-right"></i></a></li>
-                </ul>
+                {{ $staffs->links() }} {{-- Untuk staff --}}
             </div>
         </main>
     </div>

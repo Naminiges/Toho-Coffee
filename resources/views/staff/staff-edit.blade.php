@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Produk - TOHO Coffee Admin</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Edit Produk - TOHO Coffee Staff</title>
     @vite('resources/css/style.css')
 </head>
 <body>
@@ -103,12 +104,12 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Admin Profile">
+                <img src="{{ asset('images/logo-toho.jpg') }}" alt="Staff Profile">
                 <div class="admin-name">Staff TOHO</div>
                 <div class="admin-role">Staff</div>
             </div>
 
-            <ul class="sidebar-menu"> <!-- Menggunakan class yang sudah ada -->
+            <ul class="sidebar-menu">
                 <li>
                     <a href="{{ route('staff-dashboard') }}">
                         <i class="fas fa-chart-line"></i>
@@ -128,40 +129,69 @@
         <div class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Edit Produk</h2>
+                    <h2>Edit Status Produk</h2>
+                    <p>Anda hanya dapat mengubah status produk</p>
                 </div>
             </div>
 
             <!-- Product Form Section -->
             <div class="product-form-section active">
-                <form id="editProductForm" action="#" method="POST" enctype="multipart/form-data">
+                <form id="editProductForm" action="{{ route('staff-update', $product->id_product) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    
                     <div class="form-group">
                         <label for="productName">Nama Produk</label>
-                        <input type="text" id="productName" name="name" class="form-control" value="" readonly>
+                        <input type="text" id="productName" name="name" class="form-control" 
+                               value="{{ $product->product_name }}" readonly>
                     </div>
+                    
                     <div class="form-group">
                         <label for="productCategory">Kategori</label>
-                        <input type="text" id="productCategory" name="category" class="form-control" value="" readonly>
+                        <input type="text" id="productCategory" name="category" class="form-control" 
+                               value="{{ $product->description->category->category ?? 'N/A' }}" readonly>
                     </div>
+                    
                     <div class="form-group">
                         <label for="productDescription">Deskripsi</label>
-                        <textarea id="productDescription" name="description" class="form-control" rows="3" readonly></textarea>
+                        <textarea id="productDescription" name="description" class="form-control" rows="3" readonly>{{ $product->description->product_description ?? 'N/A' }}</textarea>
                     </div>
+                    
                     <div class="form-group">   
                         <label for="productPrice">Harga (Rp)</label> 
-                        <input type="number" id="productPrice" name="price" class="form-control" min="0" value="" readonly>
+                        <input type="number" id="productPrice" name="price" class="form-control" 
+                               min="0" value="{{ $product->product_price }}" readonly>
                     </div>
+
+                    @if($product->description->product_photo)
                     <div class="form-group">
-                        <label for="productStatus">Status</label>
+                        <label>Gambar Produk</label>
+                        <div style="margin-top: 10px;">
+                            <img src="{{ asset($product->description->product_photo) }}" alt="Product Image" 
+                                 style="max-width: 200px; border-radius: 8px; border: 1px solid #ddd;">
+                        </div>
+                    </div>
+                    @endif
+                    
+                    <div class="form-group">
+                        <label for="productStatus">Status Produk <span style="color: red;">*</span></label>
                         <select id="productStatus" name="status" class="form-control" required>
-                            <option value="active" >Aktif</option>
-                            <option value="inactive" >Nonaktif</option>
+                            <option value="active" {{ ($product->product_status === 'aktif') ? 'selected' : '' }}>Aktif</option>
+                            <option value="inactive" {{ ($product->product_status === 'nonaktif') ? 'selected' : '' }}>Nonaktif</option>
                         </select>
+                        @error('status')
+                            <div style="color: red; font-size: 12px; margin-top: 5px;">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="form-actions">
                         <a href="{{ route('staff-manajemen-produk') }}" class="btn btn-cancel">Batal</a>
-                        <button type="submit" class="btn">Simpan Perubahan</button>
+                        <button type="submit" class="btn">
+                            <span class="btn-text">Simpan Perubahan</span>
+                            <span class="btn-loader" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i> Menyimpan...
+                            </span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -273,6 +303,18 @@
             }, 5000);
         }
 
+        // Form submission handling
+        document.getElementById('editProductForm').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnLoader = submitBtn.querySelector('.btn-loader');
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            submitBtn.disabled = true;
+        });
+
         // Show success message if exists
         @if(session('success'))
             showAlert('success', '{{ session("success") }}');
@@ -281,6 +323,14 @@
         // Show error message if exists
         @if(session('error'))
             showAlert('error', '{{ session("error") }}');
+        @endif
+
+        // Show validation errors
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                showAlert('error', '{{ $error }}');
+                @break
+            @endforeach
         @endif
 
         // Close alert when clicking on it
@@ -309,68 +359,3 @@
     </script>
 </body>
 </html>
-
-<?php
-// <form id="editProductForm" action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-// @csrf
-// @method('PUT')
-// <a href="{{ route('admin.products.index') }}" class="btn btn-cancel">Batal</a>
-// <div class="product-form-section active">
-//     <form id="editProductForm" action="#" method="POST" enctype="multipart/form-data">
-//         <div class="form-row">
-//             <div class="form-group">
-//                 <label for="productName">Nama Produk</label>
-//                 <input type="text" id="productName" name="name" class="form-control" value="{{ $product->name }}" required>
-//             </div>
-//             <div class="form-group">
-//                 <label for="productCategory">Kategori</label>
-//                 <select id="productCategory" name="category" class="form-control" required>
-//                     <option value="">-- Pilih Kategori --</option>
-//                     <option value="kopi" {{ $product->category == 'kopi' ? 'selected' : '' }}>Kopi</option>
-//                     <option value="teh" {{ $product->category == 'teh' ? 'selected' : '' }}>Teh</option>
-//                     <option value="snack" {{ $product->category == 'snack' ? 'selected' : '' }}>Snack</option>
-//                     <option value="merchandise" {{ $product->category == 'merchandise' ? 'selected' : '' }}>Merchandise</option>
-//                 </select>
-//             </div>
-//         </div>
-
-//         <div class="form-group">
-//             <label for="productDescription">Deskripsi</label>
-//             <textarea id="productDescription" name="description" class="form-control" rows="3" required>{{ $product->description }}</textarea>
-//         </div>
-
-//         <div class="form-row">
-//             <div class="form-group">
-//                 <label for="productPrice">Harga (Rp)</label>
-//                 <input type="number" id="productPrice" name="price" class="form-control" min="0" value="{{ $product->price }}" required>
-//             </div>
-//             <div class="form-group">
-//                 <label for="productStock">Stok</label>
-//                 <input type="number" id="productStock" name="stock" class="form-control" min="0" value="{{ $product->stock }}" required>
-//             </div>
-//         </div>
-
-//         <div class="form-group">
-//             <label for="productImage">Gambar Produk</label>
-//             <input type="file" id="productImage" name="image" class="form-control" accept="image/*">
-//             <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG, PNG. Maks: 2MB</p>
-//             <div id="imagePreview" style="margin-top: 10px;">
-//                 <img src="{{ asset('storage/' . $product->image) }}" alt="Preview" style="max-width: 200px; border-radius: 8px;">
-//             </div>
-//         </div>
-
-//         <div class="form-group">
-//             <label for="productStatus">Status</label>
-//             <select id="productStatus" name="status" class="form-control" required>
-//                 <option value="active" {{ $product->status == 'active' ? 'selected' : '' }}>Aktif</option>
-//                 <option value="inactive" {{ $product->status == 'inactive' ? 'selected' : '' }}>Nonaktif</option>
-//             </select>
-//         </div>
-
-//         <div class="form-actions">
-//             <a href="#" class="btn btn-cancel">Batal</a>
-//             <button type="submit" class="btn">Simpan Perubahan</button>
-//         </div>
-//     </form>
-//     </div>
-?>
