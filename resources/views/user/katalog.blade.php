@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Katalog Produk Kopi - TOHO</title>
     @vite('resources/css/style.css')
 </head>
@@ -129,127 +130,131 @@
             <li>Katalog</li>
         </ul>
 
-        <!-- Menu Filters -->
-        <div class="menu-filters">
-            <button class="filter-btn active" data-category="all">Semua</button>
-            <button class="filter-btn" data-category="coffee">Kopi</button>
-            <button class="filter-btn" data-category="non-coffee">Non-Kopi</button>
+        <!-- Filter and Search Section -->
+        <div class="filter-section">
+            <div class="menu-filters">
+                <button class="filter-btn {{ !request('category') || request('category') == 'all' ? 'active' : '' }}" 
+                        onclick="filterProducts('all')">Semua</button>
+                @if(isset($categories))
+                    @foreach($categories as $category)
+                        <button class="filter-btn {{ request('category') == $category->id_category ? 'active' : '' }}" 
+                                onclick="filterProducts('{{ $category->id_category }}')">
+                            {{ $category->category_name }}
+                        </button>
+                    @endforeach
+                @else
+                    <button class="filter-btn" onclick="filterProducts('kopi')">Kopi</button>
+                    <button class="filter-btn" onclick="filterProducts('non-kopi')">Non-Kopi</button>
+                    <button class="filter-btn" onclick="filterProducts('mix')">Mix</button>
+                @endif
+                <!-- Sort Options -->
+            </div>
+            <div class="sort-section">
+                <form method="GET" action="{{ route('user-katalog') }}" id="sortForm">
+                    <select name="sort_by" onchange="document.getElementById('sortForm').submit()">
+                        <option value="product_name" {{ request('sort_by') == 'product_name' ? 'selected' : '' }}>
+                            Nama Produk
+                        </option>
+                        <option value="product_price" {{ request('sort_by') == 'product_price' ? 'selected' : '' }}>
+                            Harga
+                        </option>
+                        <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>
+                            Terbaru
+                        </option>
+                    </select>
+                    <select name="sort_order" onchange="document.getElementById('sortForm').submit()">
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>
+                            A-Z / Rendah-Tinggi
+                        </option>
+                        <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>
+                            Z-A / Tinggi-Rendah
+                        </option>
+                    </select>
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                </form>
+            </div>
         </div>
 
-        <!-- Search Bar -->
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Cari produk kopi...">
+        <div class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <form method="GET" action="{{ route('user-katalog') }}" id="searchForm">
+                    <input type="text" 
+                            name="search" 
+                            value="{{ request('search') }}" 
+                            placeholder="Cari produk favorit Anda..."
+                            onchange="document.getElementById('searchForm').submit()">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                </form>
+            </div>
         </div>
 
         <!-- Products Grid -->
-        <div class="menu-grid">
-            <!-- Product 1 -->
-            <div class="product-card" data-category="arabica">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Aceh Gayo">
+        <div class="menu-grid products-grid" id="productsGrid">
+            @if(isset($products) && $products->count() > 0)
+                @foreach($products as $product)
+                    <div class="product-card" 
+                         data-category="{{ $product->category->id_category ?? 'unknown' }}"
+                         data-price="{{ $product->product_price }}">
+                        <div class="product-image">
+                            @if($product->product_name)
+                                <img src="{{ asset('images/products/' . $product->product_name . '.jpg') }}" 
+                                     alt="{{ $product->product_name }}"
+                                     onerror="this.src='{{ asset('images/placeholder-product.jpg') }}'">
+                            @else
+                                <img src="{{ asset('images/placeholder-product.jpg') }}" 
+                                     alt="{{ $product->product_name }}">
+                            @endif
+                            
+                            <!-- Product Status Badge -->
+                            @if($product->product_status === 'nonaktif')
+                                <div class="status-badge inactive">Tidak Tersedia</div>
+                            @endif
+                        </div>
+                        
+                        <div class="product-info">
+                            <h4>{{ $product->product_name }}</h4>
+                            <div class="price">{{ $product->formatted_price }}</div>
+                            
+                            @if($product->description && $product->description->product_description)
+                                <div class="description">
+                                    {{ Str::limit($product->description->product_description, 100) }}
+                                </div>
+                            @endif
+                            <button class="add-to-cart">Tambah ke Keranjang</button>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <!-- No Products Found -->
+                <div class="no-products">
+                    <div class="no-products-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Tidak ada produk ditemukan</h3>
+                    <p>
+                        @if(request('search'))
+                            Pencarian untuk "{{ request('search') }}" tidak menghasilkan produk.
+                        @else
+                            Belum ada produk yang tersedia untuk kategori ini.
+                        @endif
+                    </p>
+                    <a href="{{ route('user-katalog') }}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Lihat Semua Produk
+                    </a>
                 </div>
-                <div class="product-info">
-                    <h4>Arabica Aceh Gayo</h4>
-                    <div class="price">Rp 75.000</div>
-                    <div class="description">Kopi dengan aroma floral dan citrus, rasa fruity dengan keasaman sedang.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 2 -->
-            <div class="product-card" data-category="robusta">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi5.jpg') }}" alt="Robusta Lampung">
-                </div>
-                <div class="product-info">
-                    <h4>Robusta Lampung</h4>
-                    <div class="price">Rp 65.000</div>
-                    <div class="description">Kopi dengan karakter rasa kuat, earthy, dan sedikit sentuhan coklat.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 3 -->
-            <div class="product-card" data-category="blend">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi6.jpg') }}" alt="House Blend">
-                </div>
-                <div class="product-info">
-                    <h4>House Blend</h4>
-                    <div class="price">Rp 70.000</div>
-                    <div class="description">Perpaduan sempurna arabica dan robusta dengan rasa seimbang dan body sedang.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 4 -->
-            <div class="product-card" data-category="single-origin">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Toraja Kalosi">
-                </div>
-                <div class="product-info">
-                    <h4>Toraja Kalosi</h4>
-                    <div class="price">Rp 85.000</div>
-                    <div class="description">Single origin dengan karakter rasa herbal, spicy, dan sentuhan dark chocolate.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div class="product-card" data-category="arabica">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi3.jpg') }}" alt="Arabica Java Preanger">
-                </div>
-                <div class="product-info">
-                    <h4>Arabica Java Preanger</h4>
-                    <div class="price">Rp 78.000</div>
-                    <div class="description">Kopi dengan karakter jasmine aroma, rasa caramel dan keasaman rendah.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 6 -->
-            <div class="product-card" data-category="robusta">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi7.jpg') }}" alt="Robusta Temanggung">
-                </div>
-                <div class="product-info">
-                    <h4>Robusta Temanggung</h4>
-                    <div class="price">Rp 68.000</div>
-                    <div class="description">Kopi dengan body tebal, aftertaste panjang, dan sentuhan nutty.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 7 -->
-            <div class="product-card" data-category="blend">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi4.jpg') }}" alt="Morning Blend">
-                </div>
-                <div class="product-info">
-                    <h4>Morning Blend</h4>
-                    <div class="price">Rp 72.000</div>
-                    <div class="description">Blend khusus untuk pagi hari dengan karakter rasa bright dan menyegarkan.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
-
-            <!-- Product 8 -->
-            <div class="product-card" data-category="single-origin">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi8.jpg') }}" alt="Flores Bajawa">
-                </div>
-                <div class="product-info">
-                    <h4>Flores Bajawa</h4>
-                    <div class="price">Rp 82.000</div>
-                    <div class="description">Single origin dengan karakter floral, hint of vanilla, dan keasaman medium.</div>
-                    <button class="add-to-cart">Tambah ke Keranjang</button>
-                </div>
-            </div>
+            @endif
         </div>
-    </div>
 
+        <!-- Pagination -->
+        @if(isset($products) && $products->hasPages())
+            <div class="pagination-wrapper">
+                {{ $products->links() }}
+            </div>
+        @endif
+    </div>
+    
     <!-- Back to Top Button -->
     <a href="#" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
@@ -262,6 +267,72 @@
         window.Laravel = {
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         };
+
+        // Filter Products Function
+        function filterProducts(category) {
+            const url = new URL(window.location.href);
+            if (category === 'all') {
+                url.searchParams.delete('category');
+            } else {
+                url.searchParams.set('category', category);
+            }
+            window.location.href = url.toString();
+        }
+
+        // Add to Cart Function
+        function addToCart(productId) {
+            fetch('{{ route("cart.add") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': window.Laravel.csrfToken
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('success', data.message);
+                    // Update cart count if exists
+                    updateCartCount();
+                } else {
+                    showAlert('error', data.message || 'Gagal menambahkan ke keranjang');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('error', 'Terjadi kesalahan saat menambahkan ke keranjang');
+            });
+        }
+
+        // Update Cart Count
+        function updateCartCount() {
+            fetch('{{ route("cart.count") }}')
+                .then(response => response.json())
+                .then(data => {
+                    const cartBadge = document.querySelector('.cart-count');
+                    if (cartBadge) {
+                        cartBadge.textContent = data.count;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating cart count:', error);
+                });
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add to cart button listeners
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
+                    addToCart(productId);
+                });
+            });
+        });
 
         // User Menu Functions
         function toggleUserMenu() {

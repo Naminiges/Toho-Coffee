@@ -54,11 +54,31 @@ class ProductController extends Controller
             // Get categories for filter dropdown (if needed)
             $categories = Category::all();
 
-            return view('products', compact('products', 'categories'));
+            return compact('products', 'categories');
 
         } catch (\Exception $e) {
             return redirect()->back()
                            ->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
+        }
+    }
+
+    public function guestKatalog(Request $request)
+    {
+        try {
+        $data = $this->index($request);
+        return view('products', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
+        }
+    }
+
+    public function userKatalog(Request $request)
+    {
+        try {
+        $data = $this->index($request);
+        return view('user.katalog', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memuat produk: ' . $e->getMessage());
         }
     }
 

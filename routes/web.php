@@ -6,18 +6,18 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 
-Route::get('/products', function () {
-    return view('products');
-})->name('products');
+// Route::get('/products', function () {
+//     return view('products');
+// })->name('products');
 
 Route::get('/invoice', function () {
     return view('invoice');
 })->name('invoice');
 
 // user routes
-Route::get('/user/katalog', function () {
-    return view('user.katalog');
-})->name('user-katalog');
+// Route::get('/user/katalog', function () {
+//     return view('user.katalog');
+// })->name('user-katalog');
 
 Route::get('/user/keranjang', function () {
     return view('user.keranjang');
@@ -45,6 +45,9 @@ Route::get('/admin', function () {
 })->name('admin-dashboard');
 
 Route::get('/', [UserController::class, 'landingPage'])->name('welcome');
+Route::get('/products', [ProductController::class, 'guestKatalog'])->name('products');  
+
+Route::get('/user/katalog', [ProductController::class, 'userKatalog'])->name('user-katalog');
 
 Route::get('/admin/manajemen-produk', [ProductController::class, 'adminIndex'])->name('admin-manajemen-produk');
 Route::get('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'create'])->name('admin-tambah-produk');
@@ -126,7 +129,6 @@ Route::get('/test-reset-password', function () {
 })->name('test-reset-password');
 
 // Public routes for products
-Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // AJAX routes for dynamic functionality

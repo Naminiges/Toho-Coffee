@@ -136,6 +136,7 @@
         </ul>
 
         <!-- Filter and Search Section -->
+        <div class="filter-section">
             <div class="menu-filters">
                 <button class="filter-btn {{ !request('category') || request('category') == 'all' ? 'active' : '' }}" 
                         onclick="filterProducts('all')">Semua</button>
@@ -150,48 +151,48 @@
                     <button class="filter-btn" onclick="filterProducts('coffee')">Kopi</button>
                     <button class="filter-btn" onclick="filterProducts('non-coffee')">Non-Kopi</button>
                 @endif
-            </div>
-
-            <div class="search-section">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <form method="GET" action="{{ route('products') }}" id="searchForm">
-                        <input type="text" 
-                               name="search" 
-                               value="{{ request('search') }}" 
-                               placeholder="Cari produk favorit Anda..."
-                               onchange="document.getElementById('searchForm').submit()">
-                        <input type="hidden" name="category" value="{{ request('category') }}">
-                    </form>
-                </div>
-
                 <!-- Sort Options -->
-                <div class="sort-section">
-                    <form method="GET" action="{{ route('products') }}" id="sortForm">
-                        <select name="sort_by" onchange="document.getElementById('sortForm').submit()">
-                            <option value="product_name" {{ request('sort_by') == 'product_name' ? 'selected' : '' }}>
-                                Nama Produk
-                            </option>
-                            <option value="product_price" {{ request('sort_by') == 'product_price' ? 'selected' : '' }}>
-                                Harga
-                            </option>
-                            <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>
-                                Terbaru
-                            </option>
-                        </select>
-                        <select name="sort_order" onchange="document.getElementById('sortForm').submit()">
-                            <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>
-                                A-Z / Rendah-Tinggi
-                            </option>
-                            <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>
-                                Z-A / Tinggi-Rendah
-                            </option>
-                        </select>
-                        <input type="hidden" name="search" value="{{ request('search') }}">
-                        <input type="hidden" name="category" value="{{ request('category') }}">
-                    </form>
-                </div>
             </div>
+            <div class="sort-section">
+                <form method="GET" action="{{ route('products') }}" id="sortForm">
+                    <select name="sort_by" onchange="document.getElementById('sortForm').submit()">
+                        <option value="product_name" {{ request('sort_by') == 'product_name' ? 'selected' : '' }}>
+                            Nama Produk
+                        </option>
+                        <option value="product_price" {{ request('sort_by') == 'product_price' ? 'selected' : '' }}>
+                            Harga
+                        </option>
+                        <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>
+                            Terbaru
+                        </option>
+                    </select>
+                    <select name="sort_order" onchange="document.getElementById('sortForm').submit()">
+                        <option value="asc" {{ request('sort_order') == 'asc' ? 'selected' : '' }}>
+                            A-Z / Rendah-Tinggi
+                        </option>
+                        <option value="desc" {{ request('sort_order') == 'desc' ? 'selected' : '' }}>
+                            Z-A / Tinggi-Rendah
+                        </option>
+                    </select>
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                </form>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <form method="GET" action="{{ route('products') }}" id="searchForm">
+                    <input type="text" 
+                            name="search" 
+                            value="{{ request('search') }}" 
+                            placeholder="Cari produk favorit Anda..."
+                            onchange="document.getElementById('searchForm').submit()">
+                    <input type="hidden" name="category" value="{{ request('category') }}">
+                </form>
+            </div>
+        </div>
 
         <!-- Products Grid -->
         <div class="menu-grid products-grid" id="productsGrid">
@@ -201,8 +202,8 @@
                          data-category="{{ $product->category->id_category ?? 'unknown' }}"
                          data-price="{{ $product->product_price }}">
                         <div class="product-image">
-                            @if($product->product_image)
-                                <img src="{{ asset('images/products/' . $product->product_image) }}" 
+                            @if($product->product_name)
+                                <img src="{{ asset('images/products/' . $product->product_name . '.jpg') }}" 
                                      alt="{{ $product->product_name }}"
                                      onerror="this.src='{{ asset('images/placeholder-product.jpg') }}'">
                             @else
@@ -225,42 +226,6 @@
                                     {{ Str::limit($product->description->product_description, 100) }}
                                 </div>
                             @endif
-                            
-                            <!-- Product Metadata -->
-                            <div class="product-meta">
-                                @if($product->category)
-                                    <span class="category-badge">{{ $product->category->category_name }}</span>
-                                @endif
-                                
-                                @if($product->temperatureType)
-                                    <span class="temperature-badge">{{ $product->temperatureType->temperature }}</span>
-                                @endif
-                            </div>
-                            
-                            <!-- Action Buttons -->
-                            <div class="product-actions">
-                                @if($product->product_status === 'aktif')
-                                    @auth
-                                        <button class="btn btn-primary add-to-cart" 
-                                                data-product-id="{{ $product->id_product }}">
-                                            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
-                                        </button>
-                                    @else
-                                        <a href="{{ route('login') }}" class="btn btn-primary">
-                                            <i class="fas fa-sign-in-alt"></i> Login untuk Membeli
-                                        </a>
-                                    @endauth
-                                    
-                                    <a href="{{ route('products.show', $product->id_product) }}" 
-                                       class="btn btn-secondary">
-                                        <i class="fas fa-eye"></i> Detail
-                                    </a>
-                                @else
-                                    <button class="btn btn-disabled" disabled>
-                                        <i class="fas fa-times"></i> Tidak Tersedia
-                                    </button>
-                                @endif
-                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -356,61 +321,6 @@
             }
             window.location.href = url.toString();
         }
-
-        // Add to Cart Function
-        function addToCart(productId) {
-            fetch('{{ route("cart.add") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': window.Laravel.csrfToken
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: 1
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showAlert('success', data.message);
-                    // Update cart count if exists
-                    updateCartCount();
-                } else {
-                    showAlert('error', data.message || 'Gagal menambahkan ke keranjang');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('error', 'Terjadi kesalahan saat menambahkan ke keranjang');
-            });
-        }
-
-        // Update Cart Count
-        function updateCartCount() {
-            fetch('{{ route("cart.count") }}')
-                .then(response => response.json())
-                .then(data => {
-                    const cartBadge = document.querySelector('.cart-count');
-                    if (cartBadge) {
-                        cartBadge.textContent = data.count;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error updating cart count:', error);
-                });
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add to cart button listeners
-            document.querySelectorAll('.add-to-cart').forEach(button => {
-                button.addEventListener('click', function() {
-                    const productId = this.getAttribute('data-product-id');
-                    addToCart(productId);
-                });
-            });
-        });
 
         // User Menu Functions
         function toggleUserMenu() {
