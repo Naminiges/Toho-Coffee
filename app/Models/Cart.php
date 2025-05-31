@@ -68,6 +68,11 @@ class Cart extends Model
         return 'Rp ' . number_format($this->subtotal, 0, ',', '.');
     }
 
+    public function getRouteKeyName()
+    {
+        return 'id_cart';
+    }
+
     // Methods
     public function increaseQuantity($amount = 1)
     {

@@ -6,10 +6,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 
-// Route::get('/products', function () {
-//     return view('products');
-// })->name('products');
-
 Route::get('/invoice', function () {
     return view('invoice');
 })->name('invoice');
@@ -19,9 +15,9 @@ Route::get('/invoice', function () {
 //     return view('user.katalog');
 // })->name('user-katalog');
 
-Route::get('/user/keranjang', function () {
-    return view('user.keranjang');
-})->name('user-keranjang');
+// Route::get('/user/keranjang', function () {
+//     return view('user.keranjang');
+// })->name('user-keranjang');
 
 Route::get('/user/keranjang/checkout', function () {
     return view('user.checkout');
@@ -48,6 +44,10 @@ Route::get('/', [UserController::class, 'landingPage'])->name('welcome');
 Route::get('/products', [ProductController::class, 'guestKatalog'])->name('products');  
 
 Route::get('/user/katalog', [ProductController::class, 'userKatalog'])->name('user-katalog');
+Route::get('/user/keranjang', [CartController::class, 'showCart'])->name('user-keranjang');
+Route::post('/user/keranjang/tambah', [CartController::class, 'addToCart'])->name('user-keranjang-tambah');
+Route::put('/user/keranjang/update/{id_cart}', [CartController::class, 'updateQuantity'])->name('user-keranjang-update');
+Route::delete('/user/keranjang/hapus/{id_cart}', [CartController::class, 'removeItem'])->name('user-keranjang-hapus');
 
 Route::get('/admin/manajemen-produk', [ProductController::class, 'adminIndex'])->name('admin-manajemen-produk');
 Route::get('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'create'])->name('admin-tambah-produk');

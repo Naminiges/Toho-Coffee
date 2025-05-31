@@ -789,6 +789,13 @@ footer {
     width: 100%;
 }
 
+.btn-block.disabled {
+    display: block;
+    width: 100%;
+    background-color: var(--dark-gray);
+    cursor: not-allowed;
+}
+
 /* ====== MENU LIST PAGE ====== */
 .menu-filters {
     margin-bottom: 30px;

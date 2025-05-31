@@ -214,7 +214,7 @@
                         </div>
                         
                         <div class="product-info">
-                            <h4>{{ $product->product_name }}</h4>
+                            <h4>{{ $product->product_name }} ({{$product->description->temperatureType->temperature}})</h4>
                             <div class="price">{{ $product->formatted_price }}</div>
                             
                             @if($product->description && $product->description->product_description)
@@ -222,7 +222,11 @@
                                     {{ Str::limit($product->description->product_description, 100) }}
                                 </div>
                             @endif
-                            <button class="add-to-cart">Tambah ke Keranjang</button>
+                            <form action="{{ route('user-keranjang-tambah') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id_product }}">
+                                <button type="submit" class="btn btn-success">Tambah ke Keranjang</button>
+                            </form>
                         </div>
                     </div>
                 @endforeach

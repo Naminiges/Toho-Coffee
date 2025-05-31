@@ -200,9 +200,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="productImage">Gambar Produk</label>
+                        <label for="productImage">Gambar Produk (JPG)</label>
                         <input type="file" id="productImage" name="image" class="form-control" accept="image/*" required>
-                        <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG, PNG. Maks: 2MB</p>
+                        <p style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">Format: JPG. Maks: 2MB</p>
                         @error('image')
                                 <span class="error-message">{{ $message }}</span>
                         @enderror

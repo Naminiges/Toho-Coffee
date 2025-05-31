@@ -54,7 +54,10 @@ class ProductController extends Controller
             // Get categories for filter dropdown (if needed)
             $categories = Category::all();
 
-            return compact('products', 'categories');
+            // Get temperature types 
+            $temperatureTypes = TemperatureType::all();
+
+            return compact('products', 'categories', 'temperatureTypes');
 
         } catch (\Exception $e) {
             return redirect()->back()
