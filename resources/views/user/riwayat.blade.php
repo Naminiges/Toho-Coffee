@@ -129,231 +129,218 @@
 
         <!-- Filter Section -->
         <div class="filter-section" style="justify-content: flex-start;">
-            <button class="filter-btn active">Semua</button>
-            <button class="filter-btn">Menunggu Konfirmasi</button>
-            <button class="filter-btn">Diproses</button>
-            <button class="filter-btn">Siap Diambil</button>
-            <button class="filter-btn">Selesai</button>
-            <button class="filter-btn">Dibatalkan</button>
+            <a href="{{ route('user-riwayat') }}" class="filter-btn {{ request('status', 'all') == 'all' ? 'active' : '' }}">Semua</a>
+            <a href="{{ route('user-riwayat', ['status' => 'menunggu']) }}" class="filter-btn {{ request('status') == 'menunggu' ? 'active' : '' }}">Menunggu Konfirmasi</a>
+            <a href="{{ route('user-riwayat', ['status' => 'diproses']) }}" class="filter-btn {{ request('status') == 'diproses' ? 'active' : '' }}">Diproses</a>
+            <a href="{{ route('user-riwayat', ['status' => 'siap']) }}" class="filter-btn {{ request('status') == 'siap' ? 'active' : '' }}">Siap Diambil</a>
+            <a href="{{ route('user-riwayat', ['status' => 'selesai']) }}" class="filter-btn {{ request('status') == 'selesai' ? 'active' : '' }}">Selesai</a>
+            <a href="{{ route('user-riwayat', ['status' => 'dibatalkan']) }}" class="filter-btn {{ request('status') == 'dibatalkan' ? 'active' : '' }}">Dibatalkan</a>
         </div>
 
         <!-- Orders List -->
         <div class="orders-list">
-            <!-- Order Card 1 -->
+            @forelse($orders as $order)
+            <!-- Order Card -->
             <div class="order-card">
                 <div class="order-header">
                     <div>
-                        <h3>Order #TOHO-2024-001</h3>
-                        <p style="color: var(--dark-gray); font-size: 14px;">20 Maret 2024, 14:30</p>
+                        <h3>Order #{{ $order->orders_code }}</h3>
+                        <p style="color: var(--dark-gray); font-size: 14px;">{{ $order->order_date->format('d F Y, H:i') }}</p>
                     </div>
-                    <div class="order-status status-ready">
-                        <i class="fas fa-check-circle"></i>
-                        Siap Diambil
+                    <div class="order-status 
+                        @switch($order->order_status)
+                            @case('menunggu') status-pending @break
+                            @case('diproses') status-processing @break
+                            @case('siap') status-ready @break
+                            @case('selesai') status-completed @break
+                            @case('dibatalkan') status-cancelled @break
+                            @default status-pending
+                        @endswitch
+                    ">
+                        @switch($order->order_status)
+                            @case('menunggu')
+                                <i class="fas fa-clock"></i>
+                                Menunggu Konfirmasi
+                                @break
+                            @case('diproses')
+                                <i class="fas fa-cog fa-spin"></i>
+                                Diproses
+                                @break
+                            @case('siap')
+                                <i class="fas fa-check-circle"></i>
+                                Siap Diambil
+                                @break
+                            @case('selesai')
+                                <i class="fas fa-check-circle"></i>
+                                Selesai
+                                @break
+                            @case('dibatalkan')
+                                <i class="fas fa-times-circle"></i>
+                                Dibatalkan
+                                @break
+                            @default
+                                <i class="fas fa-clock"></i>
+                                Menunggu Konfirmasi
+                        @endswitch
                     </div>
                 </div>
                 <div class="order-content">
                     <div class="order-items">
+                        @foreach($order->orderDetails as $detail)
                         <div class="order-item">
                             <div class="order-item-image">
-                                <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Gayo">
+                                @if($detail->product_photo)
+                                    <img src="{{ asset('images/products/' . $detail->product_name . '.jpg') }}" 
+                                        alt="{{ $detail->product_name ?? 'Product' }}">
+                                @else
+                                    <img src="{{ asset('images/default-product.jpg') }}" 
+                                        alt="Default Product Image">
+                                @endif
                             </div>
                             <div class="order-item-details">
-                                <h4>Arabica Gayo Premium</h4>
-                                <p class="order-item-variant">Medium Roast, 200gr</p>
-                                <div class="order-item-price">Rp 85.000</div>
+                                <h4>{{ $detail->product_name ?? 'Produk Tidak Tersedia' }}</h4>
+                                <p class="order-item-variant">
+                                    {{ $detail->category_name ?? 'Kategori' }} - 
+                                    {{ $detail->temperature_name ?? 'Temperature' }}
+                                    @if($detail->product_quantity >= 1)
+                                        , {{ $detail->product_quantity }}x
+                                    @endif
+                                </p>
+                                <div class="order-item-price">Rp {{ number_format($detail->product_price, 0, ',', '.') }}</div>
+                                
+                                <!-- Informasi pickup jika ada -->
+                                @if($detail->pickup_time)
+                                <p class="pickup-info" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
+                                    <i class="fas fa-clock"></i>
+                                    Pickup: {{ \Carbon\Carbon::parse($detail->pickup_time)->format('d/m/Y H:i') }}
+                                </p>
+                                @endif
+                                
+                                @if($detail->pickup_place)
+                                <p class="pickup-info" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ $detail->pickup_place }}
+                                </p>
+                                @endif
+                                
+                                @if($detail->pickup_method)
+                                <p class="pickup-info" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
+                                    <i class="fas fa-truck"></i>
+                                    {{ ucfirst($detail->pickup_method) }}
+                                </p>
+                                @endif
                             </div>
                         </div>
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Toraja">
-                            </div>
-                            <div class="order-item-details">
-                                <h4>Robusta Toraja Special</h4>
-                                <p class="order-item-variant">Dark Roast, 250gr</p>
-                                <div class="order-item-price">Rp 75.000</div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
 
                     <div class="order-timeline">
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 14:30</div>
+                                <div class="timeline-date">{{ $order->order_date->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan diterima</div>
                             </div>
                         </div>
+                        
+                        @if(in_array($order->order_status, ['diproses', 'siap', 'selesai']))
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 14:35</div>
+                                <div class="timeline-date">{{ $order->order_date->addMinutes(5)->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan dikonfirmasi</div>
                             </div>
                         </div>
+                        @endif
+                        
+                        @if(in_array($order->order_status, ['siap', 'selesai']))
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 15:00</div>
+                                <div class="timeline-date">{{ $order->order_date->addMinutes(25)->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan siap diambil</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="order-summary">
-                        <div class="order-summary-item">
-                            <span>Subtotal</span>
-                            <span>Rp 160.000</span>
-                        </div>
-                        <div class="order-summary-item">
-                            <span>Total</span>
-                            <span>Rp 160.000</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-actions">
-                    <a href=" {{ route('user-detail-pesanan') }}" style="text-decoration : none;">
-                        <button class="btn btn-secondary">Detail Pesanan</button>
-                    </a>
-                    <button class="btn">Ambil Pesanan</button>
-                </div>
-            </div>
-
-            <!-- Order Card 2 -->
-            <div class="order-card">
-                <div class="order-header">
-                    <div>
-                        <h3>Order #TOHO-2024-002</h3>
-                        <p style="color: var(--dark-gray); font-size: 14px;">19 Maret 2024, 10:15</p>
-                    </div>
-                    <div class="order-status status-completed">
-                        <i class="fas fa-check-circle"></i>
-                        Selesai
-                    </div>
-                </div>
-                <div class="order-content">
-                    <div class="order-items">
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi3.jpg') }}" alt="TOHO Blend">
-                            </div>
-                            <div class="order-item-details">
-                                <h4>TOHO Signature Blend</h4>
-                                <p class="order-item-variant">Medium-Dark Roast, 500gr</p>
-                                <div class="order-item-price">Rp 120.000</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-timeline">
+                        @endif
+                        
+                        @if($order->order_status === 'selesai' && $order->order_complete)
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 10:15</div>
-                                <div class="timeline-text">Pesanan diterima</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 10:20</div>
-                                <div class="timeline-text">Pesanan dikonfirmasi</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 10:45</div>
-                                <div class="timeline-text">Pesanan siap diambil</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">19 Maret 2024, 11:30</div>
+                                <div class="timeline-date">{{ $order->order_complete->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan diambil</div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="order-summary">
-                        <div class="order-summary-item">
-                            <span>Subtotal</span>
-                            <span>Rp 120.000</span>
-                        </div>
-                        <div class="order-summary-item">
-                            <span>Total</span>
-                            <span>Rp 120.000</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="order-actions">
-                    <a href=" {{ route('user-detail-pesanan') }}" style="text-decoration : none;">
-                        <button class="btn btn-secondary">Detail Pesanan</button>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Order Card 3 -->
-            <div class="order-card">
-                <div class="order-header">
-                    <div>
-                        <h3>Order #TOHO-2024-003</h3>
-                        <p style="color: var(--dark-gray); font-size: 14px;">18 Maret 2024, 16:45</p>
-                    </div>
-                    <div class="order-status status-cancelled">
-                        <i class="fas fa-times-circle"></i>
-                        Dibatalkan
-                    </div>
-                </div>
-                <div class="order-content">
-                    <div class="order-items">
-                        <div class="order-item">
-                            <div class="order-item-image">
-                                <img src="{{ asset('images/kopi4.jpg') }}" alt="Pour Over Set">
-                            </div>
-                            <div class="order-item-details">
-                                <h4>Pour Over Set</h4>
-                                <p class="order-item-variant">Set Lengkap</p>
-                                <div class="order-item-price">Rp 275.000</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="order-timeline">
+                        @endif
+                        
+                        @if($order->order_status === 'dibatalkan')
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">18 Maret 2024, 16:45</div>
-                                <div class="timeline-text">Pesanan diterima</div>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon"></div>
-                            <div class="timeline-content">
-                                <div class="timeline-date">18 Maret 2024, 17:00</div>
+                                <div class="timeline-date">{{ $order->order_date->addMinutes(15)->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan dibatalkan</div>
                             </div>
                         </div>
+                        @endif
                     </div>
 
                     <div class="order-summary">
+                        @php
+                            $subtotal = $order->orderDetails->sum(function($detail) {
+                                return $detail->product_price * $detail->product_quantity;
+                            });
+                        @endphp
                         <div class="order-summary-item">
                             <span>Subtotal</span>
-                            <span>Rp 275.000</span>
+                            <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
                         <div class="order-summary-item">
                             <span>Total</span>
-                            <span>Rp 275.000</span>
+                            <span>Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="order-actions">
-                    <a href=" {{ route('user-detail-pesanan') }}" style="text-decoration : none;">
+                    <a href="{{ route('user-detail-pesanan', $order->id_orders) }}" style="text-decoration : none;">
                         <button class="btn btn-secondary">Detail Pesanan</button>
                     </a>
+                    @if($order->order_status === 'siap')
+                        <form action="{{ route('user-ambil-pesanan', $order->id_orders) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn" onclick="return confirm('Konfirmasi bahwa Anda telah mengambil pesanan ini?')">Ambil Pesanan</button>
+                        </form>
+                    @endif
                 </div>
             </div>
+            @empty
+            <!-- Empty State -->
+            <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                <div style="font-size: 4rem; color: var(--light-gray); margin-bottom: 20px;">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <h3 style="color: var(--dark-gray); margin-bottom: 10px;">Belum Ada Pesanan</h3>
+                <p style="color: var(--dark-gray); margin-bottom: 30px;">
+                    @if(request('status') && request('status') !== 'all')
+                        Tidak ada pesanan dengan status "{{ ucfirst(request('status')) }}"
+                    @else
+                        Anda belum memiliki riwayat pesanan
+                    @endif
+                </p>
+                <a href="{{ route('user-katalog') }}" class="btn">
+                    <i class="fas fa-coffee"></i>
+                    Mulai Belanja
+                </a>
+            </div>
+            @endforelse
         </div>
+
+        <!-- Pagination -->
+        @if($orders->hasPages())
+        <div class="pagination-wrapper" style="margin-top: 30px;">
+            {{ $orders->appends(request()->query())->links() }}
+        </div>
+        @endif
     </div>
 
     <a href="#" class="back-to-top">

@@ -133,35 +133,66 @@
             <div class="order-detail-main">
                 <!-- Order Status -->
                 <div class="order-info-card">
-                    <div class="order-status-badge status-ready">
-                        <i class="fas fa-check-circle"></i>
-                        Siap Diambil
+                    <div class="order-status-badge 
+                        @switch($order->order_status)
+                            @case('menunggu') status-pending @break
+                            @case('diproses') status-processing @break
+                            @case('siap') status-ready @break
+                            @case('selesai') status-completed @break
+                            @case('dibatalkan') status-cancelled @break
+                            @default status-pending
+                        @endswitch
+                    ">
+                        @switch($order->order_status)
+                            @case('menunggu')
+                                <i class="fas fa-clock"></i>
+                                Menunggu Konfirmasi
+                                @break
+                            @case('diproses')
+                                <i class="fas fa-cog fa-spin"></i>
+                                Diproses
+                                @break
+                            @case('siap')
+                                <i class="fas fa-check-circle"></i>
+                                Siap Diambil
+                                @break
+                            @case('selesai')
+                                <i class="fas fa-check-circle"></i>
+                                Selesai
+                                @break
+                            @case('dibatalkan')
+                                <i class="fas fa-times-circle"></i>
+                                Dibatalkan
+                                @break
+                        @endswitch
                     </div>
                     <div class="info-grid">
                         <div class="info-item">
                             <label>Nomor Pesanan</label>
-                            <span>#TOHO-2024-001</span>
+                            <span>#{{ $order->orders_code }}</span>
                         </div>
                         <div class="info-item">
                             <label>Tanggal Pesanan</label>
-                            <span>20 Maret 2024, 14:30</span>
+                            <span>{{ $order->order_date->format('d F Y, H:i') }}</span>
                         </div>
+                        @if($order->orderDetails->first())
                         <div class="info-item">
                             <label>Metode Pengambilan</label>
-                            <span>Pickup di Toko</span>
+                            <span>{{ ucfirst($order->orderDetails->first()->pickup_method ?? 'Pickup di Toko') }}</span>
                         </div>
                         <div class="info-item">
                             <label>Lokasi Pengambilan</label>
-                            <span>TOHO Coffee - Cabang Utama</span>
+                            <span>{{ $order->orderDetails->first()->pickup_place ?? 'TOHO Coffee - Cabang Utama' }}</span>
                         </div>
                         <div class="info-item">
                             <label>Waktu Pengambilan</label>
-                            <span>20 Maret 2024, 15:00</span>
+                            <span>{{ $order->orderDetails->first()->pickup_time ? \Carbon\Carbon::parse($order->orderDetails->first()->pickup_time)->format('d F Y, H:i') : 'Belum ditentukan' }}</span>
                         </div>
                         <div class="info-item">
                             <label>Status Pembayaran</label>
-                            <span>Lunas</span>
+                            <span>{{ ucfirst($order->orderDetails->first()->payment_status ?? 'Belum Lunas') }}</span>
                         </div>
+                        @endif
                     </div>
                 </div>
 
@@ -172,24 +203,50 @@
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 14:30</div>
+                                <div class="timeline-date">{{ $order->order_date->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan diterima</div>
                             </div>
                         </div>
+                        
+                        @if(in_array($order->order_status, ['diproses', 'siap', 'selesai']))
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 14:35</div>
+                                <div class="timeline-date">{{ $order->order_date->addMinutes(5)->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan dikonfirmasi</div>
                             </div>
                         </div>
+                        @endif
+                        
+                        @if(in_array($order->order_status, ['siap', 'selesai']))
                         <div class="timeline-item">
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
-                                <div class="timeline-date">20 Maret 2024, 15:00</div>
+                                <div class="timeline-date">{{ $order->order_date->addMinutes(25)->format('d F Y, H:i') }}</div>
                                 <div class="timeline-text">Pesanan siap diambil</div>
                             </div>
                         </div>
+                        @endif
+                        
+                        @if($order->order_status === 'selesai' && $order->order_complete)
+                        <div class="timeline-item">
+                            <div class="timeline-icon"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">{{ $order->order_complete->format('d F Y, H:i') }}</div>
+                                <div class="timeline-text">Pesanan diambil</div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        @if($order->order_status === 'dibatalkan')
+                        <div class="timeline-item">
+                            <div class="timeline-icon"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">{{ $order->order_date->addMinutes(15)->format('d F Y, H:i') }}</div>
+                                <div class="timeline-text">Pesanan dibatalkan</div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
@@ -197,40 +254,51 @@
                 <div class="order-info-card">
                     <h3>Detail Pesanan</h3>
                     <div class="order-items-list">
+                        @foreach($order->orderDetails as $detail)
                         <div class="order-item">
                             <div class="item-image">
-                                <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Gayo">
+                                @if($detail->product_photo)
+                                    <img src="{{ asset('images/products/' . $detail->product_name . '.jpg') }}" 
+                                        alt="{{ $detail->product_name ?? 'Product' }}">
+                                @else
+                                    <img src="{{ asset('images/default-product.jpg') }}" 
+                                        alt="Default Product Image">
+                                @endif
                             </div>
                             <div class="item-details">
-                                <h4>Arabica Gayo Premium</h4>
-                                <p class="item-variant">Medium Roast, 200gr</p>
-                                <div class="item-price">Rp 85.000</div>
+                                <h4>{{ $detail->product_name ?? 'Produk Tidak Tersedia' }}</h4>
+                                <p class="item-variant">
+                                    {{ $detail->category_name ?? 'Kategori' }} - 
+                                    {{ $detail->temperature_name ?? 'Temperature' }}
+                                    @if($detail->product_quantity >= 1)
+                                        , {{ $detail->product_quantity }}x
+                                    @endif
+                                </p>
+                                <div class="item-price">Rp {{ number_format($detail->product_price, 0, ',', '.') }}</div>
+                                
+                                @if($detail->product_description)
+                                <p class="item-description" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
+                                    {{ Str::limit($detail->product_description, 100) }}
+                                </p>
+                                @endif
                             </div>
                         </div>
-                        <div class="order-item">
-                            <div class="item-image">
-                                <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Toraja">
-                            </div>
-                            <div class="item-details">
-                                <h4>Robusta Toraja Special</h4>
-                                <p class="item-variant">Dark Roast, 250gr</p>
-                                <div class="item-price">Rp 75.000</div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
 
                     <div class="order-summary">
+                        @php
+                            $subtotal = $order->orderDetails->sum(function($detail) {
+                                return $detail->product_price * $detail->product_quantity;
+                            });
+                        @endphp
                         <div class="summary-item">
                             <span>Subtotal</span>
-                            <span>Rp 160.000</span>
-                        </div>
-                        <div class="summary-item">
-                            <span>PPn 10%</span>
-                            <span>Rp 1.600</span>
+                            <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
                         <div class="summary-total">
                             <span>Total</span>
-                            <span>Rp 161.600</span>
+                            <span>Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                         </div>
                     </div>
 
@@ -238,7 +306,13 @@
                         <a href="{{ route('user-riwayat') }}">
                             <button class="btn btn-secondary">Kembali</button>
                         </a>
-                        <button class="btn">Ambil Pesanan</button>
+                        @if($order->order_status === 'siap')
+                            <form action="{{ route('user-ambil-pesanan', $order->id_orders) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn" onclick="return confirm('Konfirmasi bahwa Anda telah mengambil pesanan ini?')">Ambil Pesanan</button>
+                            </form>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -249,46 +323,69 @@
                 <!-- Customer Info -->
                 <div class="order-info-card">
                     <h3>Informasi Pelanggan</h3>
+                    @if($order->orderDetails->first())
                     <div class="info-item">
                         <label>Nama</label>
-                        <span>John Doe</span>
+                        <span>{{ $order->member_name ?? Auth::user()->name }}</span>
                     </div>
                     <div class="info-item">
                         <label>Email</label>
-                        <span>john.doe@example.com</span>
+                        <span>{{ $order->orderDetails->first()->pickup_email ?? Auth::user()->email }}</span>
                     </div>
                     <div class="info-item">
                         <label>Nomor Telepon</label>
-                        <span>+62 812 3456 7890</span>
+                        <span>{{ $order->orderDetails->first()->pickup_telephone ?? 'Tidak tersedia' }}</span>
                     </div>
+                    @if($order->member_notes)
+                    <div class="info-item">
+                        <label>Catatan</label>
+                        <span>{{ $order->member_notes }}</span>
+                    </div>
+                    @endif
+                    @endif
                 </div>
                 
                 <!-- Payment Info -->
                 <div class="order-info-card">
                     <h3>Informasi Pembayaran</h3>
+                    @if($order->orderDetails->first())
                     <div class="info-item">
                         <label>Metode Pembayaran</label>
-                        <span>Transfer Bank BCA</span>
+                        <span>{{ ucfirst($order->orderDetails->first()->payment_method ?? 'Transfer Bank') }}</span>
                     </div>
                     <div class="info-item">
                         <label>Nomor Rekening</label>
-                        <span>1234567890</span>
+                        <span>{{ $order->orderDetails->first()->bank_number ?? 'Tidak tersedia' }}</span>
                     </div>
                     <div class="info-item">
                         <label>Status Pembayaran</label>
-                        <span>Lunas</span>
+                        <span>{{ ucfirst($order->orderDetails->first()->payment_status ?? 'Belum Lunas') }}</span>
                     </div>
                     <div class="info-item">
                         <label>Tanggal Pembayaran</label>
-                        <span>20 Maret 2024, 14:31</span>
+                        <span>{{ $order->order_date->format('d F Y, H:i') }}</span>
                     </div>
+                    @if($order->member_bank)
+                    <div class="info-item">
+                        <label>Bank</label>
+                        <span>{{ $order->member_bank }}</span>
+                    </div>
+                    @endif
+                    @endif
                 </div>
-                
+
                 <div class="qr-code">
-                    <img src="" alt="Bukti Transfer">
-                    <p>Bukti Transfer</p>
+                    @if($order->proof_payment)
+                        <img src="{{ asset($order->proof_payment) }}" alt="Bukti Transfer">
+                        <p>Bukti Transfer</p>
+                    @else
+                        <div style="padding: 20px; text-align: center; color: var(--dark-gray);">
+                            <i class="fas fa-receipt" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>Bukti pembayaran tidak tersedia</p>
+                        </div>
+                    @endif
                     
-                    <a href="{{ route('invoice') }}">
+                    <a href="{{ route('invoice', $order->id_orders) }}">
                         <button class="btn btn-secondary">
                             <i class="fas fa-print"></i> Print Invoice
                         </button>

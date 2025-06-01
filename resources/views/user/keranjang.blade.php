@@ -173,9 +173,6 @@
                             <i class="fas fa-shopping-cart"></i>
                             <h4>Keranjang belanja Anda kosong.</h4>
                         </div>
-                        <div class="item-subtotal">
-                            <a href="{{ route('user-katalog') }}" class="btn">Lihat Katalog</a>
-                        </div>
                     </div>
                 @endif
                 <div class="cart-actions">

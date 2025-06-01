@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -25,14 +26,17 @@ Route::get('/invoice', function () {
 
 Route::get('/user/keranjang/checkout', [CartController::class, 'checkout'])->name('user-checkout');
 Route::post('/user/keranjang/checkout/process', [CartController::class, 'processCheckout'])->name('user-checkout-process');
+Route::get('/user/riwayat', [OrderController::class, 'userRiwayat'])->name('user-riwayat');
+Route::post('/user/riwayat', [OrderController::class, 'updateStatus'])->name('user-ambil-pesanan');
+Route::get('/user/riwayat/detail-pesanan/{id}', [OrderController::class, 'userDetailPesanan'])->name('user-detail-pesanan');
 
-Route::get('/user/riwayat', function () {
-    return view('user.riwayat');
-})->name('user-riwayat');
+// Route::get('/user/riwayat', function () {
+//     return view('user.riwayat');
+// })->name('user-riwayat');
 
-Route::get('/user/riwayat/detail-pesanan', function () {
-    return view('user.detail-pesanan');
-})->name('user-detail-pesanan');
+// Route::get('/user/riwayat/detail-pesanan', function () {
+//     return view('user.detail-pesanan');
+// })->name('user-detail-pesanan');
 
 Route::get('/profil', function () {
     return view('profil');

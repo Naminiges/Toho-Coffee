@@ -812,6 +812,7 @@ footer {
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 14px;
+    text-decoration: none;
 }
 
 .filter-btn.active {
@@ -1865,8 +1866,8 @@ input:read-only , textarea:read-only {
 }
 
 .qr-code img {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 400px;
     margin-bottom: 15px;
 }
 
