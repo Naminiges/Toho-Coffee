@@ -19,9 +19,12 @@ Route::get('/invoice', function () {
 //     return view('user.keranjang');
 // })->name('user-keranjang');
 
-Route::get('/user/keranjang/checkout', function () {
-    return view('user.checkout');
-})->name('user-checkout');
+// Route::get('/user/keranjang/checkout', function () {
+//     return view('user.checkout');
+// })->name('user-checkout');
+
+Route::get('/user/keranjang/checkout', [CartController::class, 'checkout'])->name('user-checkout');
+Route::post('/user/keranjang/checkout/process', [CartController::class, 'processCheckout'])->name('user-checkout-process');
 
 Route::get('/user/riwayat', function () {
     return view('user.riwayat');

@@ -78,7 +78,12 @@ class OrderDetail extends Model
     public function calculateSubtotal(): void
     {
         $subtotal = $this->product_price * $this->product_quantity;
-        $this->update(['subtotal' => $subtotal]);
+        $this->update(['total_price' => $subtotal]);
+    }
+
+    public function getSubtotalAttribute(): float
+    {
+        return $this->product_price * $this->product_quantity;
     }
 
     // Scope untuk filter berdasarkan order
@@ -105,23 +110,5 @@ class OrderDetail extends Model
         return self::where('order_id', $orderId)
             ->selectRaw('SUM(product_price * product_quantity) as total')
             ->value('total') ?? 0;
-    }
-
-    // Event listeners
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Auto calculate subtotal saat creating
-        static::creating(function ($orderDetail) {
-            $orderDetail->subtotal = $orderDetail->product_price * $orderDetail->product_quantity;
-        });
-
-        // Auto calculate subtotal saat updating
-        static::updating(function ($orderDetail) {
-            if ($orderDetail->isDirty(['product_price', 'product_quantity'])) {
-                $orderDetail->subtotal = $orderDetail->product_price * $orderDetail->product_quantity;
-            }
-        });
     }
 }

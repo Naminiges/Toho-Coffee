@@ -24,7 +24,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">

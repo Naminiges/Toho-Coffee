@@ -25,7 +25,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -140,7 +139,7 @@
                         </div>
                         <div class="item-details">
                             <h4>{{ $item->product->product_name }} ({{ $item->product->temperatureType->temperature }})</h4>
-                            <div class="item-price">Rp {{ number_format($item->product->product_price, 0, ',', '.') }}</div>
+                            <div class="item-price">Rp {{ number_format($item->product->product_price, 0, ',', '.') }} x {{ $item->item_quantity }}</div>
                         </div>
                         <div class="item-quantity">
                             <!-- Gunakan id_cart bukan id -->
@@ -179,7 +178,15 @@
                         </div>
                     </div>
                 @endif
+                <div class="cart-actions">
+                    <div class="continue-shopping">
+                        <a href="{{ route('user-katalog') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Katalog
+                        </a>
+                    </div>
+                </div>
             </div>
+
 
             <!-- Cart Summary -->
             <div class="cart-summary">
