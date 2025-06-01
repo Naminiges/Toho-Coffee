@@ -32,7 +32,6 @@ class Order extends Model
         'total_price' => 'decimal:2',
         'order_date' => 'datetime',
         'order_complete' => 'datetime',
-        'proof_payment' => 'binary'
     ];
 
     // Status enum values

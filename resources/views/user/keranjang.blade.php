@@ -25,7 +25,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -132,101 +131,90 @@
         <div class="cart-container">
             <!-- Cart Items Section -->
             <div class="cart-items">
-                <h3>Produk dalam Keranjang (3)</h3>
-                
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Gayo">
-                    </div>
-                    <div class="item-details">
-                        <h4>Arabica Gayo Premium</h4>
-                        <p class="item-variant">Medium Roast, 200gr</p>
-                        <div class="item-price">Rp 85.000</div>
-                    </div>
-                    <div class="item-quantity">
-                        <div class="quantity-selector">
-                            <button class="quantity-btn decrease">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-btn increase">+</button>
+                <h3>Produk dalam Keranjang</h3>
+                @foreach ($items as $item)
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="{{ asset('images/products/' . $item->product->product_name) }}.jpg" alt="{{ $item->product->product_name }}">
+                        </div>
+                        <div class="item-details">
+                            <h4>{{ $item->product->product_name }} ({{ $item->product->temperatureType->temperature }})</h4>
+                            <div class="item-price">Rp {{ number_format($item->product->product_price, 0, ',', '.') }} x {{ $item->item_quantity }}</div>
+                        </div>
+                        <div class="item-quantity">
+                            <!-- Gunakan id_cart bukan id -->
+                            <form action="{{ route('user-keranjang-update', $item->id_cart) }}" method="POST" class="quantity-selector">
+                                @csrf
+                                @method('PUT')
+                                <!-- Gunakan id_product bukan id -->
+                                <input type="hidden" name="product_id" value="{{ $item->product->id_product }}">
+                                <button type="submit" name="action" value="decrease" class="quantity-btn decrease">-</button>
+                                <!-- Gunakan item_quantity bukan quantity -->
+                                <input type="number" name="quantity" value="{{ $item->item_quantity }}" min="1" class="quantity-input" readonly>
+                                <button type="submit" name="action" value="increase" class="quantity-btn increase">+</button>
+                            </form>
+                        </div>
+                        <div class="item-subtotal">
+                            <!-- Gunakan product_price dan item_quantity -->
+                            <div class="subtotal-price">Rp {{ number_format($item->product->product_price * $item->item_quantity, 0, ',', '.') }}</div>
+                            <!-- Gunakan id_cart bukan id -->
+                            <form action="{{ route('user-keranjang-hapus', $item->id_cart) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="remove-item"><i class="fas fa-trash"></i></button>
+                            </form>
                         </div>
                     </div>
-                    <div class="item-subtotal">
-                        <div class="subtotal-price">Rp 85.000</div>
-                        <button class="remove-item"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Toraja">
-                    </div>
-                    <div class="item-details">
-                        <h4>Robusta Toraja Special</h4>
-                        <p class="item-variant">Dark Roast, 250gr</p>
-                        <div class="item-price">Rp 75.000</div>
-                    </div>
-                    <div class="item-quantity">
-                        <div class="quantity-selector">
-                            <button class="quantity-btn decrease">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-btn increase">+</button>
+                @endforeach
+                <!-- Empty Cart Message -->
+                @if ($items->isEmpty())
+                    <div class="cart-item">
+                        <div class="item-details">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h4>Keranjang belanja Anda kosong.</h4>
                         </div>
                     </div>
-                    <div class="item-subtotal">
-                        <div class="subtotal-price">Rp 75.000</div>
-                        <button class="remove-item"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="{{ asset('images/kopi3.jpg') }}" alt="TOHO Blend">
-                    </div>
-                    <div class="item-details">
-                        <h4>TOHO Signature Blend</h4>
-                        <p class="item-variant">Medium-Dark Roast, 500gr</p>
-                        <div class="item-price">Rp 120.000</div>
-                    </div>
-                    <div class="item-quantity">
-                        <div class="quantity-selector">
-                            <button class="quantity-btn decrease">-</button>
-                            <input type="number" value="1" min="1" class="quantity-input">
-                            <button class="quantity-btn increase">+</button>
-                        </div>
-                    </div>
-                    <div class="item-subtotal">
-                        <div class="subtotal-price">Rp 120.000</div>
-                        <button class="remove-item"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-
+                @endif
                 <div class="cart-actions">
                     <div class="continue-shopping">
-                        <a href="{{ route('user-katalog') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Lanjut Belanja</a>
+                        <a href="{{ route('user-katalog') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Katalog
+                        </a>
                     </div>
                 </div>
             </div>
 
+
             <!-- Cart Summary -->
             <div class="cart-summary">
                 <h3>Ringkasan Belanja</h3>
-                
+                                
+                @php
+                    $subtotal = $items->sum(fn($item) => $item->product->product_price * $item->item_quantity);
+                    $ppn = $subtotal * 0.1;
+                    $total = $subtotal + $ppn;
+                @endphp
+
                 <div class="summary-item">
                     <span>Subtotal</span>
-                    <span>Rp 280.000</span>
+                    <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                 </div>
-                
+
                 <div class="summary-item">
                     <span>PPn 10%</span>
-                    <span>Rp 2.800</span>
+                    <span>Rp {{ number_format($ppn, 0, ',', '.') }}</span>
                 </div>
-                
+
                 <div class="summary-total">
                     <span>Total</span>
-                    <span>Rp 282.800</span>
+                    <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
-                
-                <a href="{{ route('user-checkout') }}" class="btn btn-block">Lanjut ke Pembayaran</a>
+
+                @if ($items->isEmpty())
+                    <a href="#" class="btn btn-block disabled">Lanjut ke Pembayaran</a>
+                @else
+                    <a href="{{ route('user-checkout') }}" class="btn btn-block">Lanjut ke Pembayaran</a>
+                @endif
                 
                 <div class="secure-checkout">
                     <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
@@ -249,32 +237,19 @@
 
     @vite('resources/js/script.js')
     <script>
-        // Quantity selector
-        const decreaseBtn = document.querySelector('.quantity-btn.decrease');
-        const increaseBtn = document.querySelector('.quantity-btn.increase');
-        const quantityInput = document.querySelector('.quantity-input');
-        
-        if (decreaseBtn && increaseBtn && quantityInput) {
-            decreaseBtn.addEventListener('click', function() {
-                const currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                }
-            });
+        document.querySelectorAll('.quantity-selector').forEach(function(form) {
+            const quantityInput = form.querySelector('.quantity-input');
             
-            increaseBtn.addEventListener('click', function() {
-                const currentValue = parseInt(quantityInput.value);
-                quantityInput.value = currentValue + 1;
-            });
-            
-            // Ensure quantity is always valid
-            quantityInput.addEventListener('change', function() {
-                let value = parseInt(this.value);
-                if (isNaN(value) || value < 1) {
-                    this.value = 1;
-                }
-            });
-        }
+            if (quantityInput) {
+                // Ensure quantity is always valid
+                quantityInput.addEventListener('change', function() {
+                    let value = parseInt(this.value);
+                    if (isNaN(value) || value < 1) {
+                        this.value = 1;
+                    }
+                });
+            }
+        });
 
         // Setup CSRF token for AJAX requests
         window.Laravel = {

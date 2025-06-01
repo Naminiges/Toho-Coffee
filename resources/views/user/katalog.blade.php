@@ -8,6 +8,14 @@
     @vite('resources/css/style.css')
 </head>
 <body>
+    @php
+        $userCartItems = [];
+        if(Auth::check()) {
+            $userCartItems = \App\Models\Cart::where('user_id', Auth::user()->id_user)
+                                            ->pluck('product_id')
+                                            ->toArray();
+        }
+    @endphp
     <!-- Header -->
     <header>
         <div class="navbar">
@@ -25,7 +33,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -214,7 +221,7 @@
                         </div>
                         
                         <div class="product-info">
-                            <h4>{{ $product->product_name }}</h4>
+                            <h4>{{ $product->product_name }} ({{$product->description->temperatureType->temperature}})</h4>
                             <div class="price">{{ $product->formatted_price }}</div>
                             
                             @if($product->description && $product->description->product_description)
@@ -222,7 +229,20 @@
                                     {{ Str::limit($product->description->product_description, 100) }}
                                 </div>
                             @endif
-                            <button class="add-to-cart">Tambah ke Keranjang</button>
+                            @if(in_array($product->id_product, $userCartItems))
+                                <button type="button" class="btn btn-success btn-added" disabled>
+                                    <i class="fas fa-check"></i> Item Ditambahkan
+                                </button>
+                            @else
+                                <form action="{{ route('user-keranjang-tambah') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id_product }}">
+                                    <input type="hidden" name="product_name" value="{{ $product->product_name }}">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-plus"></i> Tambah ke Keranjang
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -464,6 +484,52 @@
                 closeLogoutModal();
             }
         });
+
+        @if(session('cart_added'))
+            document.addEventListener('DOMContentLoaded', function() {
+                showCartPopup('{{ session("added_product_name", "Item") }} berhasil ditambahkan ke keranjang');
+            });
+        @endif
+
+        // Cart Popup Functions
+        function showCartPopup(message) {
+            const popup = document.getElementById('cartPopup');
+            const messageEl = document.getElementById('cartPopupMessage');
+            
+            messageEl.textContent = message;
+            popup.style.display = 'block';
+        }
+
+        function closeCartPopup() {
+            const popup = document.getElementById('cartPopup');
+            popup.style.display = 'none';
+        }
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function(event) {
+            const popup = document.getElementById('cartPopup');
+            if (popup && popup.style.display === 'block' && !popup.contains(event.target)) {
+                closeCartPopup();
+            }
+        });
     </script>
+    <div class="cart-popup" id="cartPopup" style="display: none;">
+        <div class="cart-popup-content">
+            <div class="cart-popup-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="cart-popup-text">
+                <span id="cartPopupMessage">Item berhasil ditambahkan ke keranjang</span>
+            </div>
+            <div class="cart-popup-actions">
+                <a href="{{ route('user-keranjang') }}" class="btn-check-cart">
+                    <i class="fas fa-shopping-cart"></i> Cek Keranjang
+                </a>
+                <button class="btn-cart-popup" onclick="closeCartPopup()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
