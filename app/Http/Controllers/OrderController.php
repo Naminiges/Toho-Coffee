@@ -63,7 +63,7 @@ class OrderController extends Controller
             // Calculate total amount if needed
             if (!isset($order->total_amount)) {
                 $order->total_amount = $order->orderDetails->sum(function($detail) {
-                    return $detail->product_price * $detail->product_quantity;
+                    return ($detail->product_price * $detail->product_quantity) + ($detail->product_price * $detail->product_quantity) * 0.1;
                 });
             }
             
@@ -246,48 +246,36 @@ class OrderController extends Controller
                 'status' => 'required|in:menunggu,diproses,siap,selesai,dibatalkan'
             ]);
             
-            $order = Order::findOrFail($orderId);
-            
-            // Single update query
-            $updateData = [
-                'order_status' => $request->status,
-                'staff_name' => Auth::user()->name,
-            ];
-
-            if ($request->status === 'diproses') {
-                $order->orderDetails()->update(['payment_status' => 'lunas']);
-            }
+            // Gunakan query builder langsung untuk update yang lebih cepat
+            $updateData = ['order_status' => $request->status];
             
             if ($request->status === 'selesai') {
                 $updateData['order_complete'] = now();
             }
             
-            $order->update($updateData);
-            
-            // Return JSON for AJAX requests
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Status pesanan berhasil diperbarui!',
-                    'status_text' => $this->getStatusText($request->status),
-                    'status_class' => $this->getStatusBadgeClass($request->status)
-                ]);
+            // Hanya set staff_name jika belum ada
+            $order = Order::select('id_orders', 'staff_name')->findOrFail($orderId);
+            if (empty($order->staff_name)) {
+                $updateData['staff_name'] = Auth::user()->name;
             }
             
-            return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
+            // Update langsung tanpa trigger event
+            DB::table('orders')
+                ->where('id_orders', $orderId)
+                ->update($updateData);
+
+            // Update payment status jika order diproses
+            if ($request->status === 'diproses') {
+                DB::table('order_details')
+                    ->where('order_id', $orderId)
+                    ->update(['payment_status' => 'lunas']);
+            }
             
+            return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal memperbarui status pesanan: ' . $e->getMessage()
-                ], 500);
-            }
-            
-            return redirect()->back()->with('error', 'Gagal memperbarui status pesanan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui status pesanan');
         }
     }
-
     /**
      * Admin Detail Pesanan (OPTIMIZED)
      */

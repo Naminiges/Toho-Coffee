@@ -177,21 +177,21 @@
                         {{-- Status Update Form --}}
                         <div class="status-update-form" style="margin-top: 20px;">
                             <div class="form-group">
-                               <form action="{{ route('staff-update-order-status', $order->id_orders) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('staff-update-order-status', $order->id_orders) }}" method="POST" style="display: inline;">
                                 @csrf
                                 <label for="orderStatus">Ubah Status Pesanan:</label>
                                 <select name="status" id="orderStatus" class="form-control">
-                                    <option value="menunggu" {{ $order->order_status === 'menunggu' ? 'selected' : '' }}>Menunggu</option>
-                                    <option value="diproses" {{ $order->order_status === 'diproses' ? 'selected' : '' }}>Diproses</option>
-                                    <option value="siap" {{ $order->order_status === 'siap' ? 'selected' : '' }}>Siap</option>
-                                    <option value="selesai" {{ $order->order_status === 'selesai' ? 'selected' : '' }}>Selesai</option>
-                                    <option value="dibatalkan" {{ $order->order_status === 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                                    @foreach($order->getAvailableStatusTransitions() as $status)
+                                        <option value="{{ $status }}" {{ $order->order_status === $status ? 'selected' : '' }}>
+                                            {{ ucfirst($status) }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-sync-alt"></i> Update Status
-                                    </button>
-                                </form>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-sync-alt"></i> Update Status
+                                </button>
+                            </form>
                             <a href="{{ route('invoice', $order->id_orders) }}">
                                 <button class="btn btn-secondary">
                                     <i class="fas fa-print"></i> Print Invoice

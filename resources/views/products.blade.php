@@ -218,7 +218,7 @@
                         </div>
                         
                         <div class="product-info">
-                            <h4>{{ $product->product_name }}</h4>
+                            <h4>{{ $product->product_name }} ({{$product->description->temperatureType->temperature}})</h4>
                             <div class="price">{{ $product->formatted_price }}</div>
                             
                             @if($product->description && $product->description->product_description)
@@ -274,7 +274,7 @@
             <div class="footer-column">
                 <h4>Informasi</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ route('products') }}">Tentang Kami</a></li>
+                    <li><a href="{{ route('welcome') }}">Tentang Kami</a></li>
                     <li><a href="{{ route('products') }}">Produk</a></li>
                 </ul>
             </div>

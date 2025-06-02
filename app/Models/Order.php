@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -123,8 +124,33 @@ class Order extends Model
         };
     }
 
-    // Method untuk update status order
-    public function updateStatus(string $status): bool
+    // In Order.php
+    public function updateStatus($orderId)
+    {
+        $user = Auth::user();
+        
+        $order = Order::select('id_orders', 'user_id', 'order_status')
+                    ->where('id_orders', $orderId)
+                    ->where('user_id', $user->id_user)
+                    ->firstOrFail();
+        
+        if ($order->order_status === 'siap') {
+            // Update langsung tanpa load model penuh
+            DB::table('orders')
+                ->where('id_orders', $orderId)
+                ->update([
+                    'order_status' => 'selesai',
+                    'order_complete' => now()
+                ]);
+            
+            return redirect()->back()->with('success', 'Pesanan berhasil diambil!');
+        }
+        
+        return redirect()->back()->with('error', 'Pesanan tidak dapat diambil saat ini.');
+    }
+
+    // Method update status yang lebih efisien
+    public function updateStatusFast(string $status, ?string $staffName = null): bool
     {
         $validStatuses = [
             self::STATUS_MENUNGGU,
@@ -140,12 +166,18 @@ class Order extends Model
 
         $updateData = ['order_status' => $status];
         
-        // Set order_complete jika status selesai
         if ($status === self::STATUS_SELESAI) {
-            $updateData['order_complete'] = Carbon::now();
+            $updateData['order_complete'] = now();
+        }
+        
+        if ($staffName && empty($this->staff_name)) {
+            $updateData['staff_name'] = $staffName;
         }
 
-        return $this->update($updateData);
+        // Update langsung ke database tanpa trigger model events
+        return DB::table('orders')
+            ->where('id_orders', $this->id_orders)
+            ->update($updateData) > 0;
     }
 
     // Method untuk check apakah order dapat dibatalkan
@@ -195,14 +227,13 @@ class Order extends Model
     {
         parent::boot();
 
-        // Auto generate order code saat creating
         static::creating(function ($order) {
             if (empty($order->orders_code)) {
                 $order->orders_code = self::generateOrderCode();
             }
             
             if (empty($order->order_date)) {
-                $order->order_date = Carbon::now();
+                $order->order_date = now();
             }
             
             if (empty($order->order_status)) {
@@ -210,12 +241,14 @@ class Order extends Model
             }
         });
 
-        // Update total_price saat order details berubah
-        static::saved(function ($order) {
-            if ($order->orderDetails()->exists()) {
-                $order->calculateTotal();
-            }
-        });
+        // HAPUS atau PERBAIKI bagian ini - ini yang menyebabkan query berlebihan
+        // static::saved(function ($order) {
+        //     if ($order->wasChanged('order_status')) {
+        //         if ($order->orderDetails()->exists()) {
+        //             $order->calculateTotal();
+        //         }
+        //     }
+        // });
     }
 
     // Static method untuk get all status options
