@@ -291,10 +291,15 @@
                             $subtotal = $order->orderDetails->sum(function($detail) {
                                 return $detail->product_price * $detail->product_quantity;
                             });
+                            $tax = $subtotal * 0.1;
                         @endphp
                         <div class="summary-item">
                             <span>Subtotal</span>
                             <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>PPn 10%</span>
+                            <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
                         </div>
                         <div class="summary-total">
                             <span>Total</span>
@@ -309,7 +314,7 @@
                         @if($order->order_status === 'siap')
                             <form action="{{ route('user-ambil-pesanan', $order->id_orders) }}" method="POST" style="display: inline;">
                                 @csrf
-                                @method('PATCH')
+                                @method('POST')
                                 <button type="submit" class="btn" onclick="return confirm('Konfirmasi bahwa Anda telah mengambil pesanan ini?')">Ambil Pesanan</button>
                             </form>
                         @endif
