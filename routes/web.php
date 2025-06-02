@@ -7,36 +7,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 
-Route::get('/invoice', function () {
-    return view('invoice');
-})->name('invoice');
-
-// user routes
-// Route::get('/user/katalog', function () {
-//     return view('user.katalog');
-// })->name('user-katalog');
-
-// Route::get('/user/keranjang', function () {
-//     return view('user.keranjang');
-// })->name('user-keranjang');
-
-// Route::get('/user/keranjang/checkout', function () {
-//     return view('user.checkout');
-// })->name('user-checkout');
-
-Route::get('/user/keranjang/checkout', [CartController::class, 'checkout'])->name('user-checkout');
-Route::post('/user/keranjang/checkout/process', [CartController::class, 'processCheckout'])->name('user-checkout-process');
-Route::get('/user/riwayat', [OrderController::class, 'userRiwayat'])->name('user-riwayat');
-Route::post('/user/riwayat', [OrderController::class, 'updateStatus'])->name('user-ambil-pesanan');
-Route::get('/user/riwayat/detail-pesanan/{id}', [OrderController::class, 'userDetailPesanan'])->name('user-detail-pesanan');
-
-// Route::get('/user/riwayat', function () {
-//     return view('user.riwayat');
-// })->name('user-riwayat');
-
-// Route::get('/user/riwayat/detail-pesanan', function () {
-//     return view('user.detail-pesanan');
-// })->name('user-detail-pesanan');
 
 Route::get('/profil', function () {
     return view('profil');
@@ -55,6 +25,12 @@ Route::get('/user/keranjang', [CartController::class, 'showCart'])->name('user-k
 Route::post('/user/keranjang/tambah', [CartController::class, 'addToCart'])->name('user-keranjang-tambah');
 Route::put('/user/keranjang/update/{id_cart}', [CartController::class, 'updateQuantity'])->name('user-keranjang-update');
 Route::delete('/user/keranjang/hapus/{id_cart}', [CartController::class, 'removeItem'])->name('user-keranjang-hapus');
+Route::get('/user/keranjang/checkout', [CartController::class, 'checkout'])->name('user-checkout');
+Route::post('/user/keranjang/checkout/process', [CartController::class, 'processCheckout'])->name('user-checkout-process');
+Route::get('/user/riwayat', [OrderController::class, 'userRiwayat'])->name('user-riwayat');
+Route::post('/user/riwayat/{orderId}', [OrderController::class, 'updateStatus'])->name('user-ambil-pesanan');
+Route::get('/user/riwayat/detail-pesanan/{id}', [OrderController::class, 'userDetailPesanan'])->name('user-detail-pesanan');
+Route::get('/invoice/{orderId}', [OrderController::class, 'invoice'])->name('invoice');
 
 Route::get('/admin/manajemen-produk', [ProductController::class, 'adminIndex'])->name('admin-manajemen-produk');
 Route::get('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'create'])->name('admin-tambah-produk');
@@ -65,31 +41,20 @@ Route::get('/admin/manajemen-pelanggan', [UserController::class, 'adminCustomers
 Route::get('/admin/manajemen-staff', [UserController::class, 'adminStaff'])->name('admin-manajemen-staff');
 Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulk-action');
+Route::get('/admin/manajemen-pesanan', [OrderController::class, 'adminManajemenPesanan'])->name('admin-manajemen-pesanan');
+Route::post('/admin/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('admin-update-order-status');
+Route::get('/admin/detail-pesanan/{orderId}', [OrderController::class, 'adminDetailPesanan'])->name('admin-detail-pesanan');
 
 Route::get('/staff/manajemen-produk', [ProductController::class, 'staffIndex'])->name('staff-manajemen-produk');
 Route::get('/staff/manajemen-produk/edit-produk/{product}', [ProductController::class, 'staffEdit'])->name('staff-edit');
 Route::put('/staff/manajemen-produk/edit-produk/{product}', [ProductController::class, 'staffUpdate'])->name('staff-update');
-
-Route::get('/admin/manajemen-pesanan', function () {
-    return view('admin.manajemen-pesanan');
-})->name('admin-manajemen-pesanan');
-
-Route::get('/admin/manajemen-pesanan/detail-pesanan', function () {
-    return view('admin.detail-pesanan');
-})->name('admin-detail-pesanan');
+Route::get('/staff', [OrderController::class, 'staffDashboard'])->name('staff-dashboard');
+Route::post('/staff/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('staff-update-order-status');
+Route::get('/staff/detail-pesanan/{orderId}', [OrderController::class, 'staffDetailPesanan'])->name('staff-detail-pesanan');
 
 Route::get('/admin/laporan', function () {
     return view('admin.laporan');
 })->name('admin-laporan');
-
-// staff routes
-Route::get('/staff', function () {
-    return view('staff.staff-dashboard');
-})->name('staff-dashboard');
-
-Route::get('/staff/detail-pesanan', function () {
-    return view('staff.staff-detail');
-})->name('staff-detail-pesanan');
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {

@@ -144,7 +144,7 @@
             <div class="order-card">
                 <div class="order-header">
                     <div>
-                        <h3>Order #{{ $order->orders_code }}</h3>
+                        <h3>Order {{ $order->orders_code }}</h3>
                         <p style="color: var(--dark-gray); font-size: 14px;">{{ $order->order_date->format('d F Y, H:i') }}</p>
                     </div>
                     <div class="order-status 
@@ -208,27 +208,6 @@
                                 </p>
                                 <div class="order-item-price">Rp {{ number_format($detail->product_price, 0, ',', '.') }}</div>
                                 
-                                <!-- Informasi pickup jika ada -->
-                                @if($detail->pickup_time)
-                                <p class="pickup-info" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
-                                    <i class="fas fa-clock"></i>
-                                    Pickup: {{ \Carbon\Carbon::parse($detail->pickup_time)->format('d/m/Y H:i') }}
-                                </p>
-                                @endif
-                                
-                                @if($detail->pickup_place)
-                                <p class="pickup-info" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    {{ $detail->pickup_place }}
-                                </p>
-                                @endif
-                                
-                                @if($detail->pickup_method)
-                                <p class="pickup-info" style="font-size: 12px; color: var(--dark-gray); margin-top: 5px;">
-                                    <i class="fas fa-truck"></i>
-                                    {{ ucfirst($detail->pickup_method) }}
-                                </p>
-                                @endif
                             </div>
                         </div>
                         @endforeach
@@ -289,10 +268,15 @@
                             $subtotal = $order->orderDetails->sum(function($detail) {
                                 return $detail->product_price * $detail->product_quantity;
                             });
+                            $tax = $subtotal * 0.1;
                         @endphp
                         <div class="order-summary-item">
                             <span>Subtotal</span>
                             <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="order-summary-item">
+                            <span>PPn 10%</span>
+                            <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
                         </div>
                         <div class="order-summary-item">
                             <span>Total</span>
@@ -307,7 +291,7 @@
                     @if($order->order_status === 'siap')
                         <form action="{{ route('user-ambil-pesanan', $order->id_orders) }}" method="POST" style="display: inline;">
                             @csrf
-                            @method('PATCH')
+                            @method('POST')
                             <button type="submit" class="btn" onclick="return confirm('Konfirmasi bahwa Anda telah mengambil pesanan ini?')">Ambil Pesanan</button>
                         </form>
                     @endif
