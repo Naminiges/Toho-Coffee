@@ -248,53 +248,65 @@
 
             <!-- Order Summary -->
             <div class="cart-summary">
-                <h3>Ringkasan Pesanan</h3>
-                
-                @foreach ($cartItems as $item)
-                    <div class="cart-item">
-                        <div class="item-image">
-                            <img src="{{ asset('images/products/' . $item->product->product_name . '.jpg') }}" 
-                                alt="{{ $item->product->product_name }}"
-                                onerror="this.src='{{ asset('images/products/default.jpg') }}'">
+                <div class="cart-summary">
+                    <h3>Ringkasan Pesanan</h3>
+                    
+                    @foreach ($cartItems as $item)
+                        <div class="cart-item">
+                            <div class="item-image">
+                                <img src="{{ asset('images/products/' . $item->product->product_name . '.jpg') }}" 
+                                    alt="{{ $item->product->product_name }}"
+                                    onerror="this.src='{{ asset('images/products/default.jpg') }}'">
+                            </div>
+                            <div class="item-details">
+                                <h4>{{ $item->product->product_name }}
+                                @if($item->product->temperatureType)
+                                    ({{ $item->product->temperatureType->temperature }})
+                                @endif
+                                </h4>
+                                <div class="item-quantity">Qty: {{ $item->item_quantity }}</div>
+                                <div class="item-price">Rp {{ number_format($item->product->product_price, 0, ',', '.') }}</div>
+                            </div>
                         </div>
-                        <div class="item-details">
-                            <h4>{{ $item->product->product_name }}
-                            @if($item->product->temperatureType)
-                                ({{ $item->product->temperatureType->temperature }})
-                            @endif
-                            </h4>
-                            <div class="item-quantity">Qty: {{ $item->item_quantity }}</div>
-                            <div class="item-price">Rp {{ number_format($item->product->product_price, 0, ',', '.') }}</div>
+                    @endforeach
+                    
+                    <div class="summary-item">
+                        <span>Subtotal</span>
+                        <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span>PPn 10%</span>
+                        <span>Rp {{ number_format($ppn, 0, ',', '.') }}</span>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+                    </div>
+                    
+                    <button id="orderBtn" type="submit" form="checkoutForm" class="btn btn-block">Buat Pesanan</button>
+                    
+                    <div class="secure-checkout">
+                        <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <span>Metode Pembayaran:</span>
+                        <div class="payment-icons">
+                            <i class="fas fa-wallet"></i>
                         </div>
                     </div>
-                @endforeach
-                
-                <div class="summary-item">
-                    <span>Subtotal</span>
-                    <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                 </div>
-                
-                <div class="summary-item">
-                    <span>PPn 10%</span>
-                    <span>Rp {{ number_format($ppn, 0, ',', '.') }}</span>
+                <div class="qr-code">
+                    <h3>Rekening TOHO Coffee</h3>
+                    <h4 style="text-align: left">Nama: TOHO COFFEE 01</h4>
+                    <h4 style="text-align: left">Bank: BNI</h4>
+                    <h4 style="text-align: left">Nomor Rekening: -</h4>
                 </div>
-                
-                <div class="summary-total">
-                    <span>Total</span>
-                    <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
-                </div>
-                
-                <button id="orderBtn" type="submit" form="checkoutForm" class="btn btn-block">Buat Pesanan</button>
-                
-                <div class="secure-checkout">
-                    <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
-                </div>
-                
-                <div class="payment-methods">
-                    <span>Metode Pembayaran:</span>
-                    <div class="payment-icons">
-                        <i class="fas fa-wallet"></i>
-                    </div>
+                <div class="qr-code">
+                    <h3>QRIS</h3>
+                    <img src="{{ asset('images/qris/qris-toho.png') }}" style="width: 100%; height: 100%;" alt="QRIS">
                 </div>
             </div>
         </div>
