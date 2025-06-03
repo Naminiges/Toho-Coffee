@@ -302,7 +302,7 @@
                     <h3>Rekening TOHO Coffee</h3>
                     <h4 style="text-align: left">Nama: TOHO COFFEE 01</h4>
                     <h4 style="text-align: left">Bank: BNI</h4>
-                    <h4 style="text-align: left">Nomor Rekening: -</h4>
+                    <h4 style="text-align: left">Nomor Rekening: 1858161668</h4>
                 </div>
                 <div class="qr-code">
                     <h3>QRIS</h3>

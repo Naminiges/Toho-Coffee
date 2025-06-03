@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -246,11 +247,15 @@ class OrderController extends Controller
                 'status' => 'required|in:menunggu,diproses,siap,selesai,dibatalkan'
             ]);
             
-            // Gunakan query builder langsung untuk update yang lebih cepat
+            // Waktu real time saat ini
+            $currentTime = now();
+            
+            // Siapkan data update dengan waktu real time
             $updateData = ['order_status' => $request->status];
             
-            if ($request->status === 'selesai') {
-                $updateData['order_complete'] = now();
+            // Set waktu completion untuk status tertentu
+            if (in_array($request->status, ['selesai', 'dibatalkan'])) {
+                $updateData['order_complete'] = $currentTime; // Waktu real time
             }
             
             // Hanya set staff_name jika belum ada
@@ -259,17 +264,23 @@ class OrderController extends Controller
                 $updateData['staff_name'] = Auth::user()->name;
             }
             
-            // Update langsung tanpa trigger event
-            DB::table('orders')
-                ->where('id_orders', $orderId)
-                ->update($updateData);
-
-            // Update payment status jika order diproses
-            if ($request->status === 'diproses') {
-                DB::table('order_details')
-                    ->where('order_id', $orderId)
-                    ->update(['payment_status' => 'lunas']);
-            }
+            // Update dengan transaction untuk konsistensi
+            DB::transaction(function() use ($orderId, $updateData, $request) {
+                // Update order dengan waktu real time
+                DB::table('orders')
+                    ->where('id_orders', $orderId)
+                    ->update($updateData);
+                    
+                // Update payment status
+                $paymentStatus = match($request->status) {
+                    'diproses', 'siap', 'selesai' => 'lunas',
+                    'dibatalkan' => 'dibatalkan',
+                    default => null
+                };
+                
+                OrderDetail::where('order_id', $orderId)
+                    ->update(['payment_status' => $paymentStatus]);
+            });
             
             return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui');
         } catch (\Exception $e) {
@@ -335,6 +346,10 @@ class OrderController extends Controller
                 'order_complete' => now()
             ]);
             
+            DB::table('orders_details')
+                ->where('order_id', $orderId)
+                ->update(['payment_status' => 'lunas']);
+
             return redirect()->back()->with('success', 'Pesanan berhasil diambil!');
         }
         
@@ -430,16 +445,20 @@ class OrderController extends Controller
     private function generateOrderTimeline($order)
     {
         $timeline = [];
+        $currentTime = now(); // Waktu real time saat ini
         
+        // Waktu pembuatan pesanan (real time dari database)
         $timeline[] = [
-            'date' => $order->order_date->format('Y-m-d H:i'),
+            'date' => $order->order_date->format('Y-m-d H:i:s'),
             'text' => 'Pesanan Dibuat',
             'completed' => true
         ];
         
-        if ($order->orderDetails->first() && $order->orderDetails->first()->payment_status === 'Lunas') {
+        // Cek payment status dari order details
+        $firstDetail = $order->orderDetails->first();
+        if ($firstDetail && $firstDetail->payment_status === 'lunas') {
             $timeline[] = [
-                'date' => $order->order_date->addMinutes(5)->format('Y-m-d H:i'),
+                'date' => $currentTime->format('Y-m-d H:i:s'), // Waktu real time
                 'text' => 'Pembayaran Dikonfirmasi',
                 'completed' => true
             ];
@@ -447,9 +466,10 @@ class OrderController extends Controller
         
         $currentStatus = $order->order_status;
         
+        // Timeline berdasarkan status real time
         if (in_array($currentStatus, [Order::STATUS_DIPROSES, Order::STATUS_SIAP, Order::STATUS_SELESAI])) {
             $timeline[] = [
-                'date' => $order->order_date->addMinutes(30)->format('Y-m-d H:i'),
+                'date' => $currentTime->format('Y-m-d H:i:s'), // Real time
                 'text' => 'Pesanan Diproses',
                 'completed' => true
             ];
@@ -457,24 +477,27 @@ class OrderController extends Controller
         
         if (in_array($currentStatus, [Order::STATUS_SIAP, Order::STATUS_SELESAI])) {
             $timeline[] = [
-                'date' => $order->order_date->addHour()->format('Y-m-d H:i'),
+                'date' => $currentTime->format('Y-m-d H:i:s'), // Real time
                 'text' => 'Pesanan Siap Diambil',
                 'completed' => true
             ];
         }
         
         if ($currentStatus === Order::STATUS_SELESAI) {
-            $completeTime = $order->order_complete ?? $order->order_date->addHours(2);
+            // Gunakan order_complete yang real time
+            $completeTime = $order->order_complete ?? $currentTime;
             $timeline[] = [
-                'date' => $completeTime->format('Y-m-d H:i'),
+                'date' => $completeTime->format('Y-m-d H:i:s'),
                 'text' => 'Pesanan Selesai',
                 'completed' => true
             ];
         }
         
         if ($currentStatus === Order::STATUS_DIBATALKAN) {
+            // Real time saat dibatalkan
+            $cancelTime = $order->order_complete ?? $currentTime;
             $timeline[] = [
-                'date' => $order->updated_at->format('Y-m-d H:i'),
+                'date' => $cancelTime->format('Y-m-d H:i:s'),
                 'text' => 'Pesanan Dibatalkan',
                 'completed' => true
             ];

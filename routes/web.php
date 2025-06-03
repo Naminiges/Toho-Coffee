@@ -9,9 +9,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Middleware\CheckRole;
 
 
-Route::get('/profil', function () {
-    return view('profil');
-})->name('user-profil');
+// Route::get('/profil', function () {
+//     return view('profil');
+// })->name('user-profil');
 
 // admin routes
 Route::get('/admin', function () {
@@ -21,7 +21,7 @@ Route::get('/admin', function () {
 Route::get('/', [UserController::class, 'landingPage'])->name('welcome');
 Route::get('/products', [ProductController::class, 'guestKatalog'])->name('products');  
 
-Route::middleware([CheckRole::class.':user'])->group(function () {
+// Route::middleware([CheckRole::class.':user'])->group(function () {
 Route::get('/user/katalog', [ProductController::class, 'userKatalog'])->name('user-katalog');
 Route::get('/user/keranjang', [CartController::class, 'showCart'])->name('user-keranjang');
 Route::post('/user/keranjang/tambah', [CartController::class, 'addToCart'])->name('user-keranjang-tambah');
@@ -33,9 +33,9 @@ Route::get('/user/riwayat', [OrderController::class, 'userRiwayat'])->name('user
 Route::post('/user/riwayat/{orderId}', [OrderController::class, 'updateStatus'])->name('user-ambil-pesanan');
 Route::get('/user/riwayat/detail-pesanan/{id}', [OrderController::class, 'userDetailPesanan'])->name('user-detail-pesanan');
 Route::get('/invoice/{orderId}', [OrderController::class, 'invoice'])->name('invoice');
-});
+// });
 
-Route::middleware([CheckRole::class.':admin'])->group(function () {
+// Route::middleware([CheckRole::class.':admin'])->group(function () {
 Route::get('/admin/manajemen-produk', [ProductController::class, 'adminIndex'])->name('admin-manajemen-produk');
 Route::get('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'create'])->name('admin-tambah-produk');
 Route::post('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'store'])->name('admin-produk-store');
@@ -48,16 +48,16 @@ Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('
 Route::get('/admin/manajemen-pesanan', [OrderController::class, 'adminManajemenPesanan'])->name('admin-manajemen-pesanan');
 Route::post('/admin/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('admin-update-order-status');
 Route::get('/admin/detail-pesanan/{orderId}', [OrderController::class, 'adminDetailPesanan'])->name('admin-detail-pesanan');
-});
+// });
 
-Route::middleware([CheckRole::class.':staff'])->group(function () {
+// Route::middleware([CheckRole::class.':staff'])->group(function () {
 Route::get('/staff/manajemen-produk', [ProductController::class, 'staffIndex'])->name('staff-manajemen-produk');
 Route::get('/staff/manajemen-produk/edit-produk/{product}', [ProductController::class, 'staffEdit'])->name('staff-edit');
 Route::put('/staff/manajemen-produk/edit-produk/{product}', [ProductController::class, 'staffUpdate'])->name('staff-update');
 Route::get('/staff', [OrderController::class, 'staffDashboard'])->name('staff-dashboard');
 Route::post('/staff/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('staff-update-order-status');
 Route::get('/staff/detail-pesanan/{orderId}', [OrderController::class, 'staffDetailPesanan'])->name('staff-detail-pesanan');
-});
+// });
 
 Route::get('/admin/laporan', function () {
     return view('admin.laporan');
@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
     
     // Profile Routes
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
-    Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
     
     // API Routes for checking authentication
     Route::get('/api/auth/check', [AuthController::class, 'checkAuth'])->name('auth.check');

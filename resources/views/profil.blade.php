@@ -4,7 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil Pengguna - TOHO Coffee</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/style.css')
+    <style>
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .form-group.has-error .form-control {
+            border-color: #dc3545;
+        }
+
+        .validation-message {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        </style>
 </head>
 <body>
     <!-- Header -->
@@ -24,7 +43,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -132,16 +150,13 @@
             <!-- Sidebar -->
             <div class="profile-sidebar">
                 <div class="profile-header">
-                    <div class="profile-avatar">
-                        <img src="{{ asset('images/logo-toho.jpg') }}" alt="Profile Picture">
-                    </div>
-                    <h3 class="profile-name">John Doe</h3>
-                    <p class="profile-email">john.doe@example.com</p>
+                    <h3 class="profile-name">{{ $user->name }}</h3>
+                    <p class="profile-email">{{ $user->email }}</p>
                 </div>
 
                 <ul class="profile-menu">
                     <li>
-                        <a href="{{ route('user-profil') }}" class="active">
+                        <a href="{{ route('profile') }}" class="active">
                             <i class="fas fa-user"></i>
                             Informasi Pribadi
                         </a>
@@ -150,13 +165,6 @@
                         <a href="{{ route('user-riwayat') }}">
                             <i class="fas fa-shopping-bag"></i>
                             Pesanan Saya
-                        </a>
-                    </li>
-                    <li>
-                    <li>
-                        <a href="#" class="logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Logout
                         </a>
                     </li>
                 </ul>
@@ -178,26 +186,45 @@
                 <!-- Personal Information -->
                 <div class="profile-section">
                     <h3>Informasi Pribadi</h3>
-                    <form id="profileForm">
+                    <form id="profileForm" method="POST" action="{{ route('profile.update') }}">
+                        @csrf
+                        <input type="hidden" name="update_profile" value="1">
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="firstName">Nama Depan</label>
-                                <input type="text" id="firstName" class="form-control" value="John" required>
+                                <input type="text" id="firstName" name="first_name" class="form-control" 
+                                    value="{{ old('first_name', explode(' ', $user->name)[0] ?? '') }}" required>
+                                @error('first_name')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label for="lastName">Nama Belakang</label>
-                                <input type="text" id="lastName" class="form-control" value="Doe" required>
+                                <input type="text" id="lastName" name="last_name" class="form-control" 
+                                    value="{{ old('last_name', implode(' ', array_slice(explode(' ', $user->name), 1)) ?: '') }}" required>
+                                @error('last_name')
+                                    <div class="error-message">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control" value="john.doe@example.com" required>
+                            <input type="email" id="email" name="email" class="form-control" 
+                                value="{{ old('email', $user->email) }}" required>
+                            @error('email')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Nomor Telepon</label>
-                            <input type="tel" id="phone" class="form-control" value="+62 812 3456 7890" required>
+                            <input type="tel" id="phone" name="phone" class="form-control" 
+                                value="{{ old('phone', $user->user_phone ?? '') }}" required>
+                            @error('phone')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="profile-actions">
@@ -209,32 +236,37 @@
                 <!-- Change Password -->
                 <div class="profile-section">
                     <h3>Ubah Password</h3>
-                    <form id="passwordForm">
-                        <div class="form-group">
-                            <label for="currentPassword">Password Saat Ini</label>
-                            <div class="password-toggle">
-                                <input type="password" id="currentPassword" class="form-control" required>
-                                <i class="fas fa-eye"></i>
-                            </div>
-                        </div>
-
+                    <form id="passwordForm" method="POST" action="{{ route('profile.update') }}">
+                        @csrf
+                        <input type="hidden" name="update_password" value="1">
+                        
                         <div class="form-group">
                             <label for="newPassword">Password Baru</label>
                             <div class="password-toggle">
-                                <input type="password" id="newPassword" class="form-control" required>
-                                <i class="fas fa-eye"></i>
+                                {{-- <input type="password" id="newPassword" name="new_password" class="form-control" required>
+                                <i class="fas fa-eye toggle-icon"></i> --}}
+                                <input type="password" id="newPassword" name="new_password" class="form-control" placeholder="Masukkan password anda" required>
+                                <i class="fas fa-eye toggle-password"></i>
                             </div>
                             <div class="validation-message">
                                 Password harus minimal 8 karakter dan mengandung huruf besar, huruf kecil, angka, dan karakter khusus
                             </div>
+                            @error('new_password')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="form-group">
                             <label for="confirmPassword">Konfirmasi Password Baru</label>
                             <div class="password-toggle">
-                                <input type="password" id="confirmPassword" class="form-control" required>
-                                <i class="fas fa-eye"></i>
+                                {{-- <input type="password" id="confirmPassword" name="new_password_confirmation" class="form-control" required>
+                                <i class="fas fa-eye toggle-icon"></i> --}}
+                                <input type="password" id="confirmPassword" name="new_password_confirmation" class="form-control" placeholder="Konfirmasi password anda" required>
+                                <i class="fas fa-eye toggle-password"></i>
                             </div>
+                            @error('new_password_confirmation')
+                                <div class="error-message">{{ $message }}</div>
+                            @enderror
                         </div>
 
                         <div class="profile-actions">
@@ -254,9 +286,15 @@
 
     <script>
         // Setup CSRF token for AJAX requests
-        window.Laravel = {
-            csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up CSRF token for any future AJAX requests (if needed)
+            const token = document.querySelector('meta[name="csrf-token"]');
+            if (token) {
+                window.Laravel = {
+                    csrfToken: token.getAttribute('content')
+                };
+            }
+        });
 
         // User Menu Functions
         function toggleUserMenu() {
@@ -274,6 +312,14 @@
             }
         }
 
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             const userMenu = document.querySelector('.user-menu');

@@ -181,18 +181,19 @@
                                 @csrf
                                 <label for="orderStatus">Ubah Status Pesanan:</label>
                                 <select name="status" id="orderStatus" class="form-control">
+                                    <option value="{{ $order->order_status }}" selected>{{ ucfirst($order->order_status) }} (Saat ini)</option>
                                     @foreach($order->getAvailableStatusTransitions() as $status)
-                                        <option value="{{ $status }}" {{ $order->order_status === $status ? 'selected' : '' }}>
+                                        <option value="{{ $status }}">
                                             {{ ucfirst($status) }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')">
                                     <i class="fas fa-sync-alt"></i> Update Status
                                 </button>
                             </form>
-                            <a href="{{ route('invoice', $order->id_orders) }}">
+                            <a href="{{ route('invoice', $order->id_orders) }}" target="_blank">
                                 <button class="btn btn-secondary">
                                     <i class="fas fa-print"></i> Print Invoice
                                 </button>

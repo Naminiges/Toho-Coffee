@@ -268,11 +268,7 @@
         </div>
 
         <!-- Pagination -->
-        @if(isset($products) && $products->hasPages())
-            <div class="pagination-wrapper">
-                {{ $products->links() }}
-            </div>
-        @endif
+        {{ $products->links('custom-pagination') }}
     </div>
     
     <!-- Back to Top Button -->

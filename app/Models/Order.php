@@ -164,20 +164,42 @@ class Order extends Model
             return false;
         }
 
+        $currentTime = now(); // Waktu real time
         $updateData = ['order_status' => $status];
         
-        if ($status === self::STATUS_SELESAI) {
-            $updateData['order_complete'] = now();
+        // Set completion time untuk status final
+        if (in_array($status, [self::STATUS_SELESAI, self::STATUS_DIBATALKAN])) {
+            $updateData['order_complete'] = $currentTime; // Real time completion
         }
         
         if ($staffName && empty($this->staff_name)) {
             $updateData['staff_name'] = $staffName;
         }
 
-        // Update langsung ke database tanpa trigger model events
-        return DB::table('orders')
-            ->where('id_orders', $this->id_orders)
-            ->update($updateData) > 0;
+        return DB::transaction(function () use ($updateData, $status) {
+            // Update order dengan waktu real time
+            $orderUpdated = DB::table('orders')
+                ->where('id_orders', $this->id_orders)
+                ->update($updateData) > 0;
+            
+            if ($orderUpdated) {
+                $paymentStatus = match($status) {
+                    self::STATUS_DIPROSES,
+                    self::STATUS_SIAP,
+                    self::STATUS_SELESAI => 'lunas',
+                    self::STATUS_DIBATALKAN => 'dibatalkan',
+                    default => null
+                };
+                
+                if ($paymentStatus) {
+                    DB::table('orders_details')
+                        ->where('order_id', $this->id_orders)
+                        ->update(['payment_status' => $paymentStatus]);
+                }
+            }
+
+            return $orderUpdated;
+        });
     }
 
     // Method untuk check apakah order dapat dibatalkan
@@ -240,15 +262,6 @@ class Order extends Model
                 $order->order_status = self::STATUS_MENUNGGU;
             }
         });
-
-        // HAPUS atau PERBAIKI bagian ini - ini yang menyebabkan query berlebihan
-        // static::saved(function ($order) {
-        //     if ($order->wasChanged('order_status')) {
-        //         if ($order->orderDetails()->exists()) {
-        //             $order->calculateTotal();
-        //         }
-        //     }
-        // });
     }
 
     // Static method untuk get all status options
@@ -273,5 +286,36 @@ class Order extends Model
         $array['order_summary'] = $this->getOrderSummary();
         
         return $array;
+    }
+    public function cancelOrder(?string $staffName = null): bool
+    {
+        if (!$this->canBeCancelled()) {
+            return false;
+        }
+        
+        $currentTime = now(); // Real time cancellation
+        
+        return DB::transaction(function () use ($staffName, $currentTime) {
+            $updateData = [
+                'order_status' => self::STATUS_DIBATALKAN,
+                'order_complete' => $currentTime // Real time cancellation
+            ];
+            
+            if ($staffName && empty($this->staff_name)) {
+                $updateData['staff_name'] = $staffName;
+            }
+            
+            $orderUpdated = DB::table('orders')
+                ->where('id_orders', $this->id_orders)
+                ->update($updateData) > 0;
+            
+            if ($orderUpdated) {
+                DB::table('orders_details')
+                    ->where('order_id', $this->id_orders)
+                    ->update(['payment_status' => 'dibatalkan']);
+            }
+            
+            return $orderUpdated;
+        });
     }
 }
