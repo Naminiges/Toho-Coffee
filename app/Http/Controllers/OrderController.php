@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -277,11 +278,8 @@ class OrderController extends Controller
                     default => null
                 };
                 
-                if ($paymentStatus) {
-                    DB::table('orders_details')
-                        ->where('order_id', $orderId)
-                        ->update(['payment_status' => $paymentStatus]);
-                }
+                OrderDetail::where('order_id', $orderId)
+                    ->update(['payment_status' => $paymentStatus]);
             });
             
             return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui');
