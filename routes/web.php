@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Middleware\CheckRole;
 
 
@@ -49,6 +50,7 @@ Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('
 Route::get('/admin/manajemen-pesanan', [OrderController::class, 'adminManajemenPesanan'])->name('admin-manajemen-pesanan');
 Route::post('/admin/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('admin-update-order-status');
 Route::get('/admin/detail-pesanan/{orderId}', [OrderController::class, 'adminDetailPesanan'])->name('admin-detail-pesanan');
+Route::get('/admin/laporan', [LaporanController::class, 'index'])->name('admin-laporan');
 // });
 
 // Route::middleware([CheckRole::class.':staff'])->group(function () {
@@ -60,9 +62,9 @@ Route::post('/staff/detail-pesanan/update-status/{orderId}', [OrderController::c
 Route::get('/staff/detail-pesanan/{orderId}', [OrderController::class, 'staffDetailPesanan'])->name('staff-detail-pesanan');
 // });
 
-Route::get('/admin/laporan', function () {
-    return view('admin.laporan');
-})->name('admin-laporan');
+// Route::get('/admin/laporan', function () {
+//     return view('admin.laporan');
+// })->name('admin-laporan');
 
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {

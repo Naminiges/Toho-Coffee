@@ -181,7 +181,7 @@
                     </div>
                     <div class="card-info">
                         <h3>Total Penjualan</h3>
-                        <p class="card-value">150</p>
+                        <h3>{{ $totalPenjualan }}</h3>
                     </div>
                 </div>
                 <div class="card summary-card"> {{-- Added summary-card class --}}
@@ -190,7 +190,7 @@
                     </div>
                     <div class="card-info">
                         <h3>Produk Terjual</h3>
-                        <p class="card-value">450</p>
+                        <h3>{{ $produkTerjual }}</h3>
                     </div>
                 </div>
                 <div class="card summary-card"> {{-- Added summary-card class --}}
@@ -199,7 +199,7 @@
                     </div>
                     <div class="card-info">
                         <h3>Total Pendapatan</h3>
-                        <p class="card-value">Rp 15.000.000</p>
+                        <h3>Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
                     </div>
                 </div>
             </div>
@@ -217,24 +217,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($produkTerlars as $produk)
                         <tr>
-                            <td>Espresso</td>
-                            <td>120</td>
-                            <td>Rp 2.400.000</td>
-                            <td>25%</td>
+                            <td>{{ $produk['nama_produk'] }}</td>
+                            <td>{{ $produk['qty_terjual'] }}</td>
+                            <td>Rp {{ number_format($produk['total_pendapatan'], 0, ',', '.') }}</td>
+                            <td>{{ $produk['persentase'] ?? '0' }}%</td>
                         </tr>
-                        <tr>
-                            <td>Latte</td>
-                            <td>95</td>
-                            <td>Rp 2.850.000</td>
-                            <td>20%</td>
-                        </tr>
-                        <tr>
-                            <td>Cappuccino</td>
-                            <td>85</td>
-                            <td>Rp 2.550.000</td>
-                            <td>18%</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
