@@ -195,16 +195,32 @@
             <!-- Charts Grid -->
             <div class="charts-grid">
                 <div class="chart-card">
-                    <h3>Grafik Penjualan (7 Hari Terakhir)</h3>
-                    <div class="chart-container">
-                        <canvas id="salesChart"></canvas>
+                    <div class="card p-4">
+                        <h5 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i> Grafik Penjualan (7 Hari Terakhir)</h5>
+                        <div>
+                            <canvas id="salesChart" width="400" height="200"></canvas>
+                        </div>
                     </div>
                 </div>
 
                 <div class="chart-card">
-                    <h3>Produk Terlaris</h3>
-                    <div class="chart-container">
-                        <canvas id="productsChart"></canvas>
+                    <div class="card p-4 shadow-sm border-0">
+                        <h5 class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-star text-warning me-2"></i> Produk Terlaris
+                        </h5>
+
+                        @if ($top_product_name)
+                            <div class="d-flex align-items-center justify-content-between bg-light rounded px-3 py-2">
+                                <div class="fw-semibold fs-6 text-dark">
+                                    {{ $top_product_name }}
+                                </div>
+                                <span class="badge bg-success px-3 py-2">
+                                    <i class="fas fa-box me-1"></i> Terlaris
+                                </span>
+                            </div>
+                        @else
+                            <p class="text-muted">Belum ada data produk terlaris.</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -212,6 +228,7 @@
     </div>
 
     @vite('resources/js/script.js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         // Setup CSRF token for AJAX requests
@@ -219,15 +236,48 @@
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         };
 
-        // Sales Chart Data
-        const salesData = @json($sales_chart_data);
-        const salesLabels = salesData.map(item => item.date);
-        const salesValues = salesData.map(item => item.total);
+    </script>
 
-        // Products Chart Data
-        const productsData = @json($top_products);
-        const productLabels = productsData.map(item => item.name);
-        const productValues = productsData.map(item => item.total_sold);
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+            const salesChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($labels) !!},
+                datasets: [{
+                    label: 'Penjualan (Rp)',
+                    data: {!! json_encode($sales) !!},
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        </script>
+
+        <script>
+        // // Sales Chart Data
+        // const salesData = @json($sales_chart_data);
+        // const salesLabels = salesData.map(item => item.date);
+        // const salesValues = salesData.map(item => item.total);
+
+        // // Products Chart Data
+        // const productsData = @json($top_products);
+        // const productLabels = productsData.map(item => item.name);
+        // const productValues = productsData.map(item => item.total_sold);
 
         // Initialize Sales Chart
         const salesCtx = document.getElementById('salesChart').getContext('2d');
@@ -419,4 +469,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
