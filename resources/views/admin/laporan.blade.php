@@ -154,11 +154,11 @@
                 <div class="page-title">
                     <h2>Laporan Penjualan</h2>
                 </div>
-                <div class="header-actions">
+                {{-- <div class="header-actions">
                     <button class="btn btn-primary" onclick="printReport()">
                         <i class="fas fa-print"></i> Cetak Laporan
                     </button>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Date Range Filter -->
