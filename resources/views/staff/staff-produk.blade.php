@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Manajemen Produk - TOHO Coffee Admin</title>
     @vite('resources/css/style.css')
 </head>
@@ -188,34 +189,7 @@
                     </tbody>
                 </table>
             </div>
-            @if($products->hasPages())
-                <div class="pagination">
-                    <ul>
-                        {{-- Previous Page Link --}}
-                        @if ($products->onFirstPage())
-                            <li class="disabled"><span><i class="fas fa-chevron-left"></i></span></li>
-                        @else
-                            <li><a href="{{ $products->previousPageUrl() }}"><i class="fas fa-chevron-left"></i></a></li>
-                        @endif
-
-                        {{-- Pagination Elements --}}
-                        @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                            @if ($page == $products->currentPage())
-                                <li><a href="#" class="active">{{ $page }}</a></li>
-                            @else
-                                <li><a href="{{ $url }}">{{ $page }}</a></li>
-                            @endif
-                        @endforeach
-
-                        {{-- Next Page Link --}}
-                        @if ($products->hasMorePages())
-                            <li><a href="{{ $products->nextPageUrl() }}" class="next"><i class="fas fa-chevron-right"></i></a></li>
-                        @else
-                            <li class="disabled"><span class="next"><i class="fas fa-chevron-right"></i></span></li>
-                        @endif
-                    </ul>
-                </div>
-            @endif
+            {{ $products->links('custom-pagination') }}
         </div>
     </div>
 

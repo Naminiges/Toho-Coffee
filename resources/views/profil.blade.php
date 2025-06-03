@@ -43,7 +43,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -151,11 +150,6 @@
             <!-- Sidebar -->
             <div class="profile-sidebar">
                 <div class="profile-header">
-                    <div class="profile-avatar">
-                        <div class="user-avatar-large">
-                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                        </div>
-                    </div>
                     <h3 class="profile-name">{{ $user->name }}</h3>
                     <p class="profile-email">{{ $user->email }}</p>
                 </div>

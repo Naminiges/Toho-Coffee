@@ -857,43 +857,80 @@ input:read-only , textarea:read-only {
     gap: 30px;
 }
 
+.pagination-wrapper {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.pagination-info {
+    margin-bottom: 20px;
+    color: var(--dark-gray);
+    font-size: 14px;
+}
+
 .pagination {
     display: flex;
     justify-content: center;
-    list-style: none;
-    margin-top: 50px;
-}
-
-.pagination ul {
-    list-style: none; /* Remove default list dots */
-    padding: 0;
-    display: flex; /* Arrange list items horizontally initially for centering */
     align-items: center;
-    flex-direction: row;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
-.pagination li {
-    margin: 0 5px;
-}
-
-.pagination a {
-    display: flex;
+.page-link {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    min-width: 40px;
     height: 40px;
-    border-radius: 50%;
+    padding: 8px 12px;
+    border-radius: 8px;
     text-decoration: none;
     transition: all 0.3s ease;
-    border: 1px solid var(--medium-gray);
-    color: var(--dark-gray);
+    border: 1px solid #e0e0e0;
+    color: #666;
+    background-color: white;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 4px;
 }
 
-.pagination a:hover,
-.pagination a.active {
+.page-link:hover:not(.disabled) {
     background-color: var(--primary-color);
-    color: var(--white);
+    color: white;
     border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(139, 69, 19, 0.2);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.page-link.disabled {
+    color: #ccc;
+    background-color: #f8f9fa;
+    border-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .pagination {
+        gap: 4px;
+    }
+    
+    .page-link {
+        min-width: 36px;
+        height: 36px;
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+    
+    .page-link i {
+        font-size: 12px;
+    }
 }
 
 /* ====== PRODUCT DETAIL PAGE ====== */

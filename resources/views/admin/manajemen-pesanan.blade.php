@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Manajemen Pesanan - TOHO Coffee</title>
     @vite('resources/css/style.css')
 </head>
@@ -220,7 +221,7 @@
 
             <!-- Pagination -->
             <div class="pagination">
-                {{ $orders->appends(request()->query())->links() }}
+                {{ $orders->appends(request()->query())->links('custom-pagination') }}
             </div>
         </main>
     </div>
