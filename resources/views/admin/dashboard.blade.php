@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard Admin - TOHO Coffee</title>
     @vite('resources/css/style.css')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -163,7 +163,7 @@
                     <div class="icon blue">
                         <i class="fas fa-shopping-cart"></i>
                     </div>
-                    <div class="value">Rp 15.5M</div>
+                    <div class="value">Rp {{ number_format($stats['total_revenue'], 0, ',', '.') }}</div>
                     <div class="label">Total Pendapatan</div>
                 </div>
 
@@ -171,7 +171,7 @@
                     <div class="icon green">
                         <i class="fas fa-shopping-bag"></i>
                     </div>
-                    <div class="value">1,234</div>
+                    <div class="value">{{ number_format($stats['total_orders'], 0, ',', '.') }}</div>
                     <div class="label">Total Pesanan</div>
                 </div>
 
@@ -179,7 +179,7 @@
                     <div class="icon orange">
                         <i class="fas fa-users"></i>
                     </div>
-                    <div class="value">856</div>
+                    <div class="value">{{ number_format($stats['total_customers'], 0, ',', '.') }}</div>
                     <div class="label">Total Pelanggan</div>
                 </div>
 
@@ -187,7 +187,7 @@
                     <div class="icon red">
                         <i class="fas fa-box"></i>
                     </div>
-                    <div class="value">45</div>
+                    <div class="value">{{ number_format($stats['total_products'], 0, ',', '.') }}</div>
                     <div class="label">Produk Tersedia</div>
                 </div>
             </div>
@@ -195,67 +195,18 @@
             <!-- Charts Grid -->
             <div class="charts-grid">
                 <div class="chart-card">
-                    <h3>Grafik Penjualan</h3>
-                    <div class="chart-placeholder">
-                        Grafik penjualan akan ditampilkan di sini
+                    <h3>Grafik Penjualan (7 Hari Terakhir)</h3>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
                     </div>
                 </div>
 
                 <div class="chart-card">
                     <h3>Produk Terlaris</h3>
-                    <div class="chart-placeholder">
-                        Grafik produk terlaris akan ditampilkan di sini
+                    <div class="chart-container">
+                        <canvas id="productsChart"></canvas>
                     </div>
                 </div>
-            </div>
-
-            <!-- Recent Orders -->
-            <div class="recent-orders">
-                <h3>Pesanan Terbaru</h3>
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>ID Pesanan</th>
-                            <th>Pelanggan</th>
-                            <th>Tanggal</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#TOHO-2024-001</td>
-                            <td>John Doe</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 85.000</td>
-                            <td><span class="status-badge status-ready">Siap Diambil</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#TOHO-2024-002</td>
-                            <td>Jane Smith</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 120.000</td>
-                            <td><span class="status-badge status-processing">Diproses</span></td>
-                            <td>
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#TOHO-2024-003</td>
-                            <td>Mike Johnson</td>
-                            <td>20 Mar 2024</td>
-                            <td>Rp 75.000</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
-                            <td>
-                            <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -267,6 +218,74 @@
         window.Laravel = {
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         };
+
+        // Sales Chart Data
+        const salesData = @json($sales_chart_data);
+        const salesLabels = salesData.map(item => item.date);
+        const salesValues = salesData.map(item => item.total);
+
+        // Products Chart Data
+        const productsData = @json($top_products);
+        const productLabels = productsData.map(item => item.name);
+        const productValues = productsData.map(item => item.total_sold);
+
+        // Initialize Sales Chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: salesLabels,
+                datasets: [{
+                    label: 'Penjualan (Rp)',
+                    data: salesValues,
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'Rp ' + value.toLocaleString('id-ID');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Initialize Products Chart
+        const productsCtx = document.getElementById('productsChart').getContext('2d');
+        new Chart(productsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: productLabels,
+                datasets: [{
+                    data: productValues,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
 
         // User Menu Functions
         function toggleUserMenu() {
@@ -345,7 +364,7 @@
             
             // Set alert content
             alertText.textContent = message;
-            alertMessage.className = `alert alert-${type}`;
+            alertMessage.className = alert alert-${type};
             
             // Set icon based on type
             if (type === 'success') {

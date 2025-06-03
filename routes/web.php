@@ -36,6 +36,7 @@ Route::get('/invoice/{orderId}', [OrderController::class, 'invoice'])->name('inv
 // });
 
 // Route::middleware([CheckRole::class.':admin'])->group(function () {
+Route::get('/admin/dashboard', [UserController::class, 'adminDashboard'])->name('admin-dashboard');
 Route::get('/admin/manajemen-produk', [ProductController::class, 'adminIndex'])->name('admin-manajemen-produk');
 Route::get('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'create'])->name('admin-tambah-produk');
 Route::post('/admin/manajemen-produk/tambah-produk', [ProductController::class, 'store'])->name('admin-produk-store');

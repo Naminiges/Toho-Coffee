@@ -46,7 +46,7 @@ class CheckRole
     {
         switch ($role) {
             case 'admin':
-                return redirect()->route('dashboard');
+                return redirect()->route('admin.dashboard');
             case 'staff':
                 return redirect()->route('staff.dashboard');
             case 'user':

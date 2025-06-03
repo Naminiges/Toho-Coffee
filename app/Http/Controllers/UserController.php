@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -116,5 +117,29 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses aksi bulk.');
         }
+    }
+
+    public function adminDashboard()
+    {
+        $stats = [
+            'total_orders'     => Order::count(),
+            'total_revenue'    => Order::sum('total_price'),
+            'total_users'      => User::where('role', 'user')->count(),
+            'total_customers'  => User::where('role', 'user')->count(),
+            'total_staff'      => User::where('role', 'staff')->count(),
+            'total_products'   => Product::count(),
+        ];
+
+        $sales_chart_data = json_encode([
+            ['label' => 'Jan', 'value' => 100000],
+            ['label' => 'Feb', 'value' => 150000],
+            ['label' => 'Mar', 'value' => 120000],
+            ['label' => 'Apr', 'value' => 180000],
+        ]);
+
+    $top_products = Product::take(3)->get();
+
+
+        return view('admin.dashboard', compact('stats', 'sales_chart_data', 'top_products'));
     }
 }
