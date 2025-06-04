@@ -119,7 +119,7 @@
             </button>
         </form>
 
-        <div class="form-divider">
+        {{-- <div class="form-divider">
             <span>atau daftar dengan</span>
         </div>
 
@@ -127,7 +127,7 @@
             <a href="#" class="social-btn">
                 <i class="fab fa-google"></i>
             </a>
-        </div>
+        </div> --}}
 
         <div class="form-footer">
             Sudah memiliki akun? <a href="{{ route('login') }}">Masuk di sini</a>

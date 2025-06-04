@@ -31,7 +31,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -134,8 +133,13 @@
         <div class="hero-content">
             <h2>Nikmati Kopi Premium Berkualitas Terbaik</h2>
             <p>Temukan kenikmatan kopi yang diproses dengan teliti dari biji pilihan dan dipanggang dengan sempurna untuk menghasilkan cita rasa terbaik.</p>
+            @auth
+            <a href="{{ route('user-katalog') }}" class="cta-button">Belanja Sekarang</a>
+            <a href="{{ route('user-katalog') }}" class="secondary-button">Pelajari Lebih Lanjut</a>
+            @else
             <a href="{{ route('login') }}" class="cta-button">Belanja Sekarang</a>
             <a href="{{ route('login') }}" class="secondary-button">Pelajari Lebih Lanjut</a>
+            @endauth
         </div>
     </section>
 
@@ -146,50 +150,21 @@
             <p>Koleksi kopi premium kami yang dipilih dengan teliti untuk memberikan pengalaman kopi terbaik bagi Anda.</p>
         </div>
         <div class="products-grid">
-            <!-- Produk 1 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Premium">
+            @if($products->count() > 0)
+                @foreach($products as $product)
+                <!-- Produk 1 -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ asset($product->description->product_photo) }}" alt="Arabica Premium">
+                    </div>
+                    <div class="product-info">
+                        <h4>{{ $product->product_name }}</h4>
+                        <div class="price">{{ $product->formatted_price }}</div>
+                        <div class="description">{{ $product->description->product_description }}</div>
+                    </div>
                 </div>
-                <div class="product-info">
-                    <h4>Arabica Premium</h4>
-                    <div class="price">Rp 95.000</div>
-                    <div class="description">Kopi Arabica premium dengan cita rasa fruity dan aroma yang khas.</div>
-                </div>
-            </div>
-            <!-- Produk 2 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Gold">
-                </div>
-                <div class="product-info">
-                    <h4>Robusta Gold</h4>
-                    <div class="price">Rp 85.000</div>
-                    <div class="description">Kopi Robusta dengan body yang kuat dan rasa cokelat yang kaya.</div>
-                </div>
-            </div>
-            <!-- Produk 3 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi3.jpg') }}" alt="Toho Signature Blend">
-                </div>
-                <div class="product-info">
-                    <h4>Toho Signature Blend</h4>
-                    <div class="price">Rp 105.000</div>
-                    <div class="description">Campuran kopi spesial dengan rasa caramel dan sentuhan rempah.</div>
-                </div>
-            </div>
-            <!-- Produk 4 -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="{{ asset('images/kopi4.jpg') }}" alt="Single Origin Aceh Gayo">
-                </div>
-                <div class="product-info">
-                    <h4>Single Origin Aceh Gayo</h4>
-                    <div class="price">Rp 120.000</div>
-                    <div class="description">Kopi single origin dari Aceh Gayo dengan karakter rasa unik.</div>
-                </div>
-            </div>
+                @endforeach
+            @endif
         </div>
     </section>
 

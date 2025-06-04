@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Manajemen Produk - TOHO Coffee Admin</title>
     @vite('resources/css/style.css')
 </head>
@@ -140,80 +141,55 @@
                             <th>Gambar</th>
                             <th>Nama Produk</th>
                             <th>Kategori</th>
+                            <th>Temperature</th>
                             <th>Harga</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Contoh Baris Produk (akan diisi data dari backend) -->
-                        <tr>
-                            <td><img src="{{ asset('images/kopi1.jpg') }}" alt="Produk 1"></td>
-                            <td>Arabica Gayo Premium</td>
-                            <td>Kopi</td>
-                            <td>Rp 85.000</td>
-                            <td>
-                                <button class="btn status-active">Aktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <a href="{{ route('staff-edit') }}">
-                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
-                                </a>
-                            </td>
-                        </tr>
-                         <tr>
-                            <td><img src="{{ asset('images/kopi2.jpg') }}" alt="Produk 2"></td>
-                            <td>Robusta Toraja Special</td>
-                            <td>Kopi</td>
-                            <td>Rp 75.000</td>
-                            <td>
-                                <button class="btn status-inactive">Nonaktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <a href="{{ route('staff-edit') }}">
-                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
-                                </a>
-                            </td>
-                        </tr>
-                         <tr>
-                            <td><img src="{{ asset('images/kopi3.jpg') }}" alt="Produk 3"></td>
-                            <td>TOHO Signature Blend</td>
-                            <td>Kopi</td>
-                            <td>Rp 120.000</td>
-                            <td>
-                                <button class="btn status-active">Aktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <a href="{{ route('staff-edit') }}">
-                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
-                                </a>
-                            </td>
-                        </tr>
-                          <tr>
-                            <td><img src="{{ asset('images/kopi4.jpg') }}" alt="Produk 4"></td>
-                            <td>French Press 350ml</td>
-                            <td>Merchandise</td>
-                            <td>Rp 150.000</td>
-                            <td>
-                                <button class="btn status-inactive">Nonaktif</button>
-                            </td>
-                            <td class="product-actions">
-                                <a href="{{ route('staff-edit') }}">
-                                    <button class="btn btn-secondary edit-btn"><i class="fas fa-edit"></i> Edit</button>
-                                </a>
-                            </td>
-                        </tr>
+                        @forelse($products as $product)
+                            <tr>
+                                <td>
+                                    @if($product->description && $product->description->product_photo)
+                                        <img src="{{ asset($product->description->product_photo) }}" 
+                                                alt="{{ $product->product_name }}" 
+                                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                    @else
+                                        <img src="{{ asset('images/no-image.png') }}" 
+                                                alt="No Image" 
+                                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                    @endif
+                                </td>
+                                <td>{{ $product->product_name }}</td>
+                                <td>{{ $product->description->category->category ?? 'N/A' }}</td>
+                                <td>{{ $product->description->temperatureType->temperature ?? 'N/A' }}</td>
+                                <td>{{ $product->formatted_price }}</td>
+                                <td>
+                                    <button class="btn {{ $product->is_active ? 'status-active' : 'status-inactive' }}">
+                                        {{ $product->is_active ? 'Aktif' : 'Nonaktif' }}
+                                    </button>
+                                </td>
+                                <td class="product-actions">
+                                    <a href="{{ route('staff-edit', $product->id_product) }}" class="btn btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 2rem;">
+                                    <div style="color: #666;">
+                                        <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                        <p>Belum ada produk yang tersedia</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
-            <div class="pagination">
-                <ul>
-                    <li><a href="#" class="active">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#" class="next"><i class="fas fa-chevron-right"></i></a></li>
-                </ul>
-            </div>
+            {{ $products->links('custom-pagination') }}
         </div>
     </div>
 
