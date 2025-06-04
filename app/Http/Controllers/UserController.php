@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -116,5 +119,114 @@ class UserController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses aksi bulk.');
         }
+    }
+
+    public function adminDashboard()
+    {
+        // Total pendapatan dari orders
+        $totalPendapatan = Order::sum('total_price');
+
+        // Total pesanan (jumlah baris orders)
+        $totalPesanan = Order::count();
+
+        // Total pelanggan (user dengan role = user)
+        $totalPelanggan = User::where('role', 'user')->count();
+
+        // Total produk tersedia (produk aktif)
+        $produkTersedia = Product::where('product_status', 'aktif')->count();
+
+        $stats = [
+            'total_revenue' => $totalPendapatan,
+            'total_orders' => $totalPesanan,
+            'total_customers' => $totalPelanggan,
+            'total_products' => $produkTersedia,
+        ];
+
+        // Produk terlaris
+        $produkTerlars = DB::table('orders_details')
+            ->select('product_id', DB::raw('SUM(product_quantity) as total_terjual'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_terjual')
+            ->take(5)
+            ->get()
+            ->map(function ($item) {
+                $product = Product::find($item->product_id);
+                return [
+                    'nama_produk' => $product->product_name ?? '-',
+                    'qty' => $item->total_terjual,
+                ];
+            });
+
+            $top_products = DB::table('orders_details')
+            ->select('product_id', DB::raw('SUM(product_quantity) as total_sold'))
+            ->groupBy('product_id')
+            ->orderByDesc('total_sold')
+            ->take(5)
+            ->get()
+            ->map(function ($item) {
+                $product = Product::find($item->product_id);
+                return [
+                    'name' => $product->product_name ?? '-',
+                    'total_sold' => (int) $item->total_sold,
+                ];
+            });
+
+            $top_product = $top_products->first();
+            $top_product_name = null;
+
+            if ($top_product) {
+                $product = Product::where('product_name', $top_product['name'])->first();
+
+                if ($product) {
+                    $top_product_name = $product->product_name . ' (' . $top_product['total_sold'] . ' terjual)';
+                }
+            }
+
+            $sales_chart_data = DB::table('orders')
+            ->selectRaw('DATE(order_date) as date, SUM(total_price) as total')
+            ->whereBetween('order_date', [now()->subDays(6)->startOfDay(), now()->endOfDay()])
+            ->groupBy(DB::raw('DATE(order_date)'))
+            ->orderBy('date')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'date' => Carbon::parse($item->date)->translatedFormat('d M'),
+                    'total' => (float) $item->total,
+                ];
+            });
+
+            $sevenDays = collect();
+            $salesData = collect();
+
+            for ($i = 6; $i >= 0; $i--) {
+                $date = Carbon::now()->subDays($i)->format('Y-m-d');
+                $dayName = Carbon::now()->subDays($i)->translatedFormat('l');
+
+                $sevenDays->push($dayName);
+
+                $dailySales = DB::table('orders')
+                    ->whereDate('order_date', $date)
+                    ->sum('total_price');
+
+                $salesData->push((float) $dailySales);
+            }
+
+            // Simpan hasil ke variabel yang akan dikirim ke view
+            $labels = $sevenDays;
+            $sales = $salesData;
+
+        return view('admin.dashboard', compact(
+        'totalPendapatan',
+        'totalPesanan',
+        'totalPelanggan',
+        'produkTersedia',
+        'stats',
+        'produkTerlars',
+        'sales_chart_data',
+        'top_product_name',
+        'top_products',
+        'labels',
+        'sales' // tambahkan ini!
+    ));
     }
 }
