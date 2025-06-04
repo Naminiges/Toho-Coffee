@@ -291,12 +291,12 @@
                         <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
                     </div>
                     
-                    <div class="payment-methods">
+                    {{-- <div class="payment-methods">
                         <span>Metode Pembayaran:</span>
                         <div class="payment-icons">
                             <i class="fas fa-wallet"></i>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="qr-code">
                     <h3>Rekening TOHO Coffee</h3>

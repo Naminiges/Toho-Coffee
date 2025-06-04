@@ -169,7 +169,7 @@
                     </li>
                 </ul>
 
-                <div class="profile-stats">
+                {{-- <div class="profile-stats">
                     <div class="stat-item">
                         <div class="stat-value">12</div>
                         <div class="stat-label">Pesanan</div>
@@ -178,7 +178,7 @@
                         <div class="stat-value">5</div>
                         <div class="stat-label">Keranjang</div>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <!-- Main Content -->

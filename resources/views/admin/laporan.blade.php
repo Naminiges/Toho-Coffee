@@ -168,9 +168,9 @@
                     <span>sampai</span>
                     <input type="date" id="endDate" class="form-control">
                 </div>
-                <button class="btn btn-primary filter-button" onclick="filterReport()"> {{-- Added filter-button class and onclick --}}
+                {{-- <button class="btn btn-primary filter-button" onclick="filterReport()">
                     <i class="fas fa-filter"></i> Filter
-                </button>
+                </button> --}}
             </div>
 
             <!-- Summary Cards -->
