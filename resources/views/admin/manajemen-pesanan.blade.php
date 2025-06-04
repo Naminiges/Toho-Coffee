@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Manajemen Pesanan - TOHO Coffee</title>
     @vite('resources/css/style.css')
 </head>
@@ -157,23 +158,24 @@
             </div>
 
             <!-- Filter Section -->
-            <div class="filter-section">
+            <form method="GET" action="{{ route('admin-manajemen-pesanan') }}" id="filterForm" class="filter-section">
                 <div class="search-bar">
-                    <input type="text" placeholder="Cari pesanan...">
+                    <input type="text" name="search" placeholder="Cari pesanan..." value="{{ request('search') }}">
                     <i class="fas fa-search"></i>
                 </div>
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-status="all">Semua</button>
-                    <button class="filter-btn" data-status="pending">Menunggu</button>
-                    <button class="filter-btn" data-status="processing">Diproses</button>
-                    <button class="filter-btn" data-status="ready">Siap</button>
-                    <button class="filter-btn" data-status="completed">Selesai</button>
-                    <button class="filter-btn" data-status="cancelled">Dibatalkan</button>
+                    <button type="button" class="filter-btn {{ request('status', 'all') == 'all' ? 'active' : '' }}" onclick="setStatus('all')">Semua</button>
+                    <button type="button" class="filter-btn {{ request('status') == 'pending' ? 'active' : '' }}" onclick="setStatus('pending')">Menunggu</button>
+                    <button type="button" class="filter-btn {{ request('status') == 'processing' ? 'active' : '' }}" onclick="setStatus('processing')">Diproses</button>
+                    <button type="button" class="filter-btn {{ request('status') == 'ready' ? 'active' : '' }}" onclick="setStatus('ready')">Siap</button>
+                    <button type="button" class="filter-btn {{ request('status') == 'completed' ? 'active' : '' }}" onclick="setStatus('completed')">Selesai</button>
+                    <button type="button" class="filter-btn {{ request('status') == 'cancelled' ? 'active' : '' }}" onclick="setStatus('cancelled')">Dibatalkan</button>
                 </div>
                 <div class="date-filter">
-                    <input type="date" id="orderDate" class="form-control">
+                    <input type="date" name="date" id="orderDate" class="form-control" value="{{ request('date') }}" onchange="document.getElementById('filterForm').submit();">
                 </div>
-            </div>
+                <input type="hidden" name="status" id="statusInput" value="{{ request('status', 'all') }}">
+            </form>
 
             <!-- Orders Table -->
             <div class="product-table-container">
@@ -189,48 +191,37 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse($orders as $order)
                         <tr>
-                            <td>#ORD001</td>
-                            <td>2024-03-20 14:30</td>
-                            <td>John Doe</td>
-                            <td>Rp 150.000</td>
-                            <td><span class="status-badge status-pending">Menunggu</span></td>
+                            <td>Order {{ $order->orders_code }}</td>
+                            <td>{{ $order->order_date->format('Y-m-d H:i') }}</td>
+                            <td>{{ $order->customer_name }}</td>
+                            <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                            <td>
+                                <span class="status-badge {{ app('App\Http\Controllers\OrderController')->getStatusBadgeClass($order->order_status) }}">
+                                    {{ app('App\Http\Controllers\OrderController')->getStatusText($order->order_status) }}
+                                </span>
+                            </td>
                             <td class="product-actions">
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
+                                <a href="{{ route('admin-detail-pesanan', $order->id_orders) }}" style="text-decoration: none;">
+                                    <button class="btn btn-secondary">Detail</button>
+                                </a>
                             </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td>#ORD002</td>
-                            <td>2024-03-20 13:15</td>
-                            <td>Jane Smith</td>
-                            <td>Rp 85.000</td>
-                            <td><span class="status-badge status-processing">Diproses</span></td>
-                            <td class="product-actions">
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">
+                                <p>Tidak ada pesanan yang ditemukan.</p>
                             </td>
                         </tr>
-                        <tr>
-                            <td>#ORD003</td>
-                            <td>2024-03-20 12:45</td>
-                            <td>Mike Johnson</td>
-                            <td>Rp 200.000</td>
-                            <td><span class="status-badge status-ready">Siap</span></td>
-                            <td class="product-actions">
-                                <a href=" {{ route('admin-detail-pesanan') }}" style="text-decoration : none;"><button class="btn btn-secondary">Detail</button></a>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination -->
             <div class="pagination">
-                <ul>
-                    <li><a href="#" class="active">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#" class="next"><i class="fas fa-chevron-right"></i></a></li>
-                </ul>
+                {{ $orders->appends(request()->query())->links('custom-pagination') }}
             </div>
         </main>
     </div>
@@ -373,6 +364,36 @@
                 closeLogoutModal();
             }
         });
+        // Filter Functions
+        function setStatus(status) {
+            document.getElementById('statusInput').value = status;
+            document.getElementById('filterForm').submit();
+        }
+
+        // Search function with delay
+        let searchTimeout;
+        document.querySelector('input[name="search"]').addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                document.getElementById('filterForm').submit();
+            }, 500);
+        });
+
+        // Real-time filter update
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update filter buttons active state
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const currentStatus = '{{ request("status", "all") }}';
+            
+            filterButtons.forEach(button => {
+                if (button.getAttribute('onclick').includes(currentStatus)) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        });
+
     </script>
 </body>
 </html>

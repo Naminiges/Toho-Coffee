@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Detail Pesanan - TOHO Coffee</title>
     @vite('resources/css/style.css')
 </head>
@@ -151,7 +152,7 @@
         <main class="main-content">
             <div class="admin-page-header">
                 <div class="page-title">
-                    <h2>Detail Pesanan #ORD001</h2>
+                    <h2>Detail Pesanan {{ $order->orders_code }}</h2>
                 </div>
             </div>
 
@@ -163,56 +164,60 @@
                         <div class="info-grid">
                             <div class="info-item">
                                 <label>ID Pesanan:</label>
-                                <span>#ORD001</span>
+                                <span> {{ $order->orders_code }} </span>
                             </div>
                             <div class="info-item">
                                 <label>Tanggal Pesanan:</label>
-                                <span>2024-03-20 14:30</span>
+                                <span>{{ $order->order_date->format('Y-m-d H:i') }}</span>
                             </div>
                             <div class="info-item">
                                 <label>Pelanggan:</label>
-                                <span>John Doe</span>
+                                <span>{{ $order->customer_name }}</span>
                             </div>
                             <div class="info-item">
                                 <label>Email:</label>
-                                <span>john.doe@example.com</span>
+                                <span>{{ $order->customer_email }}</span>
                             </div>
                             <div class="info-item">
                                 <label>Telepon:</label>
-                                <span>+62 812 3456 7890</span>
+                                <span>{{ $order->customer_phone }}</span>
                             </div>
                             <div class="info-item">
                                 <label>Metode Pembayaran:</label>
-                                <span>Transfer Bank</span>
+                                <span>{{ $order->orderDetails->first()->payment_method ?? 'Transfer Bank' }}</span>
                             </div>
                             <div class="info-item full-width">
                                 <label>Lokasi Pengambilan:</label>
-                                <span>TOHO Coffee - Cabang Utama</span>
+                                <span>{{ $order->orderDetails->first()->pickup_place ?? 'TOHO Coffee - Cabang Utama' }}</span>
                             </div>
                         </div>
 
                         {{-- Order Status Display --}}
-                        <div class="order-status-badge status-completed">
-                            <i class="fas fa-check-circle"></i> Selesai
+                        <div class="order-status-badge {{ $order->status_badge_class }}">
+                            <i class="fas fa-check-circle"></i>
+                            {{ $order->status_text }}
                         </div>
 
                         {{-- Status Update Form --}}
-                        <div class="status-update-form" style="margin-top: 20px;"> {{-- Added margin-top for spacing --}}
+                        <div class="status-update-form" style="margin-top: 20px;">
                             <div class="form-group">
-                                <input type="hidden" value=""> 
+                            <form action="{{ route('admin-update-order-status', $order->id_orders) }}" method="POST" style="display: inline;">
+                                @csrf
                                 <label for="orderStatus">Ubah Status Pesanan:</label>
-                                <select id="orderStatus" class="form-control">
-                                    <option value="pending">Menunggu</option>
-                                    <option value="processing">Diproses</option>
-                                    <option value="ready">Siap</option>
-                                    <option value="completed" selected>Selesai</option> {{-- Set the current status as selected --}}
-                                    <option value="cancelled">Dibatalkan</option>
+                                <select name="status" id="orderStatus" class="form-control">
+                                    <option value="{{ $order->order_status }}" selected>{{ ucfirst($order->order_status) }} (Saat ini)</option>
+                                    @foreach($order->getAvailableStatusTransitions() as $status)
+                                        <option value="{{ $status }}" >
+                                            {{ ucfirst($status) }}
+                                        </option>
+                                    @endforeach
                                 </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="updateOrderStatusDetail('ORD001')">
-                                <i class="fas fa-sync-alt"></i> Update Status
-                            </button>
-                            <a href="{{ route('invoice') }}">
+                                </div>
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin mengubah status pesanan ini?')">
+                                    <i class="fas fa-sync-alt"></i> Update Status
+                                </button>
+                            </form>
+                            <a href="{{ route('invoice', $order->id_orders) }}" target="_blank">
                                 <button class="btn btn-secondary">
                                     <i class="fas fa-print"></i> Print Invoice
                                 </button>
@@ -224,47 +229,51 @@
                     <div class="order-info-card">
                         <h3>Item Pesanan</h3>
                         <div class="order-items-list">
+                            @foreach($order->orderDetails as $detail)
                             <div class="order-item">
                                 <div class="item-image">
-                                    <img src="{{ asset('images/kopi1.jpg') }}" alt="Product Image">
+                                    <img src="{{ asset('images/products/' . ($detail->product_name . '.jpg' ?? 'default-product.jpg')) }}" alt="Product Image">
                                 </div>
                                 <div class="item-details">
-                                    <h4>Kopi Arabika Single Origin</h4>
-                                    <div class="item-variant">Variant: 250g, Roast: Medium</div>
-                                    <div class="item-price">Rp 50.000 x 2</div>
+                                    <h4>{{ $detail->product_name }}</h4>
+                                    <div class="item-variant">
+                                        @if($detail->category_name !== 'N/A')
+                                            {{ $detail->category_name }}
+                                        @endif
+                                        @if($detail->temperature_name !== 'N/A')
+                                            , {{ $detail->temperature_name }}
+                                        @endif
+                                    </div>
+                                    <div class="item-price">Rp {{ number_format($detail->product_price, 0, ',', '.') }} x {{ $detail->product_quantity }}</div>
                                 </div>
-                                <div class="item-subtotal">Rp 100.000</div>
+                                <div class="item-subtotal">Rp {{ number_format($detail->product_price * $detail->product_quantity, 0, ',', '.') }}</div>
                             </div>
-                             <div class="order-item">
-                                <div class="item-image">
-                                    <img src="{{ asset('images/kopi2.jpg') }}" alt="Product Image">
-                                </div>
-                                <div class="item-details">
-                                    <h4>Pastry Cokelat</h4>
-                                    <div class="item-variant">Qty: 3</div>
-                                    <div class="item-price">Rp 15.000 x 3</div>
-                                </div>
-                                <div class="item-subtotal">Rp 45.000</div>
-                            </div>
-                            <!-- More items can be added here -->
+                            @endforeach
                         </div>
                     </div>
 
                      <!-- Order Summary -->
                     <div class="order-info-card">
                          <h3>Ringkasan Pesanan</h3>
+                        @php
+                            $subtotal = $order->orderDetails->sum(function($d) { 
+                                return $d->product_price * $d->product_quantity; 
+                            });
+                            $ppn = $subtotal * 0.1;
+                            $total = $subtotal + $ppn;
+                        @endphp
                         <div class="order-summary">
                             <div class="summary-item">
                                 <span>Subtotal</span>
-                                <span>Rp 145.000</span>
+                                <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                             </div>
                             <div class="summary-item">
-                                <span>Ongkos Kirim</span>
-                                <span>Rp 5.000</span>
+                                <span>PPn 10%</span>
+                                <span>Rp {{ number_format($ppn, 0, ',', '.') }}</span>
                             </div>
                             <div class="summary-item summary-total">
                                 <span>Total</span>
-                                <span>Rp 150.000</span>
+                                <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
@@ -275,58 +284,22 @@
                     <div class="order-info-card">
                         <h3>Riwayat Status</h3>
                         <div class="order-timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-icon"></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2024-03-20 14:30</div>
-                                    <div class="timeline-text">Pesanan Dibuat</div>
-                                </div>
+                        @foreach($timeline as $item)
+                        <div class="timeline-item">
+                            <div class="timeline-icon"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">{{ $item['date'] }}</div>
+                                <div class="timeline-text">{{ $item['text'] }}</div>
                             </div>
-                            <div class="timeline-item">
-                                 <div class="timeline-icon"></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2024-03-20 14:35</div>
-                                    <div class="timeline-text">Pembayaran Dikonfirmasi</div>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-icon"></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2024-03-20 15:00</div>
-                                    <div class="timeline-text">Pesanan Diproses</div>
-                                </div>
-                            </div>
-                             <div class="timeline-item">
-                                <div class="timeline-icon"></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2024-03-20 16:00</div>
-                                    <div class="timeline-text">Pesanan Siap Diambil</div>
-                                </div>
-                            </div>
-                             <div class="timeline-item">
-                                <div class="timeline-icon"></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2024-03-20 17:30</div>
-                                    <div class="timeline-text">Pesanan Selesai</div>
-                                </div>
-                            </div>
-                            <!-- More timeline items can be added here -->
                         </div>
+                        @endforeach
                     </div>
-
-                     <!-- QR Code -->
-                    <div class="order-info-card qr-code-container">
-                         <h3>Kode QR Pesanan</h3>
-                        <div class="qr-code">
-                            <img src="" alt="QR Code">
-                            <p>Scan QR code untuk verifikasi pesanan.</p>
-                        </div>
                     </div>
 
                     <div class="order-info-card qr-code-container">
-                         <h3>Bukti Transfer</h3>
+                        <h3>Bukti Transfer</h3>
                         <div class="qr-code">
-                            <img src="" alt="Bukti Transfer">
+                            <img src="{{ asset($order->proof_payment) }}" alt="Bukti Transfer">
                             <p>Validasi Bukti Transfer</p>
                         </div>
                     </div>

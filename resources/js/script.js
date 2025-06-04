@@ -129,67 +129,6 @@ const backToTopButton = document.querySelector('.back-to-top');
     }
 };
 
-// Shopping Cart (Async with Laravel API)
-const initShoppingCart = async () => {
-    try {
-const addToCartButtons = document.querySelectorAll('.add-to-cart');
-const cartCount = document.querySelector('.cart-count');
-
-addToCartButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const originalText = button.textContent;
-                const productId = button.dataset.productId;
-                
-                try {
-                    Utils.showLoading(button);
-
-                    // Send request to Laravel backend
-                    const response = await fetch('/api/cart/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            product_id: productId,
-                            quantity: 1
-                        })
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        // Update cart count
-                        if (cartCount) {
-                            cartCount.textContent = data.cart_count;
-                        }
-
-                        // Show success animation
-        button.textContent = 'Ditambahkan!';
-        button.style.backgroundColor = '#165d42';
-        
-                        Utils.showNotification('Produk berhasil ditambahkan ke keranjang!');
-
-                        await Utils.delay(1000);
-                    } else {
-                        throw new Error(data.message || 'Gagal menambahkan ke keranjang');
-                    }
-
-                } catch (error) {
-                    console.error('Cart error:', error);
-                    Utils.showNotification(error.message, 'error');
-                } finally {
-                    Utils.hideLoading(button, originalText);
-            button.style.backgroundColor = '';
-                }
-    });
-});
-    } catch (error) {
-        console.error('Error initializing shopping cart:', error);
-    }
-};
-
 // Sticky Header (Async)
 const initStickyHeader = async () => {
     try {
@@ -398,7 +337,7 @@ const updateProductDisplay = async (products) => {
         });
 
         // Re-initialize cart buttons for new products
-        await initShoppingCart();
+        // await initShoppingCart();
         
     } catch (error) {
         console.error('Error updating product display:', error);
@@ -577,183 +516,6 @@ const handleFormSubmission = async (form, endpoint) => {
     }
 };
 
-// Cart Management (Async)
-const initCartManagement = async () => {
-    try {
-    const decreaseBtns = document.querySelectorAll('.cart-item .quantity-btn.decrease');
-    const increaseBtns = document.querySelectorAll('.cart-item .quantity-btn.increase');
-    const quantityInputs = document.querySelectorAll('.cart-item .quantity-input');
-    const removeButtons = document.querySelectorAll('.remove-item');
-    const clearCartButton = document.querySelector('.clear-cart');
-    const updateCartButton = document.querySelector('.update-cart');
-
-        // Update cart item quantity
-        const updateCartItem = async (itemId, quantity) => {
-            try {
-                const response = await fetch('/api/cart/update', {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        item_id: itemId,
-                        quantity: quantity
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    await updateCartTotal();
-                    return data;
-                } else {
-                    throw new Error(data.message || 'Gagal memperbarui keranjang');
-                }
-            } catch (error) {
-                console.error('Update cart error:', error);
-                Utils.showNotification(error.message, 'error');
-            }
-        };
-
-        // Quantity buttons
-    decreaseBtns.forEach((btn, index) => {
-            btn.addEventListener('click', async function() {
-                const quantityInput = quantityInputs[index];
-                const currentValue = parseInt(quantityInput.value);
-                const itemId = this.dataset.itemId;
-                
-            if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                    await updateCartItem(itemId, currentValue - 1);
-            }
-        });
-    });
-
-    increaseBtns.forEach((btn, index) => {
-            btn.addEventListener('click', async function() {
-                const quantityInput = quantityInputs[index];
-                const currentValue = parseInt(quantityInput.value);
-                const itemId = this.dataset.itemId;
-                
-                quantityInput.value = currentValue + 1;
-                await updateCartItem(itemId, currentValue + 1);
-        });
-    });
-
-        // Remove item buttons
-    removeButtons.forEach(btn => {
-            btn.addEventListener('click', async function() {
-            const item = this.closest('.cart-item');
-                const itemId = this.dataset.itemId;
-                
-                if (confirm('Hapus item ini dari keranjang?')) {
-                    try {
-                        const response = await fetch(`/api/cart/remove/${itemId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json'
-                            }
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok) {
-                            item.style.opacity = '0';
-                            await Utils.delay(300);
-                            item.remove();
-                            
-                            await updateCartTotal();
-                            Utils.showNotification('Item berhasil dihapus');
-                        } else {
-                            throw new Error(data.message || 'Gagal menghapus item');
-                        }
-                    } catch (error) {
-                        console.error('Remove item error:', error);
-                        Utils.showNotification(error.message, 'error');
-                    }
-                }
-        });
-    });
-
-        // Clear cart button
-    if (clearCartButton) {
-            clearCartButton.addEventListener('click', async function() {
-                if (confirm('Kosongkan seluruh keranjang?')) {
-                    const originalText = this.textContent;
-                    
-                    try {
-                        Utils.showLoading(this);
-                        
-                        const response = await fetch('/api/cart/clear', {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json'
-                            }
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok) {
-                            location.reload(); // Reload to show empty cart
-                        } else {
-                            throw new Error(data.message || 'Gagal mengosongkan keranjang');
-                        }
-                    } catch (error) {
-                        console.error('Clear cart error:', error);
-                        Utils.showNotification(error.message, 'error');
-                    } finally {
-                        Utils.hideLoading(this, originalText);
-                    }
-            }
-        });
-    }
-
-    } catch (error) {
-        console.error('Error initializing cart management:', error);
-    }
-};
-
-// Update Cart Total (Async)
-const updateCartTotal = async () => {
-    try {
-        const response = await fetch('/api/cart/total', {
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            // Update cart count
-            const cartCount = document.querySelector('.cart-count');
-            if (cartCount) {
-                cartCount.textContent = data.items_count;
-            }
-
-            // Update totals
-            const subtotalElement = document.querySelector('.summary-item:first-child span:last-child');
-            const totalElement = document.querySelector('.summary-total span:last-child');
-            
-            if (subtotalElement) {
-                subtotalElement.textContent = `Rp ${data.subtotal.toLocaleString('id-ID')}`;
-            }
-            
-            if (totalElement) {
-                totalElement.textContent = `Rp ${data.total.toLocaleString('id-ID')}`;
-            }
-        }
-    } catch (error) {
-        console.error('Update cart total error:', error);
-    }
-};
-
-// Admin Functions (Async)
 const initAdminFunctions = async () => {
     try {
         // Product management
@@ -1163,43 +925,43 @@ const initOrderManagement = async () => {
 };
 
 // Update Order Status (Async)
-const updateOrderStatus = async (orderId, status) => {
-    try {
-        const response = await fetch(`/admin/api/orders/${orderId}/status`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({
-                status: status
-            })
-        });
+// const updateOrderStatus = async (orderId, status) => {
+//     try {
+//         const response = await fetch(`/admin/api/orders/${orderId}/status`, {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'Accept': 'application/json',
+//                 'X-CSRF-TOKEN': csrfToken
+//             },
+//             body: JSON.stringify({
+//                 status: status
+//             })
+//         });
 
-        const data = await response.json();
+//         const data = await response.json();
 
-        if (response.ok) {
-            // Update UI
-            const orderRow = document.querySelector(`[data-order-id="${orderId}"]`);
-            if (orderRow) {
-                const statusCell = orderRow.querySelector('.order-status');
-                if (statusCell) {
-                    statusCell.textContent = data.status_text;
-                    statusCell.className = `order-status status-${status}`;
-                }
-            }
+//         if (response.ok) {
+//             // Update UI
+//             const orderRow = document.querySelector(`[data-order-id="${orderId}"]`);
+//             if (orderRow) {
+//                 const statusCell = orderRow.querySelector('.order-status');
+//                 if (statusCell) {
+//                     statusCell.textContent = data.status_text;
+//                     statusCell.className = `order-status status-${status}`;
+//                 }
+//             }
             
-            return data;
-        } else {
-            throw new Error(data.message || 'Gagal memperbarui status pesanan');
-        }
+//             return data;
+//         } else {
+//             throw new Error(data.message || 'Gagal memperbarui status pesanan');
+//         }
         
-    } catch (error) {
-        console.error('Update order status error:', error);
-        throw error;
-    }
-};
+//     } catch (error) {
+//         console.error('Update order status error:', error);
+//         throw error;
+//     }
+// };
 
 // Image Upload Preview (Async)
 const initImagePreview = async () => {
@@ -1375,32 +1137,32 @@ const initRealTimeUpdates = async () => {
 };
 
 // Check for new orders (Admin)
-const checkForNewOrders = async () => {
-    try {
-        const response = await fetch('/admin/api/orders/check-new', {
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
+// const checkForNewOrders = async () => {
+//     try {
+//         const response = await fetch('/admin/api/orders/check-new', {
+//             headers: {
+//                 'Accept': 'application/json',
+//                 'X-CSRF-TOKEN': csrfToken
+//             }
+//         });
 
-        const data = await response.json();
+//         const data = await response.json();
 
-        if (response.ok && data.has_new_orders) {
-            // Show notification for new orders
-            Utils.showNotification(`${data.new_orders_count} pesanan baru masuk!`);
+//         if (response.ok && data.has_new_orders) {
+//             // Show notification for new orders
+//             Utils.showNotification(`${data.new_orders_count} pesanan baru masuk!`);
             
-            // Update order counter if exists
-            const orderCounter = document.querySelector('.order-counter');
-            if (orderCounter) {
-                orderCounter.textContent = data.total_pending_orders;
-            }
-        }
+//             // Update order counter if exists
+//             const orderCounter = document.querySelector('.order-counter');
+//             if (orderCounter) {
+//                 orderCounter.textContent = data.total_pending_orders;
+//             }
+//         }
         
-    } catch (error) {
-        console.error('Check new orders error:', error);
-    }
-};
+//     } catch (error) {
+//         console.error('Check new orders error:', error);
+//     }
+// };
 
 // Performance Optimization (Async)
 const initPerformanceOptimizations = async () => {
@@ -1470,11 +1232,9 @@ const initializeApp = async () => {
         // Initialize page-specific components
         await Promise.all([
             initTestimonialSlider(),
-            initShoppingCart(),
             initMenuFilters(),
             initProductDetail(),
             initAuthForms(),
-            initCartManagement(),
             initImagePreview()
         ]);
         
@@ -1556,41 +1316,3 @@ window.CoffeeShopApp = {
     showNotification: Utils.showNotification,
     withRetry
 };
-
-async function setDateTimeLimits() {
-const input = document.getElementById("pickupTime");
-const button = document.getElementById("orderBtn");
-
-// Simulasi async waktu (misalnya bisa diubah jadi fetch server time)
-const now = await new Promise(resolve => {
-    setTimeout(() => resolve(new Date()), 0);
-});
-
-const currentHour = now.getHours();
-
-// Fungsi format datetime
-function formatDateTime(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
-
-// Atur min dan max input jika dalam jam operasional
-if (currentHour >= 8 && currentHour < 17) {
-    input.min = formatDateTime(now);
-    const maxDate = new Date();
-    maxDate.setHours(17, 0, 0, 0);
-    input.max = formatDateTime(maxDate);
-    input.disabled = false;
-    button.disabled = false;
-} else {
-    // Di luar jam operasional: disable input dan tombol
-    input.disabled = true;
-    button.disabled = true;
-}
-}
-
-setDateTimeLimits();

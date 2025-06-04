@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Checkout - TOHO Coffee</title>
     @vite('resources/css/style.css')
 </head>
@@ -24,7 +25,6 @@
                     <div class="cart-icon">
                         <a href="{{ route('user-keranjang') }}" style="text-decoration : none;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
                         </a>
                     </div>
                     <div class="user-menu">
@@ -134,125 +134,179 @@
             <div class="cart-items">
                 <h3>Informasi Pesanan</h3>
                 
-                <form id="checkoutForm" class="checkout-form">
-                    <div class="form-group">
-                        <label for="name">Nama Lengkap</label>
-                        <input type="text" id="name" class="form-control" required>
-                    </div>
+                <form id="checkoutForm" action="{{ route('user-checkout-process') }}" method="POST" enctype="multipart/form-data" class="checkout-form">
+                @csrf
+                
+                <div class="form-group">
+                    <label for="name">Nama Lengkap</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}" required>
+                    @error('name')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label for="phone">Nomor Telepon</label>
-                        <input type="tel" id="phone" class="form-control" required>
-                    </div>
+                <div class="form-group">
+                    <label for="phone">Nomor Telepon</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" value="{{ old('phone', Auth::user()->user_phone) }}" required>
+                    @error('phone')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" class="form-control" required>
-                    </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" class="form-control" value="{{ old('email', Auth::user()->email) }}" required>
+                    @error('email')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label>Metode Pengambilan</label>
-                        <div class="pickup-options">
-                            <div class="pickup-option">
-                                <input type="radio" id="pickup1" name="pickup" value="pickup1" checked>
-                                <label for="pickup1">
-                                    <strong>TOHO Coffee - Cabang Utama</strong><br>
-                                    Universitas Sumatera Utara, Medan<br>
-                                    Buka: 08:00 - 17:00
-                                </label>
-                            </div>
+                <div class="form-group">
+                    <label for="member_bank">Nama Bank Customer</label>
+                    <select id="member_bank" name="member_bank" class="form-control" required>
+                        <option value="">Pilih Bank/E-Wallet</option>
+                        <optgroup label="Bank">
+                            <option value="BRI" {{ old('member_bank') == 'BRI' ? 'selected' : '' }}>BRI</option>
+                            <option value="Bank Mega" {{ old('member_bank') == 'Bank Mega' ? 'selected' : '' }}>Bank Mega</option>
+                            <option value="CIMB Niaga" {{ old('member_bank') == 'CIMB Niaga' ? 'selected' : '' }}>CIMB Niaga</option>
+                            <option value="Bank Mandiri" {{ old('member_bank') == 'Bank Mandiri' ? 'selected' : '' }}>Bank Mandiri</option>
+                            <option value="BNI" {{ old('member_bank') == 'BNI' ? 'selected' : '' }}>BNI</option>
+                            <option value="BCA" {{ old('member_bank') == 'BCA' ? 'selected' : '' }}>BCA</option>
+                            <option value="Bank Sinarmas" {{ old('member_bank') == 'Bank Sinarmas' ? 'selected' : '' }}>Bank Sinarmas</option>
+                            <option value="Bank Permata" {{ old('member_bank') == 'Bank Permata' ? 'selected' : '' }}>Bank Permata</option>
+                            <option value="Danamon" {{ old('member_bank') == 'Danamon' ? 'selected' : '' }}>Danamon</option>
+                        </optgroup>
+                        <optgroup label="E-Wallet">
+                            <option value="OVO" {{ old('member_bank') == 'OVO' ? 'selected' : '' }}>OVO</option>
+                            <option value="DANA" {{ old('member_bank') == 'DANA' ? 'selected' : '' }}>DANA</option>
+                            <option value="GOPAY" {{ old('member_bank') == 'GOPAY' ? 'selected' : '' }}>GOPAY</option>
+                        </optgroup>
+                    </select>
+                    @error('member_bank')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="bank_number">Nomor Rekening Customer</label>
+                    <input type="text" id="bank_number" name="bank_number" class="form-control" required>
+                    @error('bank_number')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label>Metode Pengambilan</label>
+                    <div class="pickup-options">
+                        <div class="pickup-option">
+                            <input type="radio" id="pickup1" name="pickup" value="pickup1" checked>
+                            <label for="pickup1">
+                                <strong>TOHO Coffee - Cabang Utama</strong><br>
+                                Universitas Sumatera Utara, Medan<br>
+                                Buka: 08:00 - 17:00
+                            </label>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="pickupTime">Waktu Pengambilan</label>
-                        <input type="datetime-local" max="" min="" id="pickupTime" class="form-control" required>
-                    </div>
+                <div class="form-group">
+                    <label for="pickup_time">Waktu Pengambilan</label>
+                    <input type="datetime-local" id="pickup_time" name="pickup_time" class="form-control"
+                        value="{{ old('pickup_time') }}" required>
+                    @error('pickup_time')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label for="transferProof">Bukti Transfer</label>
-                        <input type="file" id="transferProof" class="form-control" accept="image/*" required>
-                    </div>
+                <div class="form-group">
+                    <label for="transfer_proof">Bukti Transfer</label>
+                    <input type="file" id="transfer_proof" name="transfer_proof" class="form-control" accept="image/*" required>
+                    <small class="form-text">Upload bukti transfer dalam format JPG (maksimal 2MB)</small>
+                    @error('transfer_proof')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label for="notes">Catatan (Opsional)</label>
-                        <textarea id="notes" class="form-control" rows="3" placeholder="Tambahkan catatan khusus untuk pesanan Anda"></textarea>
-                    </div>
+                <div class="form-group">
+                    <label for="notes">Catatan (Opsional)</label>
+                    <textarea id="notes" name="notes" class="form-control" rows="3" 
+                            placeholder="Tambahkan catatan khusus untuk pesanan Anda">{{ old('notes') }}</textarea>
+                    @error('notes')
+                        <div class="error-message">{{ $message }}</div>
+                    @enderror
+                </div>
 
-                    <div class="cart-actions">
-                        <div class="continue-shopping">
-                            <a href="{{ route('user-keranjang') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali ke Keranjang</a>
-                        </div>
+                <div class="cart-actions">
+                    <div class="continue-shopping">
+                        <a href="{{ route('user-keranjang') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Kembali ke Keranjang
+                        </a>
                     </div>
-                </form>
+                </div>
+            </form>
             </div>
 
             <!-- Order Summary -->
             <div class="cart-summary">
-                <h3>Ringkasan Pesanan</h3>
-                
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="{{ asset('images/kopi1.jpg') }}" alt="Arabica Gayo">
+                <div class="cart-summary">
+                    <h3>Ringkasan Pesanan</h3>
+                    
+                    @foreach ($cartItems as $item)
+                        <div class="cart-item">
+                            <div class="item-image">
+                                <img src="{{ asset('images/products/' . $item->product->product_name . '.jpg') }}" 
+                                    alt="{{ $item->product->product_name }}"
+                                    onerror="this.src='{{ asset('images/products/default.jpg') }}'">
+                            </div>
+                            <div class="item-details">
+                                <h4>{{ $item->product->product_name }}
+                                @if($item->product->temperatureType)
+                                    ({{ $item->product->temperatureType->temperature }})
+                                @endif
+                                </h4>
+                                <div class="item-quantity">Qty: {{ $item->item_quantity }}</div>
+                                <div class="item-price">Rp {{ number_format($item->product->product_price, 0, ',', '.') }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                    
+                    <div class="summary-item">
+                        <span>Subtotal</span>
+                        <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </div>
-                    <div class="item-details">
-                        <h4>Arabica Gayo Premium</h4>
-                        <p class="item-variant">Medium Roast, 200gr</p>
-                        <div class="item-quantity">Qty: 1</div>
-                        <div class="item-price">Rp 85.000</div>
+                    
+                    <div class="summary-item">
+                        <span>PPn 10%</span>
+                        <span>Rp {{ number_format($ppn, 0, ',', '.') }}</span>
+                    </div>
+                    
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+                    </div>
+                    
+                    <button id="orderBtn" type="submit" form="checkoutForm" class="btn btn-block">Buat Pesanan</button>
+                    
+                    <div class="secure-checkout">
+                        <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <span>Metode Pembayaran:</span>
+                        <div class="payment-icons">
+                            <i class="fas fa-wallet"></i>
+                        </div>
                     </div>
                 </div>
-
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="{{ asset('images/kopi2.jpg') }}" alt="Robusta Toraja">
-                    </div>
-                    <div class="item-details">
-                        <h4>Robusta Toraja Special</h4>
-                        <p class="item-variant">Dark Roast, 250gr</p>
-                        <div class="item-quantity">Qty: 1</div>
-                        <div class="item-price">Rp 75.000</div>
-                    </div>
+                <div class="qr-code">
+                    <h3>Rekening TOHO Coffee</h3>
+                    <h4 style="text-align: left">Nama: TOHO COFFEE 01</h4>
+                    <h4 style="text-align: left">Bank: BNI</h4>
+                    <h4 style="text-align: left">Nomor Rekening: 1858161668</h4>
                 </div>
-
-                <div class="cart-item">
-                    <div class="item-image">
-                        <img src="{{ asset('images/kopi3.jpg') }}" alt="TOHO Blend">
-                    </div>
-                    <div class="item-details">
-                        <h4>TOHO Signature Blend</h4>
-                        <p class="item-variant">Medium-Dark Roast, 500gr</p>
-                        <div class="item-quantity">Qty: 1</div>
-                        <div class="item-price">Rp 120.000</div>
-                    </div>
-                </div>
-                
-                <div class="summary-item">
-                    <span>Subtotal</span>
-                    <span>Rp 280.000</span>
-                </div>
-                
-                <div class="summary-item">
-                    <span>PPn 10%</span>
-                    <span>Rp 2.800</span>
-                </div>
-                
-                <div class="summary-total">
-                    <span>Total</span>
-                    <span>Rp 282.800</span>
-                </div>
-                
-                <button id="orderBtn" type="submit" form="checkoutForm" class="btn btn-block">Buat Pesanan</button>
-                
-                <div class="secure-checkout">
-                    <i class="fas fa-lock"></i> Pembayaran Aman & Terenkripsi
-                </div>
-                
-                <div class="payment-methods">
-                    <span>Metode Pembayaran:</span>
-                    <div class="payment-icons">
-                        <i class="fas fa-wallet"></i>
-                    </div>
+                <div class="qr-code">
+                    <h3>QRIS</h3>
+                    <img src="{{ asset('images/qris/qris-toho.png') }}" style="width: 100%; height: 100%;" alt="QRIS">
                 </div>
             </div>
         </div>
@@ -400,6 +454,74 @@
                 closeLogoutModal();
             }
         });
+
+        function setTimeRestrictions() {
+            const timeInput = document.getElementById('pickup_time');
+            const orderBtn = document.getElementById('orderBtn');
+            const now = new Date();
+            const currentHour = now.getHours();
+            
+            // Fungsi format datetime untuk input
+            function formatDateTime(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+            
+            // Jika sudah lewat jam 17:00, disable untuk hari ini
+            if (currentHour >= 17) {
+                // Set minimum ke hari berikutnya jam 8:00
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(8, 0, 0, 0);
+                timeInput.min = formatDateTime(tomorrow);
+            } else if (currentHour < 8) {
+                // Jika sebelum jam 8:00, set minimum ke jam 8:00 hari ini
+                const today8AM = new Date();
+                today8AM.setHours(8, 0, 0, 0);
+                timeInput.min = formatDateTime(today8AM);
+            } else {
+                // Jika dalam jam operasional, set minimum ke waktu sekarang
+                timeInput.min = formatDateTime(now);
+            }
+            
+            // Set maksimum ke jam 17:00 hari ini (atau besok jika sudah lewat jam 17)
+            const maxDate = new Date();
+            if (currentHour >= 17) {
+                maxDate.setDate(maxDate.getDate() + 1);
+            }
+            maxDate.setHours(17, 0, 0, 0);
+            timeInput.max = formatDateTime(maxDate);
+            
+            // Validasi saat input berubah
+            timeInput.addEventListener('change', function() {
+                const selectedDateTime = new Date(this.value);
+                const selectedHour = selectedDateTime.getHours();
+                const today = new Date().toDateString();
+                const selectedDate = selectedDateTime.toDateString();
+                
+                // Validasi jam operasional (8:00 - 17:00)
+                if (selectedHour < 8 || selectedHour >= 17) {
+                    showAlert('error', 'Waktu pengambilan hanya tersedia jam 08:00 - 17:00');
+                    this.value = '';
+                    return;
+                }
+                
+                // Jika hari ini, validasi tidak boleh kurang dari waktu sekarang
+                if (selectedDate === today && selectedDateTime < now) {
+                    showAlert('error', 'Waktu tidak boleh kurang dari waktu saat ini');
+                    this.value = '';
+                    return;
+                }
+            });
+        }
+
+        // Panggil fungsi dan update setiap menit
+        setTimeRestrictions();
+        setInterval(setTimeRestrictions, 60000);
     </script>
 </body>
 </html>

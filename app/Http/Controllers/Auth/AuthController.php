@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -53,19 +51,13 @@ class AuthController extends Controller
         try {
             // Buat user baru dengan nilai default untuk role dan user_status
             $user = User::create([
-                'id_user' => Str::uuid(),
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => $request->role,
-                'user_status' => $request->user_status,
-            ]); 
-
-            Member::create([
-                'id_member' => Str::uuid(),
-                'user_id' => User::where('role', 'user')->latest()->pluck('user_id')->first()
+                'role' => $request->role ?? 'user', // Default role 'user'
+                'user_status' => $request->user_status ?? 'aktif', // Default status 'aktif'
             ]);
-            
+
             // Login user setelah berhasil registrasi
             Auth::login($user);
 
@@ -95,7 +87,7 @@ class AuthController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => ['required', 'email', 'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/'],
             'password' => 'required|string|min:6',
         ], [
             'email.required' => 'Email wajib diisi.',
@@ -255,7 +247,7 @@ class AuthController extends Controller
             return response()->json([
                 'authenticated' => true,
                 'user' => [
-                    'id' => Auth::id(),
+                    'id' => Auth::user()->id_user, // Menggunakan id_user
                     'name' => Auth::user()->name,
                     'email' => Auth::user()->email,
                 ]
@@ -276,8 +268,10 @@ class AuthController extends Controller
             return redirect()->route('login');
         }
 
+        $user = Auth::user();
+        
         return view('profil', [
-            'user' => Auth::user()
+            'user' => $user
         ]);
     }
 
@@ -292,40 +286,83 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6|confirmed',
-        ], [
-            'name.required' => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah digunakan oleh user lain.',
-            'password.min' => 'Password minimal 6 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-        ]);
+        // Validasi untuk update informasi pribadi
+        if ($request->has('update_profile')) {
+            $validator = Validator::make($request->all(), [
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $user->id_user . ',id_user',
+                'phone' => 'required|string|max:20',
+            ], [
+                'first_name.required' => 'Nama depan wajib diisi.',
+                'last_name.required' => 'Nama belakang wajib diisi.',
+                'email.required' => 'Email wajib diisi.',
+                'email.email' => 'Format email tidak valid.',
+                'email.unique' => 'Email sudah digunakan oleh user lain.',
+                'phone.required' => 'Nomor telepon wajib diisi.',
+            ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        try {
-            $user->name = $request->name;
-            $user->email = $request->email;
-            
-            if ($request->filled('password')) {
-                $user->password = Hash::make($request->password);
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->withInput()
+                    ->with('error', 'Gagal mengupdate profil. Silakan periksa kembali data yang diisi.');
             }
-            
-            $user->save();
 
-            return redirect()->back()->with('success', 'Profile berhasil diperbarui.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withErrors(['update' => 'Terjadi kesalahan saat memperbarui profile.'])
-                ->withInput();
+            try {
+                // Gabungkan nama depan dan belakang
+                $fullName = $request->first_name . ' ' . $request->last_name;
+                
+                $user->name = $fullName;
+                $user->email = $request->email;
+                $user->user_phone = $request->phone;
+                $user->save();
+
+                return redirect()->back()->with('success', 'Informasi profil berhasil diperbarui.');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['update' => 'Terjadi kesalahan saat memperbarui profil.'])
+                    ->withInput()
+                    ->with('error', 'Terjadi kesalahan saat menyimpan data.');
+            }
         }
+
+        // Validasi untuk update password
+        if ($request->has('update_password')) {
+            $validator = Validator::make($request->all(), [
+                'new_password' => [
+                    'required',
+                    'string',
+                    'min:6',
+                    'confirmed'
+                ],
+                'new_password_confirmation' => 'required|same:new_password',
+            ], [
+                'new_password.required' => 'Password baru wajib diisi.',
+                'new_password.min' => 'Password baru minimal 6 karakter.',
+                'new_password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+                'new_password_confirmation.required' => 'Konfirmasi password wajib diisi.',
+                'new_password_confirmation.same' => 'Konfirmasi password tidak cocok.',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                    ->withErrors($validator)
+                    ->with('error', 'Gagal mengupdate password. Silakan periksa kembali data yang diisi.');
+            }
+
+            try {
+                $user->password = Hash::make($request->new_password);
+                $user->save();
+
+                return redirect()->back()->with('success', 'Password berhasil diperbarui.');
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['update_password' => 'Terjadi kesalahan saat memperbarui password.'])
+                    ->with('error', 'Terjadi kesalahan saat menyimpan password baru.');
+            }
+        }
+
+        return redirect()->back()->with('error', 'Tidak ada data yang diupdate.');
     }
 }

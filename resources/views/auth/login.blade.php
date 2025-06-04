@@ -30,11 +30,11 @@
                     <a href="{{ route('register') }}" class="register-btn">Register</a>
                 </div>
             </div>
-            <div class="hamburger">
+            {{-- <div class="hamburger">
                 <div></div>
                 <div></div>
                 <div></div>
-            </div>
+            </div> --}}
         </div>
     </header>
 
@@ -67,9 +67,9 @@
                 <span class="error-message" id="password-error"></span>
             </div>
             
-            <div class="remember-forgot">
+            {{-- <div class="remember-forgot">
                 <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
-            </div>
+            </div> --}}
             
             <button type="submit" class="btn btn-block" id="login-btn">
                 <span class="btn-text">Masuk</span>
@@ -79,7 +79,7 @@
             </button>
         </form>
         
-        <div class="form-divider">
+        {{-- <div class="form-divider">
             <span>Atau</span>
         </div>
         
@@ -87,7 +87,7 @@
             <a href="#" class="social-btn">
                 <i class="fab fa-google"></i>
             </a>
-        </div>
+        </div> --}}
         
         <div class="form-footer">
             Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
