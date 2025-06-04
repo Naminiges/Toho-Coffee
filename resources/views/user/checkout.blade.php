@@ -137,13 +137,7 @@
                 <form id="checkoutForm" action="{{ route('user-checkout-process') }}" method="POST" enctype="multipart/form-data" class="checkout-form">
                 @csrf
                 
-                <div class="form-group">
-                    <label for="name">Nama Lengkap</label>
-                    <input type="text" id="name" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}" required>
-                    @error('name')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
+                <input type="hidden" id="name" name="name" class="form-control" value="{{ old('name', Auth::user()->name) }}" required>
 
                 <div class="form-group">
                     <label for="phone">Nomor Telepon</label>
@@ -153,13 +147,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control" value="{{ old('email', Auth::user()->email) }}" required>
-                    @error('email')
-                        <div class="error-message">{{ $message }}</div>
-                    @enderror
-                </div>
+                <input type="hidden" id="email" name="email" class="form-control" value="{{ old('email', Auth::user()->email) }}" required>
 
                 <div class="form-group">
                     <label for="member_bank">Nama Bank Customer</label>

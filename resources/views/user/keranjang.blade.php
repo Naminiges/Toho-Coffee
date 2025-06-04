@@ -161,7 +161,7 @@
                             <form action="{{ route('user-keranjang-hapus', $item->id_cart) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="remove-item"><i class="fas fa-trash"></i></button>
+                                <button type="submit" class="remove-item" onclick="alert('yakin ingin menghapus item dari keranjang?')"><i class="fas fa-trash"></i></button>
                             </form>
                         </div>
                     </div>
