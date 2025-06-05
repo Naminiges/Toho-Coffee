@@ -15,9 +15,9 @@ use App\Http\Middleware\CheckRole;
 // })->name('user-profil');
 
 // admin routes
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-})->name('admin-dashboard');
+// Route::get('/admin', function () {
+//     return view('admin.dashboard');
+// })->name('admin-dashboard');
 
 Route::get('/', [UserController::class, 'landingPage'])->name('welcome');
 Route::get('/products', [ProductController::class, 'guestKatalog'])->name('products');  

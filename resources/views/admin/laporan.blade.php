@@ -44,12 +44,6 @@
                                     <span>Profile Saya</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('user-keranjang') }}" class="dropdown-item">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span>Pesanan Saya</span>
-                                </a>
-                            </li>
                         </ul>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-footer">
