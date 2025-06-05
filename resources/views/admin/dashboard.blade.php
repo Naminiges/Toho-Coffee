@@ -197,27 +197,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="chart-card">
-                    <div class="card p-4 shadow-sm border-0">
-                        <h5 class="mb-3 d-flex align-items-center">
-                            <i class="fas fa-star text-warning me-2"></i> Produk Terlaris
-                        </h5>
-
-                        @if ($top_product_name)
-                            <div class="d-flex align-items-center justify-content-between bg-light rounded px-3 py-2">
-                                <div class="fw-semibold fs-6 text-dark">
-                                    {{ $top_product_name }}
-                                </div>
-                                <span class="badge bg-success px-3 py-2">
-                                    <i class="fas fa-box me-1"></i> Terlaris
-                                </span>
-                            </div>
-                        @else
-                            <p class="text-muted">Belum ada data produk terlaris.</p>
-                        @endif
-                    </div>
-                </div>
             </div>
         </div>
     </div>

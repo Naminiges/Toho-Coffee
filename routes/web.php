@@ -46,6 +46,7 @@ Route::put('/admin/manajemen-produk/edit-produk/{product}', [ProductController::
 Route::get('/admin/manajemen-pelanggan', [UserController::class, 'adminCustomers'])->name('admin-manajemen-pelanggan');
 Route::get('/admin/manajemen-staff', [UserController::class, 'adminStaff'])->name('admin-manajemen-staff');
 Route::post('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+Route::post('/users/{user}/toggle-role', [UserController::class, 'toggleRole'])->name('users.toggle-role');
 Route::post('/users/bulk-action', [UserController::class, 'bulkAction'])->name('users.bulk-action');
 Route::get('/admin/manajemen-pesanan', [OrderController::class, 'adminManajemenPesanan'])->name('admin-manajemen-pesanan');
 Route::post('/admin/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('admin-update-order-status');

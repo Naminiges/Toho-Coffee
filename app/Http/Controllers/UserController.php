@@ -93,6 +93,26 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengubah status akun.');
         }
     }
+
+    public function toggleRole(Request $request, $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            
+            // Toggle status
+            $newRole = $user->role === 'user' ? 'staff' : 'user';
+            $user->role = $newRole;
+            $user->save();
+            
+            $statusText = $newRole === 'user' ? 'menjadi user' : 'menjadi staff';
+            $userName = $user->name;
+            
+            return redirect()->back()->with('success', "Akun {$userName} berhasil {$statusText}.");
+            
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengubah role akun.');
+        }
+    }
     
     /**
      * Bulk action for multiple users (optional feature)
@@ -142,46 +162,6 @@ class UserController extends Controller
             'total_products' => $produkTersedia,
         ];
 
-        // Produk terlaris
-        $produkTerlars = DB::table('orders_details')
-            ->select('product_id', DB::raw('SUM(product_quantity) as total_terjual'))
-            ->groupBy('product_id')
-            ->orderByDesc('total_terjual')
-            ->take(5)
-            ->get()
-            ->map(function ($item) {
-                $product = Product::find($item->product_id);
-                return [
-                    'nama_produk' => $product->product_name ?? '-',
-                    'qty' => $item->total_terjual,
-                ];
-            });
-
-            $top_products = DB::table('orders_details')
-            ->select('product_id', DB::raw('SUM(product_quantity) as total_sold'))
-            ->groupBy('product_id')
-            ->orderByDesc('total_sold')
-            ->take(5)
-            ->get()
-            ->map(function ($item) {
-                $product = Product::find($item->product_id);
-                return [
-                    'name' => $product->product_name ?? '-',
-                    'total_sold' => (int) $item->total_sold,
-                ];
-            });
-
-            $top_product = $top_products->first();
-            $top_product_name = null;
-
-            if ($top_product) {
-                $product = Product::where('product_name', $top_product['name'])->first();
-
-                if ($product) {
-                    $top_product_name = $product->product_name . ' (' . $top_product['total_sold'] . ' terjual)';
-                }
-            }
-
             $sales_chart_data = DB::table('orders')
             ->selectRaw('DATE(order_date) as date, SUM(total_price) as total')
             ->whereBetween('order_date', [now()->subDays(6)->startOfDay(), now()->endOfDay()])
@@ -221,10 +201,7 @@ class UserController extends Controller
         'totalPelanggan',
         'produkTersedia',
         'stats',
-        'produkTerlars',
         'sales_chart_data',
-        'top_product_name',
-        'top_products',
         'labels',
         'sales' // tambahkan ini!
     ));

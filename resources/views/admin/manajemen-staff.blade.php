@@ -160,12 +160,13 @@
                             <th>Email</th>
                             <th>Status Akun</th>
                             <th>Aksi</th>
+                            <th>Akses</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($staffs as $staff)
                             <tr>
-                                <td>#CUST{{ str_pad($staff->id_user, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>#STF{{ str_pad($staff->id_user, 3, '0', STR_PAD_LEFT) }}</td>
                                 <td>{{ $staff->name }}</td>
                                 <td>{{ $staff->email }}</td>
                                 <td>
@@ -189,6 +190,14 @@
                                             </button>
                                         </form>
                                     @endif
+                                </td>
+                                <td>
+                                    <form action="{{ route('users.toggle-role', $staff->id_user) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-secondary" onclick="return confirm('Yakin ingin jadikan user akun ini?')">
+                                            <i class="fas fa-arrow-down"></i> Jadikan User
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
