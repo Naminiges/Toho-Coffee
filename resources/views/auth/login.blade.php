@@ -67,9 +67,9 @@
                 <span class="error-message" id="password-error"></span>
             </div>
             
-            {{-- <div class="remember-forgot">
+            <div class="remember-forgot">
                 <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
-            </div> --}}
+            </div>
             
             <button type="submit" class="btn btn-block" id="login-btn">
                 <span class="btn-text">Masuk</span>

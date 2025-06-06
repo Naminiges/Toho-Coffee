@@ -78,6 +78,7 @@
                 @error('email')
                     <span class="error-message">{{ $message }}</span>
                 @enderror
+                <small>Masukkan email asli yang terdaftar (harus Gmail)</small>
             </div>
 
             <div class="form-group">

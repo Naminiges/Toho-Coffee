@@ -9,16 +9,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Middleware\CheckRole;
 
-
-// Route::get('/profil', function () {
-//     return view('profil');
-// })->name('user-profil');
-
-// admin routes
-// Route::get('/admin', function () {
-//     return view('admin.dashboard');
-// })->name('admin-dashboard');
-
 Route::get('/', [UserController::class, 'landingPage'])->name('welcome');
 Route::get('/products', [ProductController::class, 'guestKatalog'])->name('products');  
 
@@ -63,10 +53,6 @@ Route::post('/staff/detail-pesanan/update-status/{orderId}', [OrderController::c
 Route::get('/staff/detail-pesanan/{orderId}', [OrderController::class, 'staffDetailPesanan'])->name('staff-detail-pesanan');
 // });
 
-// Route::get('/admin/laporan', function () {
-//     return view('admin.laporan');
-// })->name('admin-laporan');
-
 // Guest routes (only accessible when not logged in)
 Route::middleware('guest')->group(function () {
     // Register Routes
@@ -91,10 +77,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 
 // Protected routes - only accessible when logged in
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    
     // Profile Routes
     Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
@@ -103,13 +85,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/auth/check', [AuthController::class, 'checkAuth'])->name('auth.check');
 });
 
-// Add this route temporarily for testing (remove in production)
-Route::get('/test-reset-password', function () {
-    return view('auth.forgot-password', [
-        'token' => 'test-token-123',
-        'email' => 'test@example.com'
-    ]);
-})->name('test-reset-password');
 
 // Public routes for products
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
@@ -123,10 +98,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('products', ProductController::class)->except(['index', 'show']);
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
     Route::post('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
-});
-
-// Cart routes (jika diperlukan)
-Route::middleware('auth')->group(function () {
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
 });

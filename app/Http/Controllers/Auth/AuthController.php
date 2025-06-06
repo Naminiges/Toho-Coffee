@@ -143,7 +143,12 @@ class AuthController extends Controller
      */
     public function showLinkRequestForm()
     {
-        return view('auth.forgot-password');
+        // Redirect jika sudah login
+        if (Auth::check()) {
+            return redirect('/');
+        }
+        
+        return view('auth.forgot-password-request');
     }
 
     /**
@@ -152,11 +157,17 @@ class AuthController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|exists:users,email',
+            'email' => [
+                'required', 
+                'email', 
+                'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/', 
+                'exists:users,email'
+            ],
         ], [
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
-            'email.exists' => 'Email tidak terdaftar dalam sistem.',
+            'email.regex' => 'Email harus menggunakan domain Gmail (@gmail.com).',
+            'email.exists' => 'Email tidak terdaftar dalam sistem kami.',
         ]);
 
         if ($validator->fails()) {
@@ -166,22 +177,32 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // Kirim reset link
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        try {
+            // Kirim reset link
+            $status = Password::sendResetLink(
+                $request->only('email')
+            );
 
-        if ($status === Password::RESET_LINK_SENT) {
+            if ($status === Password::RESET_LINK_SENT) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Link reset password telah dikirim ke email Anda. Silakan cek kotak masuk atau folder spam Anda.'
+                ]);
+            }
+
             return response()->json([
-                'success' => true,
-                'message' => 'Link reset password telah dikirim ke email Anda.'
-            ]);
+                'success' => false,
+                'message' => 'Gagal mengirim email reset password. Silakan coba lagi nanti.'
+            ], 500);
+            
+        } catch (\Exception $e) {
+            \Log::error('Password reset error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan sistem. Silakan coba lagi nanti.'
+            ], 500);
         }
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Terjadi kesalahan saat mengirim email reset password.'
-        ], 500);
     }
 
     /**
@@ -189,7 +210,12 @@ class AuthController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        return view('auth.reset-password', [
+        // Redirect jika sudah login
+        if (Auth::check()) {
+            return redirect('/');
+        }
+        
+        return view('auth.forgot-password', [
             'token' => $token,
             'email' => $request->email
         ]);
