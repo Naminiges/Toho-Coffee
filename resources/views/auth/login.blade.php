@@ -67,9 +67,9 @@
                 <span class="error-message" id="password-error"></span>
             </div>
             
-            {{-- <div class="remember-forgot">
+            <div class="remember-forgot">
                 <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
-            </div> --}}
+            </div>
             
             <button type="submit" class="btn btn-block" id="login-btn">
                 <span class="btn-text">Masuk</span>
@@ -79,15 +79,15 @@
             </button>
         </form>
         
-        {{-- <div class="form-divider">
+        <div class="form-divider">
             <span>Atau</span>
         </div>
         
         <div class="social-auth">
-            <a href="#" class="social-btn">
+            <a href="{{ route('auth.google') }}" class="social-btn">
                 <i class="fab fa-google"></i>
             </a>
-        </div> --}}
+        </div>
         
         <div class="form-footer">
             Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
@@ -185,10 +185,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', data.message);
+                    // Cek apakah ada message_type untuk menentukan warna alert
+                    const alertType = data.message_type || 'success';
+                    showAlert(alertType, data.message);
+                    
                     setTimeout(() => {
                         window.location.href = data.redirect;
-                    }, 1500);
+                    }, alertType === 'error' ? 2000 : 1500); // Beri waktu lebih lama untuk pesan error
                 } else {
                     if (data.errors) {
                         // Show field-specific errors

@@ -9,8 +9,8 @@
 </head>
 <body>
     <header>
-        <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
-            <div class="logo"> <!-- Menggunakan class yang sudah ada -->
+        <div class="navbar">
+            <div class="logo">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
@@ -42,12 +42,6 @@
                                 <a href="{{ route('profile') }}" class="dropdown-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profile Saya</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('user-keranjang') }}" class="dropdown-item">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span>Pesanan Saya</span>
                                 </a>
                             </li>
                         </ul>
@@ -166,12 +160,13 @@
                             <th>Email</th>
                             <th>Status Akun</th>
                             <th>Aksi</th>
+                            <th>Akses</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($staffs as $staff)
                             <tr>
-                                <td>#CUST{{ str_pad($staff->id_user, 3, '0', STR_PAD_LEFT) }}</td>
+                                <td>#STF{{ str_pad($staff->id_user, 3, '0', STR_PAD_LEFT) }}</td>
                                 <td>{{ $staff->name }}</td>
                                 <td>{{ $staff->email }}</td>
                                 <td>
@@ -195,6 +190,14 @@
                                             </button>
                                         </form>
                                     @endif
+                                </td>
+                                <td>
+                                    <form action="{{ route('users.toggle-role', $staff->id_user) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-secondary" onclick="return confirm('Yakin ingin jadikan user akun ini?')">
+                                            <i class="fas fa-arrow-down"></i> Jadikan User
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

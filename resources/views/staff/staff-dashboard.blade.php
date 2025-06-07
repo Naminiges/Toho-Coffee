@@ -10,8 +10,8 @@
 <body>
     <!-- Header -->
     <header>
-        <div class="navbar"> <!-- Menggunakan class yang sudah ada -->
-            <div class="logo"> <!-- Menggunakan class yang sudah ada -->
+        <div class="navbar">
+            <div class="logo">
                 <img src="{{ asset('images/logo-toho.jpg') }}" alt="TOHO Coffee Logo">
                 <h1>TOHO Coffee</h1>
             </div>
@@ -43,12 +43,6 @@
                                 <a href="{{ route('profile') }}" class="dropdown-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profile Saya</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('user-keranjang') }}" class="dropdown-item">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span>Pesanan Saya</span>
                                 </a>
                             </li>
                         </ul>

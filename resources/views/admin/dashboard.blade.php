@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard Admin - TOHO Coffee</title>
     @vite('resources/css/style.css')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" async></script>
 </head>
 <body>
     <!-- Header -->
@@ -43,12 +44,6 @@
                                 <a href="{{ route('profile') }}" class="dropdown-item">
                                     <i class="fas fa-user"></i>
                                     <span>Profile Saya</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('user-keranjang') }}" class="dropdown-item">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span>Pesanan Saya</span>
                                 </a>
                             </li>
                         </ul>
@@ -196,147 +191,130 @@
             <div class="charts-grid">
                 <div class="chart-card">
                     <div class="card p-4">
-                        <h5 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i> Grafik Penjualan (7 Hari Terakhir)</h5>
+                        <h5 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i> Grafik Pendapatan (7 Hari Terakhir)</h5>
                         <div>
                             <canvas id="salesChart" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
-
-                <div class="chart-card">
-                    <div class="card p-4 shadow-sm border-0">
-                        <h5 class="mb-3 d-flex align-items-center">
-                            <i class="fas fa-star text-warning me-2"></i> Produk Terlaris
-                        </h5>
-
-                        @if ($top_product_name)
-                            <div class="d-flex align-items-center justify-content-between bg-light rounded px-3 py-2">
-                                <div class="fw-semibold fs-6 text-dark">
-                                    {{ $top_product_name }}
-                                </div>
-                                <span class="badge bg-success px-3 py-2">
-                                    <i class="fas fa-box me-1"></i> Terlaris
-                                </span>
-                            </div>
-                        @else
-                            <p class="text-muted">Belum ada data produk terlaris.</p>
-                        @endif
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-
-    @vite('resources/js/script.js')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         // Setup CSRF token for AJAX requests
         window.Laravel = {
             csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         };
-
     </script>
 
+    <!-- Chart initialization script - bungkus dalam async function -->
     <script>
-        const ctx = document.getElementById('salesChart').getContext('2d');
+        async function initializeCharts() {
+            // Tunggu Chart.js dimuat
+            while (typeof Chart === 'undefined') {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            const ctx = document.getElementById('salesChart').getContext('2d');
             const salesChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($labels) !!},
-                datasets: [{
-                    label: 'Penjualan (Rp)',
-                    data: {!! json_encode($sales) !!},
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'Rp ' + value.toLocaleString('id-ID');
+                type: 'bar',
+                data: {
+                    labels: {!! json_encode($labels) !!},
+                    datasets: [{
+                        label: 'Pendapatan (Rp)',
+                        data: {!! json_encode($sales) !!},
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + value.toLocaleString('id-ID');
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
-        </script>
+            });
 
-        <script>
-        // // Sales Chart Data
-        // const salesData = @json($sales_chart_data);
-        // const salesLabels = salesData.map(item => item.date);
-        // const salesValues = salesData.map(item => item.total);
-
-        // // Products Chart Data
-        // const productsData = @json($top_products);
-        // const productLabels = productsData.map(item => item.name);
-        // const productValues = productsData.map(item => item.total_sold);
-
-        // Initialize Sales Chart
-        const salesCtx = document.getElementById('salesChart').getContext('2d');
-        new Chart(salesCtx, {
-            type: 'line',
-            data: {
-                labels: salesLabels,
-                datasets: [{
-                    label: 'Penjualan (Rp)',
-                    data: salesValues,
-                    borderColor: 'rgb(75, 192, 192)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return 'Rp ' + value.toLocaleString('id-ID');
+            // Initialize Sales Chart (Line Chart)
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: salesLabels,
+                    datasets: [{
+                        label: 'Penjualan (Rp)',
+                        data: salesValues,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'Rp ' + value.toLocaleString('id-ID');
+                                }
                             }
                         }
                     }
                 }
-            }
-        });
+            });
 
-        // Initialize Products Chart
-        const productsCtx = document.getElementById('productsChart').getContext('2d');
-        new Chart(productsCtx, {
-            type: 'doughnut',
-            data: {
-                labels: productLabels,
-                datasets: [{
-                    data: productValues,
-                    backgroundColor: [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56',
-                        '#4BC0C0',
-                        '#9966FF'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
+            // Initialize Products Chart jika ada element productsChart
+            const productsElement = document.getElementById('productsChart');
+            if (productsElement) {
+                const productsCtx = productsElement.getContext('2d');
+                new Chart(productsCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: productLabels,
+                        datasets: [{
+                            data: productValues,
+                            backgroundColor: [
+                                '#FF6384',
+                                '#36A2EB',
+                                '#FFCE56',
+                                '#4BC0C0',
+                                '#9966FF'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
                     }
-                }
+                });
             }
-        });
+        }
 
+        // Initialize charts ketika DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCharts);
+        } else {
+            initializeCharts();
+        }
+    </script>
+
+    <!-- Script untuk fungsi-fungsi lainnya tetap sama -->
+    <script>
         // User Menu Functions
         function toggleUserMenu() {
             const dropdown = document.getElementById('userDropdown');
@@ -414,7 +392,7 @@
             
             // Set alert content
             alertText.textContent = message;
-            alertMessage.className = alert alert-${type};
+            alertMessage.className = `alert alert-${type}`;
             
             // Set icon based on type
             if (type === 'success') {
@@ -444,29 +422,43 @@
             showAlert('error', '{{ session("error") }}');
         @endif
 
-        // Close alert when clicking on it
-        document.getElementById('alertContainer').addEventListener('click', function() {
-            this.style.display = 'none';
-        });
-
-        // Prevent modal from closing when clicking inside modal content
-        document.querySelector('.modal-content').addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // Close modal when clicking on overlay
-        document.getElementById('logoutModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLogoutModal();
+        // Event listeners untuk modal dan alert
+        document.addEventListener('DOMContentLoaded', function() {
+            // Close alert when clicking on it
+            const alertContainer = document.getElementById('alertContainer');
+            if (alertContainer) {
+                alertContainer.addEventListener('click', function() {
+                    this.style.display = 'none';
+                });
             }
-        });
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeLogoutModal();
+            // Prevent modal from closing when clicking inside modal content
+            const modalContent = document.querySelector('.modal-content');
+            if (modalContent) {
+                modalContent.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
             }
+
+            // Close modal when clicking on overlay
+            const logoutModal = document.getElementById('logoutModal');
+            if (logoutModal) {
+                logoutModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeLogoutModal();
+                    }
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeLogoutModal();
+                }
+            });
         });
     </script>
+    @vite('resources/js/script.js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" async></script>
 </body>
 </html> 

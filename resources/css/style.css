@@ -2303,7 +2303,7 @@ input:read-only , textarea:read-only {
 
 .charts-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 12fr;
     gap: 20px;
     margin-bottom: 30px;
 }

@@ -78,6 +78,7 @@
                 @error('email')
                     <span class="error-message">{{ $message }}</span>
                 @enderror
+                <small>Masukkan email asli yang terdaftar (harus Gmail)</small>
             </div>
 
             <div class="form-group">
@@ -119,15 +120,15 @@
             </button>
         </form>
 
-        {{-- <div class="form-divider">
+        <div class="form-divider">
             <span>atau daftar dengan</span>
         </div>
 
         <div class="social-auth">
-            <a href="#" class="social-btn">
+            <a href="{{ route('auth.google') }}" class="social-btn">
                 <i class="fab fa-google"></i>
             </a>
-        </div> --}}
+        </div>
 
         <div class="form-footer">
             Sudah memiliki akun? <a href="{{ route('login') }}">Masuk di sini</a>

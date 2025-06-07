@@ -244,7 +244,7 @@
                             <div class="timeline-icon"></div>
                             <div class="timeline-content">
                                 <div class="timeline-date">{{ $order->order_date->addMinutes(15)->format('d F Y, H:i') }}</div>
-                                <div class="timeline-text">Pesanan dibatalkan</div>
+                                <div class="timeline-text">Pesanan dibatalkan (fee akan direfund 1x24 jam)</div>
                             </div>
                         </div>
                         @endif

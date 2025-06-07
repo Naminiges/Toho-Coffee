@@ -26,8 +26,8 @@
                 @endauth
             </ul>
             <div class="nav-actions">
-                <div class="user-icon">
-                    <a href="{{ route('welcome') }}" class="register-btn">Kembali</a>
+                <div class="auth-links">
+                    <a href="{{ route('password.request') }}" class="register-btn">Kembali</a>
                 </div>
             </div>
             <div class="hamburger">
@@ -127,7 +127,7 @@
         </form>
 
         <div class="form-actions">
-            <div class="back-to-login">
+            <div class="form-footer">
                 <p>Ingat password Anda? <a href="{{ route('login') }}">Login di sini</a></p>
             </div>
         </div>
@@ -179,7 +179,7 @@
     </a>
 
     <!-- Scripts -->
-    @vite('resources/js/app.js')
+    @vite('resources/js/script.js')
     <script>
         // Password toggle functionality
         function togglePassword(fieldId) {

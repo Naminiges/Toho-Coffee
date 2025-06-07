@@ -299,7 +299,7 @@ class ProductController extends Controller
             // Validasi sesuai dengan form di blade
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
-                'category' => 'required|string|in:kopi,teh,snack,merchandise',
+                'category' => 'required|string|in:kopi,non-kopi,mix',
                 'description' => 'required|string',
                 'price' => 'required|numeric|min:0',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -319,7 +319,14 @@ class ProductController extends Controller
             // Load description untuk update
             $product->load('description');
 
+            // Get category ID berdasarkan category name
+            $category = Category::where('category', $validated['category'])->first();
+            if (!$category) {
+                throw new \Exception('Kategori tidak ditemukan');
+            }
+
             // Handle image upload jika ada
+            $imagePath = $product->description->product_photo; // Keep existing image by default
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada
                 if ($product->description->product_photo && file_exists(public_path($product->description->product_photo))) {
@@ -340,15 +347,11 @@ class ProductController extends Controller
             ]);
 
             // Update ProductDescription
-            $updateData = [
+            $product->description->update([
+                'category_id' => $category->id_category,
+                'product_photo' => $imagePath,
                 'product_description' => $validated['description']
-            ];
-
-            if (isset($imagePath)) {
-                $updateData['product_photo'] = $imagePath;
-            }
-
-            $product->description->update($updateData);
+            ]);
 
             return redirect()->route('admin-manajemen-produk')
                         ->with('success', 'Produk berhasil diperbarui');
