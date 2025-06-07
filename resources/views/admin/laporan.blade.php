@@ -148,24 +148,25 @@
                 <div class="page-title">
                     <h2>Laporan Penjualan</h2>
                 </div>
-                {{-- <div class="header-actions">
-                    <button class="btn btn-primary" onclick="printReport()">
+                <div class="header-actions">
+                    <a href="{{ route('admin-laporan-print') }}?start_date={{ $startDate ?? '' }}&end_date={{ $endDate ?? '' }}" 
+                    class="btn btn-primary">
                         <i class="fas fa-print"></i> Cetak Laporan
-                    </button>
-                </div> --}}
+                    </a>
+                </div>
             </div>
 
             <!-- Date Range Filter -->
-            <div class="filter-container report-filter"> {{-- Added report-filter class for specific styling --}}
-                <div class="date-input-group"> {{-- Grouping date inputs and text --}}
-                    <input type="date" id="startDate" class="form-control">
+            <form action="{{ route('admin-laporan-filter') }}" method="GET" class="filter-container report-filter">
+                <div class="date-input-group">
+                    <input type="date" name="start_date" id="startDate" class="form-control" value="{{ $startDate ?? '' }}">
                     <span>sampai</span>
-                    <input type="date" id="endDate" class="form-control">
+                    <input type="date" name="end_date" id="endDate" class="form-control" value="{{ $endDate ?? '' }}">
                 </div>
-                {{-- <button class="btn btn-primary filter-button" onclick="filterReport()">
+                <button type="submit" class="btn btn-primary filter-button">
                     <i class="fas fa-filter"></i> Filter
-                </button> --}}
-            </div>
+                </button>
+            </form>
 
             <!-- Summary Cards -->
             <div class="summary-cards">

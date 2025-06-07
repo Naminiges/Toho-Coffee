@@ -42,6 +42,8 @@ Route::get('/admin/manajemen-pesanan', [OrderController::class, 'adminManajemenP
 Route::post('/admin/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('admin-update-order-status');
 Route::get('/admin/detail-pesanan/{orderId}', [OrderController::class, 'adminDetailPesanan'])->name('admin-detail-pesanan');
 Route::get('/admin/laporan', [LaporanController::class, 'index'])->name('admin-laporan');
+Route::get('/admin/laporan/filter', [LaporanController::class, 'filter'])->name('admin-laporan-filter');
+Route::get('/admin/laporan/print', [LaporanController::class, 'print'])->name('admin-laporan-print');
 // });
 
 // Route::middleware([CheckRole::class.':staff'])->group(function () {
