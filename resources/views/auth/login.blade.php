@@ -185,10 +185,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showAlert('success', data.message);
+                    // Cek apakah ada message_type untuk menentukan warna alert
+                    const alertType = data.message_type || 'success';
+                    showAlert(alertType, data.message);
+                    
                     setTimeout(() => {
                         window.location.href = data.redirect;
-                    }, 1500);
+                    }, alertType === 'error' ? 2000 : 1500); // Beri waktu lebih lama untuk pesan error
                 } else {
                     if (data.errors) {
                         // Show field-specific errors

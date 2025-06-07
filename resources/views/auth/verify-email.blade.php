@@ -55,7 +55,8 @@
                     <div class="mt-3">
                         <a href="{{ route('logout') }}" 
                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                           class="btn btn-secondary">
+                           class="btn logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

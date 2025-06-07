@@ -196,9 +196,10 @@ class AuthController extends Controller
             if (!Auth::user()->hasVerifiedEmail()) {
                 // JANGAN logout user, biarkan tetap login tapi redirect ke verification
                 return response()->json([
-                    'success' => false,
+                    'success' => true, // Tetap true untuk memungkinkan redirect
                     'message' => 'Email Anda belum diverifikasi. Silakan cek email dan klik link verifikasi.',
-                    'redirect' => route('verification.notice')
+                    'redirect' => '/email/verify',
+                    'message_type' => 'error' // Tentukan tipe pesan sebagai error
                 ], 403);
             }
             
