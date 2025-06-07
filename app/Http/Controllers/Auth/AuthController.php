@@ -163,6 +163,23 @@ class AuthController extends Controller
     }
 
     /**
+     * Get redirect URL based on user role
+     */
+    private function getRedirectUrlByRole(string $role): string
+    {
+        switch ($role) {
+            case 'admin':
+                return route('admin-dashboard');
+            case 'staff':
+                return route('staff-dashboard');
+            case 'user':
+                return route('user-katalog');
+            default:
+                return route('welcome');
+        }
+    }
+
+    /**
      * Handle login process - DIPERBAIKI
      */
     public function login(Request $request)
@@ -203,10 +220,13 @@ class AuthController extends Controller
                 ], 403);
             }
             
+            // Redirect berdasarkan role
+            $redirectUrl = $this->getRedirectUrlByRole(Auth::user()->role);
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Login berhasil!',
-                'redirect' => '/'
+                'redirect' => $redirectUrl
             ]);
         }
 

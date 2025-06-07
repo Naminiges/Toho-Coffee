@@ -44,7 +44,7 @@
                 <div class="verification-actions">
                     <form method="POST" action="{{ route('verification.send') }}" id="resend-form">
                         @csrf
-                        <button type="submit" class="btn btn-primary" id="resend-btn">
+                        <button type="submit" class="btn btn-primary btn-block" id="resend-btn">
                             <span class="btn-text">Kirim Ulang Email</span>
                             <span class="btn-loader" style="display: none;">
                                 <i class="fas fa-spinner fa-spin"></i> Mengirim...
