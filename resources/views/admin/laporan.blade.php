@@ -175,7 +175,7 @@
                         <i class="fas fa-shopping-cart"></i>
                     </div>
                     <div class="card-info">
-                        <h3>Total Penjualan</h3>
+                        <h3>Total Pesanan</h3>
                         <h3>{{ $totalPenjualan }}</h3>
                     </div>
                 </div>

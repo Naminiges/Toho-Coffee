@@ -11,21 +11,29 @@ class LaporanController extends Controller
 {
     public function index()
     {
-        // Total transaksi (jumlah order)
+        // Total transaksi (jumlah order) - TETAP semua status
         $totalPenjualan = Order::count();
 
-        // Total pendapatan
-        $totalPendapatan = Order::sum('total_price');
+        // Total pendapatan - HANYA dari pesanan dengan status 'selesai'
+        $totalPendapatan = Order::where('order_status', 'selesai')->sum('total_price');
 
-        // Jumlah total produk terjual dari orders_details
-        $produkTerjual = DB::table('orders_details')->sum('product_quantity');
+        // Jumlah total produk terjual dari orders_details - HANYA dari pesanan dengan status 'selesai'
+        $produkTerjual = DB::table('orders_details')
+            ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
+            ->where('orders.order_status', 'selesai')
+            ->sum('product_quantity');
 
-        // Hitung total qty untuk persentase
-        $totalQty = DB::table('orders_details')->sum('product_quantity');
+        // Hitung total qty untuk persentase - HANYA dari pesanan dengan status 'selesai'
+        $totalQty = DB::table('orders_details')
+            ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
+            ->where('orders.order_status', 'selesai')
+            ->sum('product_quantity');
 
-        // Produk terlaris dari orders_details
+        // Produk terlaris dari orders_details - HANYA dari pesanan dengan status 'selesai'
         $produkTerlars = DB::table('orders_details')
+            ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->select('product_id', DB::raw('SUM(product_quantity) as total_terjual'))
+            ->where('orders.order_status', 'selesai')
             ->groupBy('product_id')
             ->orderByDesc('total_terjual')
             ->take(5)
@@ -55,32 +63,34 @@ class LaporanController extends Controller
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
     
-        // Total transaksi (jumlah order) dalam rentang tanggal
+        // Total transaksi (jumlah order) dalam rentang tanggal - TETAP semua status
         $totalPenjualan = Order::whereBetween('order_date', [$startDate, $endDate])->count();
     
-        // Total pendapatan dalam rentang tanggal
-        $totalPendapatan = Order::whereBetween('order_date', [$startDate, $endDate])->sum('total_price');
+        // Total pendapatan dalam rentang tanggal - HANYA dari pesanan dengan status 'selesai'
+        $totalPendapatan = Order::whereBetween('order_date', [$startDate, $endDate])
+            ->where('order_status', 'selesai')
+            ->sum('total_price');
     
-        // Jumlah total produk terjual dari orders_details dalam rentang tanggal
-        // FIX: Gunakan id_orders bukan id
+        // Jumlah total produk terjual dari orders_details dalam rentang tanggal - HANYA dari pesanan dengan status 'selesai'
         $produkTerjual = DB::table('orders_details')
             ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->whereBetween('orders.order_date', [$startDate, $endDate])
+            ->where('orders.order_status', 'selesai')
             ->sum('product_quantity');
     
-        // Total qty untuk perhitungan persentase
-        // FIX: Gunakan id_orders bukan id
+        // Total qty untuk perhitungan persentase - HANYA dari pesanan dengan status 'selesai'
         $totalQty = DB::table('orders_details')
             ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->whereBetween('orders.order_date', [$startDate, $endDate])
+            ->where('orders.order_status', 'selesai')
             ->sum('product_quantity');
     
-        // Produk terlaris dari orders_details dalam rentang tanggal
-        // FIX: Gunakan id_orders bukan id
+        // Produk terlaris dari orders_details dalam rentang tanggal - HANYA dari pesanan dengan status 'selesai'
         $produkTerlars = DB::table('orders_details')
             ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->select('product_id', DB::raw('SUM(product_quantity) as total_terjual'))
             ->whereBetween('orders.order_date', [$startDate, $endDate])
+            ->where('orders.order_status', 'selesai')
             ->groupBy('product_id')
             ->orderByDesc('total_terjual')
             ->take(5)
@@ -113,26 +123,34 @@ class LaporanController extends Controller
         $endDate = $request->input('end_date');
     
         // Menggunakan query yang sama seperti di method filter
+        // Total transaksi (jumlah order) - TETAP semua status
         $totalPenjualan = Order::whereBetween('order_date', [$startDate, $endDate])->count();
-        $totalPendapatan = Order::whereBetween('order_date', [$startDate, $endDate])->sum('total_price');
         
-        // FIX: Gunakan id_orders bukan id
+        // Total pendapatan - HANYA dari pesanan dengan status 'selesai'
+        $totalPendapatan = Order::whereBetween('order_date', [$startDate, $endDate])
+            ->where('order_status', 'selesai')
+            ->sum('total_price');
+        
+        // Produk terjual - HANYA dari pesanan dengan status 'selesai'
         $produkTerjual = DB::table('orders_details')
             ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->whereBetween('orders.order_date', [$startDate, $endDate])
+            ->where('orders.order_status', 'selesai')
             ->sum('product_quantity');
     
-        // FIX: Gunakan id_orders bukan id
+        // Total qty untuk perhitungan persentase - HANYA dari pesanan dengan status 'selesai'
         $totalQty = DB::table('orders_details')
             ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->whereBetween('orders.order_date', [$startDate, $endDate])
+            ->where('orders.order_status', 'selesai')
             ->sum('product_quantity');
     
-        // FIX: Gunakan id_orders bukan id
+        // Produk terlaris - HANYA dari pesanan dengan status 'selesai'
         $produkTerlars = DB::table('orders_details')
             ->join('orders', 'orders_details.order_id', '=', 'orders.id_orders')
             ->select('product_id', DB::raw('SUM(product_quantity) as total_terjual'))
             ->whereBetween('orders.order_date', [$startDate, $endDate])
+            ->where('orders.order_status', 'selesai')
             ->groupBy('product_id')
             ->orderByDesc('total_terjual')
             ->take(5)

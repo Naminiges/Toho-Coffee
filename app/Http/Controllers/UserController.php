@@ -143,10 +143,10 @@ class UserController extends Controller
 
     public function adminDashboard()
     {
-        // Total pendapatan dari orders
-        $totalPendapatan = Order::sum('total_price');
+        // Total pendapatan dari orders dengan status 'selesai' saja
+        $totalPendapatan = Order::where('order_status', 'selesai')->sum('total_price');
 
-        // Total pesanan (jumlah baris orders)
+        // Total pesanan (jumlah baris orders) - tetap semua status
         $totalPesanan = Order::count();
 
         // Total pelanggan (user dengan role = user)
@@ -162,8 +162,10 @@ class UserController extends Controller
             'total_products' => $produkTersedia,
         ];
 
-            $sales_chart_data = DB::table('orders')
+        // Chart data untuk orders dengan status 'selesai' saja
+        $sales_chart_data = DB::table('orders')
             ->selectRaw('DATE(order_date) as date, SUM(total_price) as total')
+            ->where('order_status', 'selesai') // Tambahkan filter status selesai
             ->whereBetween('order_date', [now()->subDays(6)->startOfDay(), now()->endOfDay()])
             ->groupBy(DB::raw('DATE(order_date)'))
             ->orderBy('date')
@@ -175,35 +177,37 @@ class UserController extends Controller
                 ];
             });
 
-            $sevenDays = collect();
-            $salesData = collect();
+        $sevenDays = collect();
+        $salesData = collect();
 
-            for ($i = 6; $i >= 0; $i--) {
-                $date = Carbon::now()->subDays($i)->format('Y-m-d');
-                $dayName = Carbon::now()->subDays($i)->translatedFormat('l');
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i)->format('Y-m-d');
+            $dayName = Carbon::now()->subDays($i)->translatedFormat('l');
 
-                $sevenDays->push($dayName);
+            $sevenDays->push($dayName);
 
-                $dailySales = DB::table('orders')
-                    ->whereDate('order_date', $date)
-                    ->sum('total_price');
+            // Ambil data penjualan hanya untuk status 'selesai'
+            $dailySales = DB::table('orders')
+                ->whereDate('order_date', $date)
+                ->where('order_status', 'selesai') // Tambahkan filter status selesai
+                ->sum('total_price');
 
-                $salesData->push((float) $dailySales);
-            }
+            $salesData->push((float) $dailySales);
+        }
 
-            // Simpan hasil ke variabel yang akan dikirim ke view
-            $labels = $sevenDays;
-            $sales = $salesData;
+        // Simpan hasil ke variabel yang akan dikirim ke view
+        $labels = $sevenDays;
+        $sales = $salesData;
 
         return view('admin.dashboard', compact(
-        'totalPendapatan',
-        'totalPesanan',
-        'totalPelanggan',
-        'produkTersedia',
-        'stats',
-        'sales_chart_data',
-        'labels',
-        'sales' // tambahkan ini!
-    ));
+            'totalPendapatan',
+            'totalPesanan',
+            'totalPelanggan',
+            'produkTersedia',
+            'stats',
+            'sales_chart_data',
+            'labels',
+            'sales'
+        ));
     }
 }

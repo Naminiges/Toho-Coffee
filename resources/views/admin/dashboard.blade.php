@@ -191,7 +191,7 @@
             <div class="charts-grid">
                 <div class="chart-card">
                     <div class="card p-4">
-                        <h5 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i> Grafik Penjualan (7 Hari Terakhir)</h5>
+                        <h5 class="mb-3"><i class="fas fa-chart-line text-primary me-2"></i> Grafik Pendapatan (7 Hari Terakhir)</h5>
                         <div>
                             <canvas id="salesChart" width="400" height="200"></canvas>
                         </div>
@@ -200,10 +200,6 @@
             </div>
         </div>
     </div>
-
-    @vite('resources/js/script.js')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" async></script>
-
     <script>
         // Setup CSRF token for AJAX requests
         window.Laravel = {
@@ -225,7 +221,7 @@
                 data: {
                     labels: {!! json_encode($labels) !!},
                     datasets: [{
-                        label: 'Penjualan (Rp)',
+                        label: 'Pendapatan (Rp)',
                         data: {!! json_encode($sales) !!},
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
