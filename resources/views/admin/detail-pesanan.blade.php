@@ -211,7 +211,7 @@
                                     <i class="fas fa-sync-alt"></i> Update Status
                                 </button>
                             </form>
-                            <a href="{{ route('invoice', $order->id_orders) }}" target="_blank">
+                            <a href="{{ route('admin-invoice', $order->id_orders) }}" target="_blank">
                                 <button class="btn btn-secondary">
                                     <i class="fas fa-print"></i> Print Invoice
                                 </button>

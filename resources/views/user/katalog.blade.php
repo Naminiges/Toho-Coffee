@@ -295,50 +295,6 @@
             window.location.href = url.toString();
         }
 
-        // Add to Cart Function
-        function addToCart(productId) {
-            fetch('{{ route("cart.add") }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': window.Laravel.csrfToken
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: 1
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showAlert('success', data.message);
-                    // Update cart count if exists
-                    updateCartCount();
-                } else {
-                    showAlert('error', data.message || 'Gagal menambahkan ke keranjang');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showAlert('error', 'Terjadi kesalahan saat menambahkan ke keranjang');
-            });
-        }
-
-        // Update Cart Count
-        function updateCartCount() {
-            fetch('{{ route("cart.count") }}')
-                .then(response => response.json())
-                .then(data => {
-                    const cartBadge = document.querySelector('.cart-count');
-                    if (cartBadge) {
-                        cartBadge.textContent = data.count;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error updating cart count:', error);
-                });
-        }
-
         // Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Add to cart button listeners

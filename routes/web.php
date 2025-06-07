@@ -46,6 +46,12 @@ Route::middleware('guest')->group(function () {
     // Password Reset Routes
     Route::get('/reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
+
+    // Google OAuth Routes
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])
+        ->middleware('throttle:google-auth')
+        ->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 });
 
 /*
@@ -148,7 +154,7 @@ Route::middleware([CheckRole::class.':admin'])->group(function () {
     Route::get('/admin/laporan/print', [LaporanController::class, 'print'])->name('admin-laporan-print');
     
     // Invoice
-    Route::get('/invoice/{orderId}', [OrderController::class, 'invoice'])->name('invoice');
+    Route::get('/admin/invoice/{orderId}', [OrderController::class, 'invoice'])->name('admin-invoice');
 });
 
 /*
@@ -171,7 +177,7 @@ Route::middleware([CheckRole::class.':staff'])->group(function () {
     Route::post('/staff/detail-pesanan/update-status/{orderId}', [OrderController::class, 'updateOrderStatus'])->name('staff-update-order-status');
 
     // Invoice
-    Route::get('/invoice/{orderId}', [OrderController::class, 'invoice'])->name('invoice');
+    Route::get('/staff/invoice/{orderId}', [OrderController::class, 'invoice'])->name('staff-invoice');
 });
 
 /*

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
 
 
 class AuthController extends Controller
@@ -503,5 +505,92 @@ class AuthController extends Controller
         }
 
         return redirect()->back()->with('error', 'Tidak ada data yang diupdate.');
+    }
+
+    // ==================== GOOGLE OAUTH METHODS ====================
+
+    /**
+     * Find or create user from Google data
+     */
+    public function findOrCreateGoogleUser($googleUser)
+    {
+        // Cari user berdasarkan Google ID
+        $user = User::where('google_id', $googleUser->getId())->first();
+        
+        if ($user) {
+            return $user;
+        }
+        
+        // Cari user berdasarkan email
+        $user = User::where('email', $googleUser->getEmail())->first();
+        
+        if ($user) {
+            // Update Google ID untuk user yang sudah ada
+            $user->update(['google_id' => $googleUser->getId()]);
+            return $user;
+        }
+        
+        // Buat user baru
+        return User::create([
+            'name' => $googleUser->getName(),
+            'email' => $googleUser->getEmail(),
+            'google_id' => $googleUser->getId(),
+            'password' => Hash::make(Str::random(24)), // Random password
+            'role' => 'user',
+            'user_status' => 'aktif',
+            'email_verified_at' => now(), // Google account sudah terverifikasi
+        ]);
+    }
+
+    /**
+     * Redirect to Google OAuth
+     */
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    /**
+     * Handle Google OAuth callback
+     */
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->user();
+            
+            // Validasi domain email jika diperlukan
+            if (!str_ends_with($googleUser->getEmail(), '@gmail.com')) {
+                return redirect()->route('login')
+                    ->with('error', 'Hanya email Gmail yang diperbolehkan.');
+            }
+            
+            // Cari atau buat user
+            $user = $this->findOrCreateGoogleUser($googleUser);
+            
+            // Login user
+            Auth::login($user, true);
+            
+            // Regenerate session
+            request()->session()->regenerate();
+            
+            // Redirect berdasarkan role
+            $redirectUrl = $this->getRedirectUrlByRole($user->role);
+            
+            return redirect($redirectUrl)
+                ->with('success', 'Berhasil login dengan Google!');
+                
+        } catch (\Laravel\Socialite\Two\InvalidStateException $e) {
+        return redirect()->route('login')
+            ->with('error', 'Sesi login Google tidak valid. Silakan coba lagi.');
+            
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            return redirect()->route('login')
+                ->with('error', 'Gagal terhubung ke Google. Silakan coba lagi.');
+                
+        } catch (\Exception $e) {
+            \Log::error('Google OAuth Error: ' . $e->getMessage());
+            return redirect()->route('login')
+                ->with('error', 'Terjadi kesalahan saat login dengan Google. Silakan coba lagi.');
+        }
     }
 }

@@ -79,15 +79,15 @@
             </button>
         </form>
         
-        {{-- <div class="form-divider">
+        <div class="form-divider">
             <span>Atau</span>
         </div>
         
         <div class="social-auth">
-            <a href="#" class="social-btn">
+            <a href="{{ route('auth.google') }}" class="social-btn">
                 <i class="fab fa-google"></i>
             </a>
-        </div> --}}
+        </div>
         
         <div class="form-footer">
             Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
