@@ -72,6 +72,18 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 });
 
+Route::get('/email/verify', [AuthController::class, 'showVerificationNotice'])
+    ->middleware('auth')
+    ->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
+    ->middleware(['auth', 'signed'])
+    ->name('verification.verify');
+
+Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])
+    ->middleware(['auth', 'throttle:6,1'])
+    ->name('verification.send');
+
 // Logout Route - only accessible when logged in
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 

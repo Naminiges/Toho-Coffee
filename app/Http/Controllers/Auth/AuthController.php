@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
 
 class AuthController extends Controller
 {
@@ -23,7 +26,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle registration process
+     * Handle registration process - DIPERBAIKI
      */
     public function register(Request $request)
     {
@@ -49,24 +52,103 @@ class AuthController extends Controller
         }
 
         try {
-            // Buat user baru dengan nilai default untuk role dan user_status
+            // Buat user baru dengan email_verified_at = null (belum terverifikasi)
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => $request->role ?? 'user', // Default role 'user'
-                'user_status' => $request->user_status ?? 'aktif', // Default status 'aktif'
+                'role' => $request->role ?? 'user',
+                'user_status' => $request->user_status ?? 'aktif',
+                'email_verified_at' => null, // PENTING: Set null untuk email belum terverifikasi
             ]);
 
-            // Login user setelah berhasil registrasi
+            // Login user setelah register (untuk bisa mengakses halaman verifikasi)
             Auth::login($user);
 
-            // Redirect ke halaman utama
-            return redirect('/')->with('success', 'Registrasi berhasil! Selamat datang.');
+            // Trigger event untuk mengirim email verifikasi
+            event(new Registered($user));
+
+            // PERBAIKAN: Redirect ke halaman verify email, bukan login
+            return redirect()->route('verification.notice')
+                ->with('success', 'Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.');
+                
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withErrors(['register' => 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.'])
                 ->withInput($request->except('password', 'password_confirmation'));
+        }
+    }
+
+    // ==================== EMAIL VERIFICATION METHODS ====================
+    
+    /**
+     * Show email verification notice - DIPERBAIKI
+     */
+    public function showVerificationNotice()
+    {
+        // Jika user belum login, redirect ke login
+        if (!Auth::check()) {
+            return redirect()->route('login')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        // Check if email is already verified
+        if (Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('welcome')
+                ->with('success', 'Email Anda sudah terverifikasi.');
+        }
+
+        return view('auth.verify-email');
+    }
+
+    /**
+     * Handle email verification - DIPERBAIKI
+     */
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+        
+        // PERBAIKAN: Redirect ke halaman utama setelah verifikasi berhasil
+        return redirect()->route('welcome')
+            ->with('success', 'Email berhasil diverifikasi! Selamat datang di TOHO Coffee.');
+    }
+
+    /**
+     * Resend verification email
+     */
+    public function resendVerificationEmail(Request $request)
+    {
+        // Check if user is authenticated
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda harus login terlebih dahulu.',
+                'redirect' => route('login')
+            ], 401);
+        }
+
+        // Check if email is already verified
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email sudah terverifikasi.'
+            ]);
+        }
+
+        try {
+            $request->user()->sendEmailVerificationNotification();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Link verifikasi email telah dikirim ulang. Silakan cek email Anda.'
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Resend verification email error: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengirim email. Silakan coba lagi.'
+            ], 500);
         }
     }
 
@@ -81,7 +163,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle login process
+     * Handle login process - DIPERBAIKI
      */
     public function login(Request $request)
     {
@@ -109,6 +191,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            // PERBAIKAN: Cek apakah email sudah diverifikasi
+            if (!Auth::user()->hasVerifiedEmail()) {
+                // JANGAN logout user, biarkan tetap login tapi redirect ke verification
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email Anda belum diverifikasi. Silakan cek email dan klik link verifikasi.',
+                    'redirect' => route('verification.notice')
+                ], 403);
+            }
             
             return response()->json([
                 'success' => true,

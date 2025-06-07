@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'check.role' => \App\Http\Middleware\CheckRole::class,
+            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -179,7 +179,7 @@
     </a>
 
     <!-- Scripts -->
-    @vite('resources/js/app.js')
+    @vite('resources/js/script.js')
     <script>
         // Password toggle functionality
         function togglePassword(fieldId) {
