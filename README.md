@@ -1,61 +1,216 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TOHO Coffee - Sistem Manajemen Kafe
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Introduction
+Pickup Order System Wesbite TOHO Coffee adalah sistem pickup order kafe yang dikembangkan untuk mengelola operasional kafe, termasuk manajemen produk, pesanan, pelanggan, dan laporan penjualan. Sistem ini dirancang dengan arsitektur web modern menggunakan Laravel framework dan menyediakan antarmuka yang intuitif untuk admin, staff, dan pelanggan. Sistem ini juga terintegrasi dengan Google OAuth untuk autentikasi pengguna.
 
-## About Laravel
+### Fitur Utama
+- **Autentikasi Multi-platform**: Login dengan email/password dan Google OAuth
+- **Manajemen Produk**: Pengelolaan menu, kategori, dan stok produk
+- **Sistem Pesanan**: Proses pemesanan online dan manajemen pesanan
+- **Manajemen Pengguna**: Pengelolaan admin, staff, dan pelanggan
+- **Laporan Penjualan**: Analisis penjualan dan laporan keuangan
+- **Keranjang Belanja**: Sistem keranjang belanja untuk pelanggan
+- **Dashboard Admin**: Tampilan statistik dan metrik penting
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Prerequisites
+- PHP >= 8.1
+- Composer
+- MySQL >= 5.7
+- Node.js & NPM
+- Web Server (Apache/Nginx)
+- Google Cloud Platform Account
+- Mailtrap.io Account
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Installation Steps
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Clone Repository**
+   ```bash
+   git clone [https://github.com/Naminiges/Toho-Coffee.git]
+   cd toho-coffee
+   ```
 
-## Learning Laravel
+2. **Install Dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+3. **Environment Setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+4. **Database Configuration**
+   - Buat database baru di MySQL
+   - Update file `.env` dengan konfigurasi database:
+     ```
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=toho_coffee
+     DB_USERNAME=your_username
+     DB_PASSWORD=your_password
+     ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+5. **Google OAuth Configuration**
+   - Buat project di [Google Cloud Console](https://console.cloud.google.com)
+   - Aktifkan Google+ API
+   - Buat OAuth 2.0 credentials
+   - Update file `.env` dengan kredensial Google:
+     ```
+     GOOGLE_CLIENT_ID=your_client_id
+     GOOGLE_CLIENT_SECRET=your_client_secret
+     GOOGLE_REDIRECT_URI=http://your-domain/auth/google/callback
+     ```
 
-## Laravel Sponsors
+6. **Mailtrap Configuration**
+   - Buat akun di [Mailtrap.io](https://mailtrap.io)
+   - Buat inbox baru untuk project
+   - Update file `.env` dengan konfigurasi Mailtrap:
+     ```
+     MAIL_MAILER=smtp
+     MAIL_HOST=smtp.mailtrap.io
+     MAIL_PORT=2525
+     MAIL_USERNAME=your_mailtrap_username
+     MAIL_PASSWORD=your_mailtrap_password
+     MAIL_FROM_ADDRESS=noreply@tohocoffee.com
+     MAIL_FROM_NAME="${APP_NAME}"
+     ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+7. **Database Migration & Seeding**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
 
-### Premium Partners
+9. **Compile Assets**
+   ```bash
+   npm run dev
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+10. **Start Development Server**
+    ```bash
+    php artisan serve
+    ```
 
-## Contributing
+### Default Login Credentials
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Admin
+- Email: admintoho@gmail.com
+- Password: admin123
 
-## Code of Conduct
+#### Staff
+- Email: stafftoho@gmail.com
+- Password: staff123
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Project Structure
 
-## Security Vulnerabilities
+toho-coffee/
+├── app/
+│ ├── Http/
+│ │ ├── Controllers/
+│ │ │ └── Auth/
+│ │ └── Middleware/
+│ ├── Models/
+│ ├── Notifications/
+│ └── Providers/
+├── config/
+│ ├── services.php
+│ └── mail.php
+├── database/
+│ ├── migrations/
+│ └── seeders/
+├── public/
+│ ├── css/
+│ ├── js/
+│ └── images/
+├── resources/
+│ ├── css/
+│ ├── js/
+│ └── views/
+│ ├── auth/
+│ ├── admin/
+│ ├── staff/
+│ └── user/
+└── routes/
+└── web.php
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Features & Usage
 
-## License
+### Authentication & Email
+- Login dengan email/password
+- Login dengan Google OAuth
+- Verifikasi email
+- Reset password via email
+- Notifikasi email untuk:
+  - Konfirmasi pesanan
+  - Status pesanan
+  - Reset password
+  - Verifikasi akun
+- 404 Fallback Page
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Admin Panel
+- Dashboard dengan statistik penjualan
+- Manajemen produk dan kategori
+- Manajemen pesanan
+- Manajemen pengguna (admin, staff, pelanggan)
+- Laporan penjualan dan analisis
+
+### Staff Panel
+- Manajemen produk
+- Pemrosesan pesanan
+- Update status pesanan
+
+### Customer Panel
+- Katalog produk
+- Keranjang belanja
+- Riwayat pesanan
+- Checkout Payment
+- Profil pengguna
+
+## Contributors
+
+### Development Team
+- [Putera Nami Shiddieqy] - Project Manager
+- [Wynn Thomas Salim] - Backend Developer
+- [Raswan Haqqi Al Amwi] - Frontend Developer
+- [Fauzan Khair Siregar] - UI/UX Designer
+
+### Special Thanks
+- [Fando Pasaribu] - CEO TOHO Coffee
+
+## Sources & References
+
+### Technologies Used
+- [Laravel](https://laravel.com) - PHP Framework
+- [Laravel Socialite](https://laravel.com/docs/socialite) - OAuth Authentication
+- [Google Cloud Platform](https://cloud.google.com) - OAuth Provider
+- [Mailtrap.io](https://mailtrap.io) - Email Testing Platform
+- [MySQL](https://www.mysql.com) - Database
+- [Bootstrap](https://getbootstrap.com) - CSS Framework
+- [Font Awesome](https://fontawesome.com) - Icons
+- [Chart.js](https://www.chartjs.org) - Charts & Graphs
+
+### Documentation
+- [Laravel Documentation](https://laravel.com/docs)
+- [Laravel Socialite Documentation](https://laravel.com/docs/socialite)
+- [Google OAuth Documentation](https://developers.google.com/identity/protocols/oauth2)
+- [Laravel Mail Documentation](https://laravel.com/docs/mail)
+- [Mailtrap Documentation](https://mailtrap.io/docs)
+- [Bootstrap Documentation](https://getbootstrap.com/docs)
+- [MySQL Documentation](https://dev.mysql.com/doc)
+- [Font Awesome Documentation](https://fontawesome.com/docs)
+
+## Security Considerations
+- Implementasi OAuth 2.0 dengan Google
+- CSRF Protection
+- Secure Password Hashing
+- Session Management
+- Rate Limiting
+- Input Validation
+- Email Verification
+- Secure Email Configuration
+
+## Support
+For support, create an issue in the repository.
