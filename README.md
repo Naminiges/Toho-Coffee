@@ -1,4 +1,4 @@
-# TOHO Coffee - Sistem Manajemen Kafe
+# TOHO Coffee Website - Pickup Order System
 
 ## Introduction
 Pickup Order System Wesbite TOHO Coffee adalah sistem pickup order kafe yang dikembangkan untuk mengelola operasional kafe, termasuk manajemen produk, pesanan, pelanggan, dan laporan penjualan. Sistem ini dirancang dengan arsitektur web modern menggunakan Laravel framework dan menyediakan antarmuka yang intuitif untuk admin, staff, dan pelanggan. Sistem ini juga terintegrasi dengan Google OAuth untuk autentikasi pengguna.
