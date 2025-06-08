@@ -22,6 +22,20 @@ class CheckRole
         }
 
         $user = Auth::user();
+
+        // TAMBAHAN: Cek apakah user_status adalah 'nonaktif'
+        if ($user->user_status === 'nonaktif') {
+            // Logout user
+            Auth::logout();
+            
+            // Invalidate session
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            // Redirect ke halaman login dengan pesan error
+            return redirect()->route('login')
+                ->with('error', 'Akun Anda telah dinonaktifkan. Silakan hubungi contact person untuk informasi lebih lanjut.');
+        }
         
         // Jika tidak ada role yang dispesifikasi, lanjutkan request
         if (empty($roles)) {

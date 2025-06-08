@@ -209,6 +209,19 @@ class AuthController extends Controller
         $remember = $request->has('remember');
 
         if (Auth::attempt($credentials, $remember)) {
+            $user = Auth::user();
+            
+            // TAMBAHAN: Cek apakah user_status adalah 'nonaktif'
+            if ($user->user_status === 'nonaktif') {
+                // Logout user yang baru saja login
+                Auth::logout();
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator untuk informasi lebih lanjut.'
+                ], 403);
+            }
+            
             $request->session()->regenerate();
 
             // PERBAIKAN: Cek apakah email sudah diverifikasi
@@ -566,6 +579,12 @@ class AuthController extends Controller
             
             // Cari atau buat user
             $user = $this->findOrCreateGoogleUser($googleUser);
+
+            // TAMBAHAN: Cek apakah user_status adalah 'nonaktif'
+            if ($user->user_status === 'nonaktif') {
+                return redirect()->route('login')
+                    ->with('error', 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator untuk informasi lebih lanjut.');
+            }
             
             // Login user
             Auth::login($user, true);

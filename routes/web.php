@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\CheckUserStatus;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,10 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('pro
 // AJAX Routes for Dynamic Functionality
 Route::get('/api/products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/api/products/category/{category}', [ProductController::class, 'getByCategory'])->name('products.by-category');
+
+Route::fallback(function () {
+    return response()->view('404', [], 404);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -78,7 +83,7 @@ Route::post('/email/verification-notification', [AuthController::class, 'resendV
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     // Logout Route
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
@@ -186,7 +191,7 @@ Route::middleware([CheckRole::class.':staff'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', CheckUserStatus::class, 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('products', ProductController::class)->except(['index', 'show']);
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
     Route::post('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
