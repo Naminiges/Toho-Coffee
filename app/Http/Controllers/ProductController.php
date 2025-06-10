@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Models\ProductDescription;
 use App\Models\TemperatureType;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -326,11 +326,12 @@ class ProductController extends Controller
             }
 
             // Handle image upload jika ada
-            $imagePath = $product->description->product_photo; // Keep existing image by default
+            $imagePath = $product->description->product_photo;
             if ($request->hasFile('image')) {
-                // Hapus gambar lama jika ada
-                if ($product->description->product_photo && file_exists(public_path($product->description->product_photo))) {
-                    unlink(public_path($product->description->product_photo));
+                // Hapus gambar lama menggunakan File facade
+                $fullPath = public_path($product->description->product_photo);
+                if ($product->description->product_photo && File::exists($fullPath)) {
+                    File::delete($fullPath);
                 }
 
                 $image = $request->file('image');
